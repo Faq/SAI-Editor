@@ -30,7 +30,6 @@ _ReSharper*/
 *.DotSettings
 
 #nuget
-packages/*
 !packages/repositories.config
 
 #Installer
