@@ -101,7 +101,7 @@
             this.comboBoxSearchType.Size = new System.Drawing.Size(113, 21);
             this.comboBoxSearchType.TabIndex = 7;
             this.comboBoxSearchType.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearchType_SelectedIndexChanged);
-            this.comboBoxSearchType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBoxSearchType_KeyPress);
+            this.comboBoxSearchType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ComboBoxSearchType_KeyPress);
             // 
             // checkBoxHasAiName
             // 
@@ -121,7 +121,7 @@
             this.buttonSearch.TabIndex = 3;
             this.buttonSearch.Text = "Search";
             this.buttonSearch.UseVisualStyleBackColor = true;
-            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
+            this.buttonSearch.Click += new System.EventHandler(this.ButtonSearch_Click);
             // 
             // listViewEntryResults
             // 

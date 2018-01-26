@@ -13,7 +13,7 @@ namespace SAI_Editor.Classes.Database
         where Command : DbCommand
         where Transaction : DbTransaction
     {
-        public StrBuilder connectionString { get; set; }
+        public StrBuilder ConnectionString { get; set; }
 
         public bool CanConnectToDatabase(MySqlConnectionStringBuilder _connectionString, bool showErrorMessage = true)
         {
@@ -41,7 +41,7 @@ namespace SAI_Editor.Classes.Database
 
             await Task.Run(() =>
             {
-                using (Connection conn = (Connection)Activator.CreateInstance(typeof(Connection), connectionString.ToString()))
+                using (Connection conn = (Connection)Activator.CreateInstance(typeof(Connection), ConnectionString.ToString()))
                 {
                     conn.Open();
                     var transaction = conn.BeginTransaction();
@@ -90,7 +90,7 @@ namespace SAI_Editor.Classes.Database
         {
             return await Task.Run(async() =>
             {
-                using (Connection conn = (Connection)Activator.CreateInstance(typeof(Connection), connectionString.ToString()))
+                using (Connection conn = (Connection)Activator.CreateInstance(typeof(Connection), ConnectionString.ToString()))
                 {
                     conn.Open();
 
@@ -125,7 +125,7 @@ namespace SAI_Editor.Classes.Database
         {
             return await Task.Run(() =>
             {
-                using (Connection conn = (Connection)Activator.CreateInstance(typeof(Connection), connectionString.ToString()))
+                using (Connection conn = (Connection)Activator.CreateInstance(typeof(Connection), ConnectionString.ToString()))
                 {
                     conn.Open();
 

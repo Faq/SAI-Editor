@@ -60,7 +60,7 @@
             this.buttonTrinitycore.TabIndex = 27;
             this.buttonTrinitycore.Text = "GitHub TrinityCore";
             this.buttonTrinitycore.UseVisualStyleBackColor = true;
-            this.buttonTrinitycore.Click += new System.EventHandler(this.buttonTrinitycore_Click);
+            this.buttonTrinitycore.Click += new System.EventHandler(this.ButtonTrinitycore_Click);
             // 
             // buttonGithub
             // 
@@ -70,7 +70,7 @@
             this.buttonGithub.TabIndex = 25;
             this.buttonGithub.Text = "GitHub Project";
             this.buttonGithub.UseVisualStyleBackColor = true;
-            this.buttonGithub.Click += new System.EventHandler(this.buttonGithub_Click);
+            this.buttonGithub.Click += new System.EventHandler(this.ButtonGithub_Click);
             // 
             // okButton
             // 
@@ -80,7 +80,7 @@
             this.okButton.Size = new System.Drawing.Size(62, 23);
             this.okButton.TabIndex = 30;
             this.okButton.Text = "&OK";
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            this.okButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // pictureBox1
             // 
@@ -102,7 +102,7 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 31;
             this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBoxDiscover_Click);
+            this.pictureBox2.Click += new System.EventHandler(this.PictureBoxDiscover_Click);
             // 
             // pictureBoxMitch
             // 
@@ -114,7 +114,7 @@
             this.pictureBoxMitch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxMitch.TabIndex = 31;
             this.pictureBoxMitch.TabStop = false;
-            this.pictureBoxMitch.Click += new System.EventHandler(this.pictureBoxMitch_Click);
+            this.pictureBoxMitch.Click += new System.EventHandler(this.PictureBoxMitch_Click);
             // 
             // richTextBox1
             // 

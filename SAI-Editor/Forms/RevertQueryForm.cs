@@ -69,7 +69,7 @@ namespace SAI_Editor.Forms
                 return;
             }
 
-            if (await SAI_Editor_Manager.Instance.worldDatabase.ExecuteNonQuery(File.ReadAllText(fileName)))
+            if (await SAI_Editor_Manager.Instance.WorldDatabase.ExecuteNonQuery(File.ReadAllText(fileName)))
                 MessageBox.Show("The query has been executed succesfully!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

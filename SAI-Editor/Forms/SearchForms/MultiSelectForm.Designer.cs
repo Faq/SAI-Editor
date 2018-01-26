@@ -48,8 +48,8 @@ namespace SAI_Editor.Forms.SearchForms
             this.listViewSelectableItems.TabIndex = 1;
             this.listViewSelectableItems.UseCompatibleStateImageBehavior = false;
             this.listViewSelectableItems.View = System.Windows.Forms.View.Details;
-            this.listViewSelectableItems.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewSelectableItems_ColumnClick);
-            this.listViewSelectableItems.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listViewSelectableItems_ItemChecked);
+            this.listViewSelectableItems.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.ListViewSelectableItems_ColumnClick);
+            this.listViewSelectableItems.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.ListViewSelectableItems_ItemChecked);
             // 
             // columnHeader
             // 
@@ -64,7 +64,7 @@ namespace SAI_Editor.Forms.SearchForms
             this.buttonContinue.TabIndex = 2;
             this.buttonContinue.Text = "Continue";
             this.buttonContinue.UseVisualStyleBackColor = true;
-            this.buttonContinue.Click += new System.EventHandler(this.buttonContinue_Click);
+            this.buttonContinue.Click += new System.EventHandler(this.ButtonContinue_Click);
             // 
             // buttonCancel
             // 
@@ -74,7 +74,7 @@ namespace SAI_Editor.Forms.SearchForms
             this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            this.buttonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
             // 
             // MultiSelectForm
             // 
