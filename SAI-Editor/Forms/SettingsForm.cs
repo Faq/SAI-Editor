@@ -14,7 +14,7 @@ namespace SAI_Editor.Forms
 {
     public partial class SettingsForm : Form
     {
-        private bool closedFormManually = false;
+        private bool _closedFormManually = false;
 
         public SettingsForm()
         {
@@ -53,7 +53,7 @@ namespace SAI_Editor.Forms
         private void buttonSaveSettings_Click(object sender, EventArgs e)
         {
             SaveSettings();
-            closedFormManually = true;
+            _closedFormManually = true;
             Close();
         }
 
@@ -61,9 +61,9 @@ namespace SAI_Editor.Forms
         {
             if (checkBoxChangeStaticInfo.Checked != Settings.Default.ChangeStaticInfo)
             {
-                EntryOrGuidAndSourceType originalEntryOrGuidAndSourceType = ((MainForm)Owner).userControl.originalEntryOrGuidAndSourceType;
-                ((MainForm)Owner).userControl.textBoxEntryOrGuid.Text = originalEntryOrGuidAndSourceType.entryOrGuid.ToString();
-                ((MainForm)Owner).userControl.comboBoxSourceType.SelectedIndex = ((MainForm)Owner).userControl.GetIndexBySourceType(originalEntryOrGuidAndSourceType.sourceType);
+                EntryOrGuidAndSourceType originalEntryOrGuidAndSourceType = ((MainForm)Owner).UserControl.OriginalEntryOrGuidAndSourceType;
+                ((MainForm)Owner).UserControl.textBoxEntryOrGuid.Text = originalEntryOrGuidAndSourceType.entryOrGuid.ToString();
+                ((MainForm)Owner).UserControl.comboBoxSourceType.SelectedIndex = ((MainForm)Owner).UserControl.GetIndexBySourceType(originalEntryOrGuidAndSourceType.sourceType);
             }
 
             bool showTooltipsStaticly = Settings.Default.ShowTooltipsStaticly;
@@ -79,11 +79,13 @@ namespace SAI_Editor.Forms
             rng.Dispose();
             string decryptedPassword = textBoxPassword.Text;
 
-            SAI_Editor_Manager.Instance.connString = new MySqlConnectionStringBuilder();
-            SAI_Editor_Manager.Instance.connString.Server = textBoxHost.Text;
-            SAI_Editor_Manager.Instance.connString.UserID = textBoxUsername.Text;
-            SAI_Editor_Manager.Instance.connString.Port = CustomConverter.ToUInt32(textBoxPort.Text);
-            SAI_Editor_Manager.Instance.connString.Database = textBoxWorldDatabase.Text;
+            SAI_Editor_Manager.Instance.connString = new MySqlConnectionStringBuilder
+            {
+                Server = textBoxHost.Text,
+                UserID = textBoxUsername.Text,
+                Port = CustomConverter.ToUInt32(textBoxPort.Text),
+                Database = textBoxWorldDatabase.Text
+            };
 
             if (textBoxPassword.Text.Length > 0)
                 SAI_Editor_Manager.Instance.connString.Password = textBoxPassword.Text;
@@ -94,7 +96,7 @@ namespace SAI_Editor.Forms
             bool newConnectionSuccesfull = false;
             
             if (radioButtonConnectToMySql.Checked)
-                newConnectionSuccesfull = SAI_Editor_Manager.Instance.worldDatabase.CanConnectToDatabase(SAI_Editor_Manager.Instance.connString, false);
+                newConnectionSuccesfull = SAI_Editor_Manager.Instance.WorldDatabase.CanConnectToDatabase(SAI_Editor_Manager.Instance.connString, false);
 
             //! We also save the settings if no connection was made. It's possible the user unchecked
             //! the radioboxes, changed some settings and then set it back to no DB connection.
@@ -135,22 +137,22 @@ namespace SAI_Editor.Forms
                 ((MainForm)Owner).textBoxPassword.Text = decryptedPassword;
                 ((MainForm)Owner).textBoxWorldDatabase.Text = textBoxWorldDatabase.Text;
                 ((MainForm)Owner).checkBoxAutoConnect.Checked = checkBoxAutoConnect.Checked;
-                ((MainForm)Owner).expandAndContractSpeed = CustomConverter.ToInt32(textBoxAnimationSpeed.Text);
+                ((MainForm)Owner).ExpandAndContractSpeed = CustomConverter.ToInt32(textBoxAnimationSpeed.Text);
                 ((MainForm)Owner).textBoxPassword.PasswordChar = Convert.ToChar(checkBoxHidePass.Checked ? '●' : '\0');
             }
             else if (radioButtonConnectToMySql.Checked) //! Don't report this if there is no connection to be made anyway
-                MessageBox.Show("The database settings were not saved because no connection could be established. All other changed settings were saved.", "Something went wrong!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(text: "The database settings were not saved because no connection could be established. All other changed settings were saved.", caption: "Something went wrong!", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
 
             if (checkBoxAutoGenerateComments.Checked != generateComments && checkBoxAutoGenerateComments.Checked)
-                ((MainForm)Owner).userControl.GenerateCommentsForAllItems();
+                ((MainForm)Owner).UserControl.GenerateCommentsForAllItems();
             
             if (checkBoxShowTooltipsStaticly.Checked != showTooltipsStaticly)
-                ((MainForm)Owner).userControl.ExpandOrContractToShowStaticTooltips(!checkBoxShowTooltipsStaticly.Checked);
+                ((MainForm)Owner).UserControl.ExpandOrContractToShowStaticTooltips(!checkBoxShowTooltipsStaticly.Checked);
 
             if (checkBoxPhaseHighlighting.Checked != phaseHighlighting)
             {
-                ((MainForm)Owner).userControl.ListViewList.Apply(true);
-                ((MainForm)Owner).userControl.checkBoxUsePhaseColors.Checked = checkBoxPhaseHighlighting.Checked;
+                ((MainForm)Owner).UserControl.ListViewList.Apply(true);
+                ((MainForm)Owner).UserControl.checkBoxUsePhaseColors.Checked = checkBoxPhaseHighlighting.Checked;
             }
 
             ((MainForm)Owner).HandleUseWorldDatabaseSettingChanged();
@@ -159,7 +161,7 @@ namespace SAI_Editor.Forms
         private void buttonExitSettings_Click(object sender, EventArgs e)
         {
             PromptSaveSettingsOnClose();
-            closedFormManually = true;
+            _closedFormManually = true;
             Close();
         }
 
@@ -167,7 +169,7 @@ namespace SAI_Editor.Forms
         {
             //! Only call this prompt method if the form was closed by the user itself and the form was not
             //! already closed before because we called Form::Close() (by pressing 'Exit' or so).
-            if (e.CloseReason == CloseReason.UserClosing && !closedFormManually)
+            if (e.CloseReason == CloseReason.UserClosing && !_closedFormManually)
                 PromptSaveSettingsOnClose();
         }
 
@@ -202,7 +204,7 @@ namespace SAI_Editor.Forms
                 textBoxPassword.Text == SAI_Editor_Manager.Instance.GetPasswordSetting())
                 return;
 
-            DialogResult dialogResult = MessageBox.Show("Do you wish to save the edited settings?", "Save settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult dialogResult = MessageBox.Show(text: "Do you wish to save the edited settings?", caption: "Save settings", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Question);
 
             if (dialogResult == DialogResult.Yes)
                 SaveSettings();
@@ -246,7 +248,7 @@ namespace SAI_Editor.Forms
             {
                 case Keys.Escape:
                     PromptSaveSettingsOnClose();
-                    closedFormManually = true;
+                    _closedFormManually = true;
                     Close();
                     break;
             }
@@ -307,24 +309,27 @@ namespace SAI_Editor.Forms
         {
             buttonTestConnection.Enabled = false;
 
-            MySqlConnectionStringBuilder _connectionString = new MySqlConnectionStringBuilder();
-            _connectionString.Server = textBoxHost.Text;
-            _connectionString.UserID = textBoxUsername.Text;
-            _connectionString.Port = CustomConverter.ToUInt32(textBoxPort.Text);
-            _connectionString.Database = textBoxWorldDatabase.Text;
+            MySqlConnectionStringBuilder connectionString =
+                new MySqlConnectionStringBuilder
+                {
+                    Server = textBoxHost.Text,
+                    UserID = textBoxUsername.Text,
+                    Port = CustomConverter.ToUInt32(textBoxPort.Text),
+                    Database = textBoxWorldDatabase.Text
+                };
 
             if (textBoxPassword.Text.Length > 0)
-                _connectionString.Password = textBoxPassword.Text;
+                connectionString.Password = textBoxPassword.Text;
 
             WorldDatabase worldDatabase = null;
 
             if (!Settings.Default.UseWorldDatabase)
                 worldDatabase = new WorldDatabase(Settings.Default.Host, Settings.Default.Port, Settings.Default.User, SAI_Editor_Manager.Instance.GetPasswordSetting(), Settings.Default.Database);
             else
-                worldDatabase = SAI_Editor_Manager.Instance.worldDatabase;
+                worldDatabase = SAI_Editor_Manager.Instance.WorldDatabase;
 
             //! If no connection was established, it would throw an error in WorldDatabase.CanConnectToDatabase.
-            if (worldDatabase.CanConnectToDatabase(_connectionString))
+            if (worldDatabase.CanConnectToDatabase(connectionString))
                 MessageBox.Show("Connection successful!", "Connection status", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             buttonTestConnection.Enabled = true;
@@ -389,7 +394,7 @@ namespace SAI_Editor.Forms
 
                 MessageBox.Show("The settings have been reset and the application will be closed to prevent old settings from colliding.", "Closing", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                closedFormManually = true;
+                _closedFormManually = true;
                 Close();
                 SAI_Editor_Manager.SaveSettingsOnExit = false;
                 Application.Exit();

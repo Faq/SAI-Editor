@@ -16,11 +16,11 @@ namespace SAI_Editor.Forms.SearchForms
 {
     public partial class SearchForEntryForm : Form
     {
-        private Thread searchThread = null;
-        private readonly SourceTypes sourceTypeToSearchFor;
-        private readonly ListViewColumnSorter lvwColumnSorter = new ListViewColumnSorter();
+        private Thread _searchThread = null;
+        private readonly SourceTypes _sourceTypeToSearchFor;
+        private readonly ListViewColumnSorter _lvwColumnSorter = new ListViewColumnSorter();
         private CancellationTokenSource _cts;
-        private int previousSearchType = 0;
+        private int _previousSearchType = 0;
         private bool _isBusy = false;
 
         public class Item
@@ -33,7 +33,7 @@ namespace SAI_Editor.Forms.SearchForms
         {
             InitializeComponent();
 
-            this.sourceTypeToSearchFor = sourceTypeToSearchFor;
+            this._sourceTypeToSearchFor = sourceTypeToSearchFor;
             textBoxCriteria.Text = startEntryString;
 
             MinimumSize = new Size(Width, Height);
@@ -48,7 +48,7 @@ namespace SAI_Editor.Forms.SearchForms
 
         private void SearchForEntryForm_Load(object sender, EventArgs e)
         {
-            switch (sourceTypeToSearchFor)
+            switch (_sourceTypeToSearchFor)
             {
                 case SourceTypes.SourceTypeCreature:
                     comboBoxSearchType.SelectedIndex = 0; //! Creature entry
@@ -176,7 +176,7 @@ namespace SAI_Editor.Forms.SearchForms
                 if (limit)
                     queryToExecute += " LIMIT 1000";
 
-                DataTable dt = await SAI_Editor_Manager.Instance.sqliteDatabase.ExecuteQueryWithCancellation(_cts.Token, queryToExecute);
+                DataTable dt = await SAI_Editor_Manager.Instance.SqliteDatabase.ExecuteQueryWithCancellation(_cts.Token, queryToExecute);
 
                 if (dt.Rows.Count > 0)
                 {
@@ -187,9 +187,9 @@ namespace SAI_Editor.Forms.SearchForms
                         if (_cts.IsCancellationRequested)
                             break;
 
-                        AreaTrigger areaTrigger = SAI_Editor_Manager.Instance.sqliteDatabase.BuildAreaTrigger(row);
+                        AreaTrigger areaTrigger = SAI_Editor_Manager.Instance.SqliteDatabase.BuildAreaTrigger(row);
 
-                        if (!checkBoxHasAiName.Checked || await SAI_Editor_Manager.Instance.worldDatabase.AreaTriggerHasSmartAI(areaTrigger.id))
+                        if (!checkBoxHasAiName.Checked || await SAI_Editor_Manager.Instance.WorldDatabase.AreaTriggerHasSmartAI(areaTrigger.id))
                             items.Add(new Item { ItemName = areaTrigger.id.ToString(), SubItems = new List<string> { areaTrigger.map_id.ToString(), areaTrigger.posX.ToString(), areaTrigger.posY.ToString(), areaTrigger.posZ.ToString() } });
                     }
 
@@ -203,14 +203,14 @@ namespace SAI_Editor.Forms.SearchForms
             }
         }
 
-        private void buttonSearch_Click(object sender, EventArgs e)
+        private void ButtonSearch_Click(object sender, EventArgs e)
         {
             if (_isBusy)
                 return;
 
             _isBusy = true;
-            searchThread = new Thread(StartSearching);
-            searchThread.Start();
+            _searchThread = new Thread(StartSearching);
+            _searchThread.Start();
         }
 
         private async void StartSearching()
@@ -425,7 +425,7 @@ namespace SAI_Editor.Forms.SearchForms
 
                         try
                         {
-                            List<SmartScript> smartScriptActionlists = await SAI_Editor_Manager.Instance.worldDatabase.GetSmartScriptActionLists(criteria, checkBoxFieldContainsCriteria.Checked);
+                            List<SmartScript> smartScriptActionlists = await SAI_Editor_Manager.Instance.WorldDatabase.GetSmartScriptActionLists(criteria, checkBoxFieldContainsCriteria.Checked);
 
                             if (smartScriptActionlists != null)
                             {
@@ -438,15 +438,15 @@ namespace SAI_Editor.Forms.SearchForms
                                         break;
 
                                     int entryorguid = smartScript.entryorguid;
-                                    int source_type = smartScript.source_type;
+                                    int sourceType = smartScript.source_type;
 
                                     //! If the entryorguid is below 0 it means the script is for a creature. We need to get
                                     //! the creature_template.entry by the guid in order to obtain the creature_template.name
                                     //! field now.
                                     if (entryorguid < 0)
-                                        entryorguid = await SAI_Editor_Manager.Instance.worldDatabase.GetObjectIdByGuidAndSourceType(entryorguid * -1, source_type);
+                                        entryorguid = await SAI_Editor_Manager.Instance.WorldDatabase.GetObjectIdByGuidAndSourceType(entryorguid * -1, sourceType);
 
-                                    string name = await SAI_Editor_Manager.Instance.worldDatabase.GetObjectNameByIdAndSourceType(entryorguid, source_type);
+                                    string name = await SAI_Editor_Manager.Instance.WorldDatabase.GetObjectNameByIdAndSourceType(entryorguid, sourceType);
                                     int actionParam1 = smartScript.action_param1;
                                     int actionParam2 = smartScript.action_param2;
 
@@ -567,7 +567,7 @@ namespace SAI_Editor.Forms.SearchForms
 
         private void StopRunningThread()
         {
-            if (searchThread != null && _cts != null && searchThread.IsAlive)
+            if (_searchThread != null && _cts != null && _searchThread.IsAlive)
             {
                 _cts.Cancel();
                 _cts.Dispose();
@@ -577,7 +577,7 @@ namespace SAI_Editor.Forms.SearchForms
             _isBusy = false;
         }
 
-        private void comboBoxSearchType_KeyPress(object sender, KeyPressEventArgs e)
+        private void ComboBoxSearchType_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (Char.IsLetter(e.KeyChar) || Char.IsDigit(e.KeyChar))
                 e.Handled = true; //! Disallow changing content of the combobox, but setting it to 3D looks like shit
@@ -592,31 +592,31 @@ namespace SAI_Editor.Forms.SearchForms
                 entryToPlace = "-";
 
             entryToPlace += listViewEntryResults.SelectedItems[0].Text;
-            ((MainForm)Owner).userControl.textBoxEntryOrGuid.Text = entryToPlace;
+            ((MainForm)Owner).UserControl.textBoxEntryOrGuid.Text = entryToPlace;
 
             switch (comboBoxSearchType.SelectedIndex)
             {
                 case 0: //! Creature entry
                 case 1: //! Creature name
                 case 2: //! Creature guid
-                    ((MainForm)Owner).userControl.comboBoxSourceType.SelectedIndex = 0;
+                    ((MainForm)Owner).UserControl.comboBoxSourceType.SelectedIndex = 0;
                     break;
                 case 3: //! Gameobject entry
                 case 4: //! Gameobject name
                 case 5: //! Gameobject guid
-                    ((MainForm)Owner).userControl.comboBoxSourceType.SelectedIndex = 1;
+                    ((MainForm)Owner).UserControl.comboBoxSourceType.SelectedIndex = 1;
                     break;
                 case 6: //! Areatrigger id
                 case 7: //! Areatrigger map id
-                    ((MainForm)Owner).userControl.comboBoxSourceType.SelectedIndex = 2;
+                    ((MainForm)Owner).UserControl.comboBoxSourceType.SelectedIndex = 2;
                     break;
                 case 8: //! Actionlist entry
-                    ((MainForm)Owner).userControl.comboBoxSourceType.SelectedIndex = 3;
+                    ((MainForm)Owner).UserControl.comboBoxSourceType.SelectedIndex = 3;
                     break;
             }
 
-            if (((MainForm)Owner).userControl.pictureBoxLoadScript.Enabled)
-                ((MainForm)Owner).userControl.TryToLoadScript(-1, SourceTypes.SourceTypeNone, true, true);
+            if (((MainForm)Owner).UserControl.pictureBoxLoadScript.Enabled)
+                ((MainForm)Owner).UserControl.TryToLoadScript(-1, SourceTypes.SourceTypeNone, true, true);
 
             Close();
         }
@@ -736,17 +736,17 @@ namespace SAI_Editor.Forms.SearchForms
         private void listViewEntryResults_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             var myListView = (ListView)sender;
-            myListView.ListViewItemSorter = lvwColumnSorter;
+            myListView.ListViewItemSorter = _lvwColumnSorter;
             //! Determine if clicked column is already the column that is being sorted
-            if (e.Column != lvwColumnSorter.SortColumn)
+            if (e.Column != _lvwColumnSorter.SortColumn)
             {
                 //! Set the column number that is to be sorted; default to ascending
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
+                _lvwColumnSorter.SortColumn = e.Column;
+                _lvwColumnSorter.Order = SortOrder.Ascending;
             }
             else
                 //! Reverse the current sort direction for this column
-                lvwColumnSorter.Order = lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+                _lvwColumnSorter.Order = _lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
 
             //! Perform the sort with these new sort options
             myListView.Sort();
@@ -757,7 +757,7 @@ namespace SAI_Editor.Forms.SearchForms
             //! Disable the 'has ainame' checkbox when the user selected actionlist for search type
             checkBoxHasAiName.Enabled = comboBoxSearchType.SelectedIndex != 8;
             listViewEntryResults.Columns.Clear();
-            bool previousSearchForAreaTrigger = previousSearchType == 6 || previousSearchType == 7;
+            bool previousSearchForAreaTrigger = _previousSearchType == 6 || _previousSearchType == 7;
 
             switch (comboBoxSearchType.SelectedIndex)
             {
@@ -804,7 +804,7 @@ namespace SAI_Editor.Forms.SearchForms
                     break;
             }
 
-            previousSearchType = comboBoxSearchType.SelectedIndex;
+            _previousSearchType = comboBoxSearchType.SelectedIndex;
         }
 
         private void SearchForEntryForm_FormClosing(object sender, FormClosingEventArgs e)

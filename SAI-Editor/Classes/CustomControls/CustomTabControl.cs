@@ -302,10 +302,12 @@ namespace SAI_Editor.Classes.CustomControls
 
             string tabtext = this.TabPages[index].Text;
 
-            System.Drawing.StringFormat format = new System.Drawing.StringFormat();
-            format.Alignment = StringAlignment.Near;
-            format.LineAlignment = StringAlignment.Center;
-            format.Trimming = StringTrimming.EllipsisCharacter;
+            System.Drawing.StringFormat format = new System.Drawing.StringFormat
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Center,
+                Trimming = StringTrimming.EllipsisCharacter
+            };
 
             Brush forebrush = null;
 

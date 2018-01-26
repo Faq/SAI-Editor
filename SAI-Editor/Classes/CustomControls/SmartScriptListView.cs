@@ -11,7 +11,7 @@ namespace SAI_Editor.Classes.CustomControls
 {
     public class SmartScriptListView : CustomListView
     {
-        private Stack<Color> _colors = new Stack<Color>(Constants.phaseColors);
+        private Stack<Color> _colors = new Stack<Color>(Constants.PhaseColors);
         private Dictionary<int, Color> _phaseColors = new Dictionary<int, Color>();
 
         public bool EnablePhaseHighlighting { get; set; }
@@ -57,14 +57,14 @@ namespace SAI_Editor.Classes.CustomControls
                 Items[lastSelectedIndex].ForeColor = Color.White;
             }
 
-            _colors = new Stack<Color>(Constants.phaseColors);
+            _colors = new Stack<Color>(Constants.PhaseColors);
             _phaseColors.Clear();
 
             if (_scripts != null)
             {
                 int[] phasemasks = _scripts.Select(p => (p as SmartScript).event_phase_mask).Distinct().ToArray();
 
-                if (phasemasks.Length > Constants.phaseColors.Count)
+                if (phasemasks.Length > Constants.PhaseColors.Count)
                 {
                     MessageBox.Show("There are not enough colors in the application because you are using too many different phasemasks.", "Not enough colors!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -109,9 +109,11 @@ namespace SAI_Editor.Classes.CustomControls
 
             foreach (SmartScript script in scripts)
             {
-                CustomListViewItem lvi = new CustomListViewItem(script.entryorguid.ToString());
-                lvi.Script = script;
-                lvi.Name = script.entryorguid.ToString();
+                CustomListViewItem lvi = new CustomListViewItem(script.entryorguid.ToString())
+                {
+                    Script = script,
+                    Name = script.entryorguid.ToString()
+                };
 
                 foreach (PropertyInfo propInfo in _pinfo.Where(p => !p.Name.Equals("entryorguid")))
                 {

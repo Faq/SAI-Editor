@@ -130,7 +130,7 @@
             this.comboBoxConditionSourceTypes.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.comboBoxConditionSourceTypes.Size = new System.Drawing.Size(290, 21);
             this.comboBoxConditionSourceTypes.TabIndex = 0;
-            this.comboBoxConditionSourceTypes.SelectedIndexChanged += new System.EventHandler(this.comboBoxConditionSourceTypes_SelectedIndexChanged);
+            this.comboBoxConditionSourceTypes.SelectedIndexChanged += new System.EventHandler(this.ComboBoxConditionSourceTypes_SelectedIndexChanged);
             // 
             // comboBoxConditionTypes
             // 
@@ -180,8 +180,8 @@
             this.comboBoxConditionTypes.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.comboBoxConditionTypes.Size = new System.Drawing.Size(290, 21);
             this.comboBoxConditionTypes.TabIndex = 11;
-            this.comboBoxConditionTypes.SelectedIndexChanged += new System.EventHandler(this.comboBoxConditionTypes_SelectedIndexChanged);
-            this.comboBoxConditionTypes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBoxesConditions_KeyPress);
+            this.comboBoxConditionTypes.SelectedIndexChanged += new System.EventHandler(this.ComboBoxConditionTypes_SelectedIndexChanged);
+            this.comboBoxConditionTypes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ComboBoxesConditions_KeyPress);
             // 
             // labelSourceType
             // 
@@ -262,7 +262,7 @@
             this.comboBoxConditionTarget.Name = "comboBoxConditionTarget";
             this.comboBoxConditionTarget.Size = new System.Drawing.Size(290, 21);
             this.comboBoxConditionTarget.TabIndex = 1;
-            this.comboBoxConditionTarget.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBoxesConditions_KeyPress);
+            this.comboBoxConditionTarget.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ComboBoxesConditions_KeyPress);
             // 
             // textBoxSourceGroup
             // 
@@ -271,8 +271,8 @@
             this.textBoxSourceGroup.Size = new System.Drawing.Size(66, 20);
             this.textBoxSourceGroup.TabIndex = 4;
             this.textBoxSourceGroup.Text = "0";
-            this.textBoxSourceGroup.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxesConditionEditor_KeyPress);
-            this.textBoxSourceGroup.Leave += new System.EventHandler(this.textBoxesConditionEditor_Leave);
+            this.textBoxSourceGroup.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxesConditionEditor_KeyPress);
+            this.textBoxSourceGroup.Leave += new System.EventHandler(this.TextBoxesConditionEditor_Leave);
             // 
             // textBoxSourceEntry
             // 
@@ -281,8 +281,8 @@
             this.textBoxSourceEntry.Size = new System.Drawing.Size(66, 20);
             this.textBoxSourceEntry.TabIndex = 6;
             this.textBoxSourceEntry.Text = "0";
-            this.textBoxSourceEntry.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxesConditionEditor_KeyPress);
-            this.textBoxSourceEntry.Leave += new System.EventHandler(this.textBoxesConditionEditor_Leave);
+            this.textBoxSourceEntry.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxesConditionEditor_KeyPress);
+            this.textBoxSourceEntry.Leave += new System.EventHandler(this.TextBoxesConditionEditor_Leave);
             // 
             // labelComment
             // 
@@ -325,8 +325,8 @@
             this.textBoxCondValue1.Size = new System.Drawing.Size(66, 20);
             this.textBoxCondValue1.TabIndex = 12;
             this.textBoxCondValue1.Text = "0";
-            this.textBoxCondValue1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxesConditionEditor_KeyPress);
-            this.textBoxCondValue1.Leave += new System.EventHandler(this.textBoxesConditionEditor_Leave);
+            this.textBoxCondValue1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxesConditionEditor_KeyPress);
+            this.textBoxCondValue1.Leave += new System.EventHandler(this.TextBoxesConditionEditor_Leave);
             // 
             // textBoxCondValue2
             // 
@@ -335,8 +335,8 @@
             this.textBoxCondValue2.Size = new System.Drawing.Size(66, 20);
             this.textBoxCondValue2.TabIndex = 14;
             this.textBoxCondValue2.Text = "0";
-            this.textBoxCondValue2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxesConditionEditor_KeyPress);
-            this.textBoxCondValue2.Leave += new System.EventHandler(this.textBoxesConditionEditor_Leave);
+            this.textBoxCondValue2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxesConditionEditor_KeyPress);
+            this.textBoxCondValue2.Leave += new System.EventHandler(this.TextBoxesConditionEditor_Leave);
             // 
             // textBoxCondValue3
             // 
@@ -345,8 +345,8 @@
             this.textBoxCondValue3.Size = new System.Drawing.Size(66, 20);
             this.textBoxCondValue3.TabIndex = 16;
             this.textBoxCondValue3.Text = "0";
-            this.textBoxCondValue3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxesConditionEditor_KeyPress);
-            this.textBoxCondValue3.Leave += new System.EventHandler(this.textBoxesConditionEditor_Leave);
+            this.textBoxCondValue3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxesConditionEditor_KeyPress);
+            this.textBoxCondValue3.Leave += new System.EventHandler(this.TextBoxesConditionEditor_Leave);
             // 
             // label3
             // 
@@ -420,7 +420,7 @@
             this.buttonSearchSourceGroup.TabIndex = 5;
             this.buttonSearchSourceGroup.Text = "...";
             this.buttonSearchSourceGroup.UseVisualStyleBackColor = true;
-            this.buttonSearchSourceGroup.Click += new System.EventHandler(this.buttonSearchSourceGroup_Click);
+            this.buttonSearchSourceGroup.Click += new System.EventHandler(this.ButtonSearchSourceGroup_Click);
             // 
             // buttonSearchSourceEntry
             // 
@@ -431,7 +431,7 @@
             this.buttonSearchSourceEntry.TabIndex = 7;
             this.buttonSearchSourceEntry.Text = "...";
             this.buttonSearchSourceEntry.UseVisualStyleBackColor = true;
-            this.buttonSearchSourceEntry.Click += new System.EventHandler(this.buttonSearchSourceEntry_Click);
+            this.buttonSearchSourceEntry.Click += new System.EventHandler(this.ButtonSearchSourceEntry_Click);
             // 
             // buttonSearchConditionValue1
             // 
@@ -442,7 +442,7 @@
             this.buttonSearchConditionValue1.TabIndex = 13;
             this.buttonSearchConditionValue1.Text = "...";
             this.buttonSearchConditionValue1.UseVisualStyleBackColor = true;
-            this.buttonSearchConditionValue1.Click += new System.EventHandler(this.buttonSearchConditionValue1_Click);
+            this.buttonSearchConditionValue1.Click += new System.EventHandler(this.ButtonSearchConditionValue1_Click);
             // 
             // buttonSearchConditionValue2
             // 
@@ -453,7 +453,7 @@
             this.buttonSearchConditionValue2.TabIndex = 15;
             this.buttonSearchConditionValue2.Text = "...";
             this.buttonSearchConditionValue2.UseVisualStyleBackColor = true;
-            this.buttonSearchConditionValue2.Click += new System.EventHandler(this.buttonSearchConditionValue2_Click);
+            this.buttonSearchConditionValue2.Click += new System.EventHandler(this.ButtonSearchConditionValue2_Click);
             // 
             // buttonSearchConditionValue3
             // 
@@ -464,7 +464,7 @@
             this.buttonSearchConditionValue3.TabIndex = 17;
             this.buttonSearchConditionValue3.Text = "...";
             this.buttonSearchConditionValue3.UseVisualStyleBackColor = true;
-            this.buttonSearchConditionValue3.Click += new System.EventHandler(this.buttonSearchConditionValue3_Click);
+            this.buttonSearchConditionValue3.Click += new System.EventHandler(this.ButtonSearchConditionValue3_Click);
             // 
             // buttonGenerateComment
             // 
@@ -475,7 +475,7 @@
             this.buttonGenerateComment.TabIndex = 24;
             this.buttonGenerateComment.Text = "Generate comments";
             this.buttonGenerateComment.UseVisualStyleBackColor = true;
-            this.buttonGenerateComment.Click += new System.EventHandler(this.buttonGenerateComment_Click);
+            this.buttonGenerateComment.Click += new System.EventHandler(this.ButtonGenerateComment_Click);
             // 
             // buttonGenerateSql
             // 
@@ -485,7 +485,7 @@
             this.buttonGenerateSql.TabIndex = 26;
             this.buttonGenerateSql.Text = "Generate SQL";
             this.buttonGenerateSql.UseVisualStyleBackColor = true;
-            this.buttonGenerateSql.Click += new System.EventHandler(this.buttonGenerateSql_Click);
+            this.buttonGenerateSql.Click += new System.EventHandler(this.ButtonGenerateSql_Click);
             // 
             // checkBoxNegativeCondition
             // 
@@ -547,7 +547,7 @@
             this.buttonResetSession.TabIndex = 10;
             this.buttonResetSession.Text = "Reset session";
             this.buttonResetSession.UseVisualStyleBackColor = true;
-            this.buttonResetSession.Click += new System.EventHandler(this.buttonResetSession_Click);
+            this.buttonResetSession.Click += new System.EventHandler(this.ButtonResetSession_Click);
             // 
             // buttonSaveCondition
             // 
@@ -557,7 +557,7 @@
             this.buttonSaveCondition.TabIndex = 25;
             this.buttonSaveCondition.Text = "Add new condition";
             this.buttonSaveCondition.UseVisualStyleBackColor = true;
-            this.buttonSaveCondition.Click += new System.EventHandler(this.buttonSaveCondition_Click);
+            this.buttonSaveCondition.Click += new System.EventHandler(this.ButtonSaveCondition_Click);
             // 
             // label19
             // 
@@ -586,7 +586,7 @@
             this.buttonSearchSourceId.TabIndex = 1099;
             this.buttonSearchSourceId.Text = "...";
             this.buttonSearchSourceId.UseVisualStyleBackColor = true;
-            this.buttonSearchSourceId.Click += new System.EventHandler(this.buttonSearchSourceId_Click);
+            this.buttonSearchSourceId.Click += new System.EventHandler(this.ButtonSearchSourceId_Click);
             // 
             // buttonSearchErrorTextId
             // 
@@ -596,7 +596,7 @@
             this.buttonSearchErrorTextId.TabIndex = 23;
             this.buttonSearchErrorTextId.Text = "...";
             this.buttonSearchErrorTextId.UseVisualStyleBackColor = true;
-            this.buttonSearchErrorTextId.Click += new System.EventHandler(this.buttonSearchErrorTextId_Click);
+            this.buttonSearchErrorTextId.Click += new System.EventHandler(this.ButtonSearchErrorTextId_Click);
             // 
             // buttonSearchErrorType
             // 
@@ -606,7 +606,7 @@
             this.buttonSearchErrorType.TabIndex = 21;
             this.buttonSearchErrorType.Text = "...";
             this.buttonSearchErrorType.UseVisualStyleBackColor = true;
-            this.buttonSearchErrorType.Click += new System.EventHandler(this.buttonSearchErrorType_Click);
+            this.buttonSearchErrorType.Click += new System.EventHandler(this.ButtonSearchErrorType_Click);
             // 
             // labelElseGroup
             // 
@@ -633,8 +633,8 @@
             this.textBoxElseGroup.Size = new System.Drawing.Size(66, 20);
             this.textBoxElseGroup.TabIndex = 9;
             this.textBoxElseGroup.Text = "0";
-            this.textBoxElseGroup.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxesConditionEditor_KeyPress);
-            this.textBoxElseGroup.Leave += new System.EventHandler(this.textBoxesConditionEditor_Leave);
+            this.textBoxElseGroup.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxesConditionEditor_KeyPress);
+            this.textBoxElseGroup.Leave += new System.EventHandler(this.TextBoxesConditionEditor_Leave);
             // 
             // textBoxSourceId
             // 
@@ -643,8 +643,8 @@
             this.textBoxSourceId.Size = new System.Drawing.Size(66, 20);
             this.textBoxSourceId.TabIndex = 8;
             this.textBoxSourceId.Text = "0";
-            this.textBoxSourceId.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxesConditionEditor_KeyPress);
-            this.textBoxSourceId.Leave += new System.EventHandler(this.textBoxesConditionEditor_Leave);
+            this.textBoxSourceId.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxesConditionEditor_KeyPress);
+            this.textBoxSourceId.Leave += new System.EventHandler(this.TextBoxesConditionEditor_Leave);
             // 
             // textBoxErrorTextId
             // 
@@ -653,8 +653,8 @@
             this.textBoxErrorTextId.Size = new System.Drawing.Size(65, 20);
             this.textBoxErrorTextId.TabIndex = 22;
             this.textBoxErrorTextId.Text = "0";
-            this.textBoxErrorTextId.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxesConditionEditor_KeyPress);
-            this.textBoxErrorTextId.Leave += new System.EventHandler(this.textBoxesConditionEditor_Leave);
+            this.textBoxErrorTextId.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxesConditionEditor_KeyPress);
+            this.textBoxErrorTextId.Leave += new System.EventHandler(this.TextBoxesConditionEditor_Leave);
             // 
             // textBoxErrorType
             // 
@@ -663,8 +663,8 @@
             this.textBoxErrorType.Size = new System.Drawing.Size(65, 20);
             this.textBoxErrorType.TabIndex = 20;
             this.textBoxErrorType.Text = "0";
-            this.textBoxErrorType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxesConditionEditor_KeyPress);
-            this.textBoxErrorType.Leave += new System.EventHandler(this.textBoxesConditionEditor_Leave);
+            this.textBoxErrorType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxesConditionEditor_KeyPress);
+            this.textBoxErrorType.Leave += new System.EventHandler(this.TextBoxesConditionEditor_Leave);
             // 
             // label20
             // 
@@ -711,7 +711,7 @@
             this.buttonDuplicateCondition.TabIndex = 2;
             this.buttonDuplicateCondition.Text = "Duplicate selected condition";
             this.buttonDuplicateCondition.UseVisualStyleBackColor = true;
-            this.buttonDuplicateCondition.Click += new System.EventHandler(this.buttonDuplicateCondition_Click);
+            this.buttonDuplicateCondition.Click += new System.EventHandler(this.ButtonDuplicateCondition_Click);
             // 
             // buttonDeleteCondition
             // 
@@ -722,7 +722,7 @@
             this.buttonDeleteCondition.TabIndex = 2;
             this.buttonDeleteCondition.Text = "Delete selected condition";
             this.buttonDeleteCondition.UseVisualStyleBackColor = true;
-            this.buttonDeleteCondition.Click += new System.EventHandler(this.buttonDeleteCondition_Click);
+            this.buttonDeleteCondition.Click += new System.EventHandler(this.ButtonDeleteCondition_Click);
             // 
             // groupBoxConditionInformation
             // 
@@ -814,7 +814,7 @@
             this.listViewConditions.TabIndex = 3;
             this.listViewConditions.UseCompatibleStateImageBehavior = false;
             this.listViewConditions.View = System.Windows.Forms.View.Details;
-            this.listViewConditions.SelectedIndexChanged += new System.EventHandler(this.listViewConditions_SelectedIndexChanged);
+            this.listViewConditions.SelectedIndexChanged += new System.EventHandler(this.ListViewConditions_SelectedIndexChanged);
             // 
             // lineSeparator1
             // 

@@ -26,17 +26,17 @@ namespace SAI_Editor.Forms
 {
     public partial class MainForm : Form
     {
-        public int expandAndContractSpeed = 5, lastSelectedWorkspaceIndex = 0;
-        public bool runningConstructor = false;
-        private bool contractingToLoginForm = false, expandingToMainForm = false, adjustedLoginSettings = false;
-        private int originalHeight = 0, originalWidth = 0, oldWidthTabControlWorkspaces = 0, oldHeightTabControlWorkspaces = 0;
+        public int ExpandAndContractSpeed = 5, LastSelectedWorkspaceIndex = 0;
+        public bool RunningConstructor = false;
+        private bool _contractingToLoginForm = false, _expandingToMainForm = false, _adjustedLoginSettings = false;
+        private int _originalHeight = 0, _originalWidth = 0, _oldWidthTabControlWorkspaces = 0, _oldHeightTabControlWorkspaces = 0;
         private int MainFormWidth = (int)SaiEditorSizes.MainFormWidth, MainFormHeight = (int)SaiEditorSizes.MainFormHeight;
-        private List<SmartScript> lastDeletedSmartScripts = new List<SmartScript>(), smartScriptsOnClipBoard = new List<SmartScript>();
-        private Thread updateSurveyThread = null, checkIfUpdatesAvailableThread = null;
-        private string applicationVersion = String.Empty;
-        private System.Windows.Forms.Timer timerCheckForInternetConnection = new System.Windows.Forms.Timer();
+        private List<SmartScript> _lastDeletedSmartScripts = new List<SmartScript>(), _smartScriptsOnClipBoard = new List<SmartScript>();
+        private Thread _updateSurveyThread = null, _checkIfUpdatesAvailableThread = null;
+        private string _applicationVersion = String.Empty;
+        private System.Windows.Forms.Timer _timerCheckForInternetConnection = new System.Windows.Forms.Timer();
 
-        public UserControlSAI userControl = null;
+        public UserControlSAI UserControl = null;
 
         public MainForm()
         {
@@ -48,11 +48,11 @@ namespace SAI_Editor.Forms
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
-            runningConstructor = true;
+            RunningConstructor = true;
 
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            applicationVersion = "v" + version.Major + "." + version.Minor + "." + version.Build;
-            SetFormTitle("SAI-Editor " + applicationVersion + ": Login");
+            _applicationVersion = "v" + version.Major + "." + version.Minor + "." + version.Build;
+            SetFormTitle("SAI-Editor " + _applicationVersion + ": Login");
 
             menuStrip.Visible = false; //! Doing this in main code so we can actually see the menustrip in designform
             pictureBoxDonate.Visible = false;
@@ -65,8 +65,8 @@ namespace SAI_Editor.Forms
             Width = (int)SaiEditorSizes.LoginFormWidth;
             Height = (int)SaiEditorSizes.LoginFormHeight;
 
-            originalHeight = Height;
-            originalWidth = Width;
+            _originalHeight = Height;
+            _originalWidth = Width;
 
             if (Settings.Default.LastFormExtraWidth > 0)
                 MainFormWidth += Settings.Default.LastFormExtraWidth;
@@ -91,11 +91,11 @@ namespace SAI_Editor.Forms
 
             customPanelLogin.Location = new Point(9, 8);
 
-            if (oldWidthTabControlWorkspaces == 0)
-                oldWidthTabControlWorkspaces = (int)SaiEditorSizes.TabControlWorkspaceWidth;
+            if (_oldWidthTabControlWorkspaces == 0)
+                _oldWidthTabControlWorkspaces = (int)SaiEditorSizes.TabControlWorkspaceWidth;
 
-            if (oldHeightTabControlWorkspaces == 0)
-                oldHeightTabControlWorkspaces = (int)SaiEditorSizes.TabControlWorkspaceHeight;
+            if (_oldHeightTabControlWorkspaces == 0)
+                _oldHeightTabControlWorkspaces = (int)SaiEditorSizes.TabControlWorkspaceHeight;
 
             //! We first load the information and then change the parameter fields
             await SAI_Editor_Manager.Instance.LoadSQLiteDatabaseInfo();
@@ -103,9 +103,9 @@ namespace SAI_Editor.Forms
             if (Settings.Default.HidePass)
                 textBoxPassword.PasswordChar = '●';
 
-            timerCheckForInternetConnection.Interval = 600000; //! 10 minutes
-            timerCheckForInternetConnection.Tick += timerCheckForInternetConnection_Tick;
-            timerCheckForInternetConnection.Enabled = false;
+            _timerCheckForInternetConnection.Interval = 600000; //! 10 minutes
+            _timerCheckForInternetConnection.Tick += TimerCheckForInternetConnection_Tick;
+            _timerCheckForInternetConnection.Enabled = false;
 
             if (!Settings.Default.InformedAboutSurvey)
             {
@@ -135,11 +135,11 @@ namespace SAI_Editor.Forms
                 Settings.Default.Save();
             }
 
-            updateSurveyThread = new Thread(UpdateSurvey);
-            updateSurveyThread.Start();
+            _updateSurveyThread = new Thread(UpdateSurvey);
+            _updateSurveyThread.Start();
 
-            checkIfUpdatesAvailableThread = new Thread(CheckIfUpdatesAvailable);
-            checkIfUpdatesAvailableThread.Start();
+            _checkIfUpdatesAvailableThread = new Thread(CheckIfUpdatesAvailable);
+            _checkIfUpdatesAvailableThread.Start();
 
             try
             {
@@ -148,7 +148,7 @@ namespace SAI_Editor.Forms
                 textBoxPassword.Text = SAI_Editor_Manager.Instance.GetPasswordSetting();
                 textBoxWorldDatabase.Text = Settings.Default.Database;
                 textBoxPort.Text = Settings.Default.Port > 0 ? Settings.Default.Port.ToString() : String.Empty;
-                expandAndContractSpeed = Settings.Default.AnimationSpeed;
+                ExpandAndContractSpeed = Settings.Default.AnimationSpeed;
                 radioButtonConnectToMySql.Checked = Settings.Default.UseWorldDatabase;
                 radioButtonDontUseDatabase.Checked = !Settings.Default.UseWorldDatabase;
                 SAI_Editor_Manager.Instance.Expansion = (WowExpansion)Settings.Default.WowExpansionIndex;
@@ -167,7 +167,7 @@ namespace SAI_Editor.Forms
                 searchForANpcTextToolStripMenuItem.Enabled = Settings.Default.UseWorldDatabase;
                 searchForAGossipMenuOptionToolStripMenuItem.Enabled = Settings.Default.UseWorldDatabase;
                 searchForAGossipOptionIdToolStripMenuItem.Enabled = Settings.Default.UseWorldDatabase;
-                adjustedLoginSettings = true;
+                _adjustedLoginSettings = true;
             }
             catch (Exception)
             {
@@ -183,37 +183,37 @@ namespace SAI_Editor.Forms
 
                 if (!String.IsNullOrWhiteSpace(Settings.Default.LastStaticInfoPerTab))
                 {
-                    states = SAIUserControlState.StatesFromJson(Settings.Default.LastStaticInfoPerTab, userControl);
+                    states = SAIUserControlState.StatesFromJson(Settings.Default.LastStaticInfoPerTab, UserControl);
 
                     if (states != null && states.Count > 0)
                     {
-                        userControl.States.Add(states.First().Value);
-                        userControl.CurrentState = states.First().Value;
+                        UserControl.States.Add(states.First().Value);
+                        UserControl.CurrentState = states.First().Value;
                     }
                 }
                 else
                 {
-                    userControl.States.Add(userControl.DefaultState);
-                    userControl.CurrentState = userControl.DefaultState;
+                    UserControl.States.Add(UserControl.DefaultState);
+                    UserControl.CurrentState = UserControl.DefaultState;
                 }
             }
 
             try
             {
-                userControl.checkBoxListActionlistsOrEntries.Enabled = Settings.Default.UseWorldDatabase;
-                userControl.buttonGenerateComments.Enabled = userControl.ListView.Items.Count > 0 && Settings.Default.UseWorldDatabase;
-                userControl.buttonSearchForEntryOrGuid.Enabled = Settings.Default.UseWorldDatabase;
-                menuItemGenerateComment.Enabled = userControl.ListView.Items.Count > 0 && Settings.Default.UseWorldDatabase;
+                UserControl.checkBoxListActionlistsOrEntries.Enabled = Settings.Default.UseWorldDatabase;
+                UserControl.buttonGenerateComments.Enabled = UserControl.ListView.Items.Count > 0 && Settings.Default.UseWorldDatabase;
+                UserControl.buttonSearchForEntryOrGuid.Enabled = Settings.Default.UseWorldDatabase;
+                menuItemGenerateComment.Enabled = UserControl.ListView.Items.Count > 0 && Settings.Default.UseWorldDatabase;
             }
             catch (Exception)
             {
                 MessageBox.Show("Something went wrong when loading the settings.", "Something went wrong!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            userControl.tabControlParameters.AutoScrollOffset = new Point(5, 5);
+            UserControl.tabControlParameters.AutoScrollOffset = new Point(5, 5);
 
             //! Static scrollbar to the parameters tabpage windows
-            foreach (TabPage page in userControl.tabControlParameters.TabPages)
+            foreach (TabPage page in UserControl.tabControlParameters.TabPages)
             {
                 page.HorizontalScroll.Enabled = false;
                 page.HorizontalScroll.Visible = false;
@@ -227,15 +227,15 @@ namespace SAI_Editor.Forms
 
                 foreach (var kvp in states.Skip(1))
                 {
-                    userControl.States.Add(kvp.Value);
+                    UserControl.States.Add(kvp.Value);
 
                     CreateTabControl();
                     ctr++;
                 }
 
                 tabControlWorkspaces.SelectedIndex = 0;
-                userControl.States.First().Load();
-                userControl.CurrentState = userControl.States.First();
+                UserControl.States.First().Load();
+                UserControl.CurrentState = UserControl.States.First();
             }
 
             if (Settings.Default.AutoConnect)
@@ -244,11 +244,13 @@ namespace SAI_Editor.Forms
 
                 if (Settings.Default.UseWorldDatabase)
                 {
-                    SAI_Editor_Manager.Instance.connString = new MySqlConnectionStringBuilder();
-                    SAI_Editor_Manager.Instance.connString.Server = Settings.Default.Host;
-                    SAI_Editor_Manager.Instance.connString.UserID = Settings.Default.User;
-                    SAI_Editor_Manager.Instance.connString.Port = Settings.Default.Port;
-                    SAI_Editor_Manager.Instance.connString.Database = Settings.Default.Database;
+                    SAI_Editor_Manager.Instance.connString = new MySqlConnectionStringBuilder
+                    {
+                        Server = Settings.Default.Host,
+                        UserID = Settings.Default.User,
+                        Port = Settings.Default.Port,
+                        Database = Settings.Default.Database
+                    };
 
                     if (Settings.Default.Password.Length > 0)
                         SAI_Editor_Manager.Instance.connString.Password = SAI_Editor_Manager.Instance.GetPasswordSetting();// Settings.Default.Password.ToSecureString().EncryptString(Encoding.Unicode.GetBytes(Settings.Default.Entropy));
@@ -256,7 +258,7 @@ namespace SAI_Editor.Forms
                     SAI_Editor_Manager.Instance.ResetWorldDatabase(true);
                 }
 
-                if (!Settings.Default.UseWorldDatabase || SAI_Editor_Manager.Instance.worldDatabase.CanConnectToDatabase(SAI_Editor_Manager.Instance.connString, false))
+                if (!Settings.Default.UseWorldDatabase || SAI_Editor_Manager.Instance.WorldDatabase.CanConnectToDatabase(SAI_Editor_Manager.Instance.connString, false))
                 {
                     SAI_Editor_Manager.Instance.ResetWorldDatabase(Settings.Default.UseWorldDatabase);
                     buttonConnect.PerformClick();
@@ -266,7 +268,7 @@ namespace SAI_Editor.Forms
                 }
             }
 
-            runningConstructor = false;
+            RunningConstructor = false;
         }
 
         private void SetSizable(bool sizable)
@@ -300,7 +302,7 @@ namespace SAI_Editor.Forms
             //! Don't allow moving the window while we are expanding or contracting. This is required because
             //! the window often breaks and has an incorrect size in the end if the application had been moved
             //! while expanding or contracting.
-            if (((m.Msg == 274 && m.WParam.ToInt32() == 61456) || (m.Msg == 161 && m.WParam.ToInt32() == 2)) && (expandingToMainForm || contractingToLoginForm))
+            if (((m.Msg == 274 && m.WParam.ToInt32() == 61456) || (m.Msg == 161 && m.WParam.ToInt32() == 2)) && (_expandingToMainForm || _contractingToLoginForm))
                 return;
 
             base.WndProc(ref m);
@@ -317,7 +319,7 @@ namespace SAI_Editor.Forms
                     if (!Settings.Default.AgreedToSurvey)
                         url += "agreed=false";
                     else
-                        url += "version=" + applicationVersion.Replace('.', '-');
+                        url += "version=" + _applicationVersion.Replace('.', '-');
 
                     client.DownloadData(url);
                 }
@@ -331,7 +333,7 @@ namespace SAI_Editor.Forms
                     //! is available. We then start a timer which checks for an internet connection every
                     //! 10 minutes.
                     if (!SAI_Editor_Manager.Instance.HasInternetConnection())
-                        timerCheckForInternetConnection.Enabled = true;
+                        _timerCheckForInternetConnection.Enabled = true;
                 }
                 catch (Exception ex)
                 {
@@ -358,7 +360,7 @@ namespace SAI_Editor.Forms
                             {
                                 string newAppVersionStr = streamReaderVersion.ReadToEnd();
                                 int newAppVersion = CustomConverter.ToInt32(newAppVersionStr.Replace("v", String.Empty).Replace(".", String.Empty));
-                                int currAppVersion = CustomConverter.ToInt32(applicationVersion.Replace("v", String.Empty).Replace(".", String.Empty));
+                                int currAppVersion = CustomConverter.ToInt32(_applicationVersion.Replace("v", String.Empty).Replace(".", String.Empty));
 
                                 if (newAppVersion > 0 && currAppVersion > 0 && newAppVersion > currAppVersion)
                                 {
@@ -385,7 +387,7 @@ namespace SAI_Editor.Forms
                     //! is available. We then start a timer which checks for an internet connection every
                     //! 10 minutes.
                     if (!SAI_Editor_Manager.Instance.HasInternetConnection())
-                        timerCheckForInternetConnection.Enabled = true;
+                        _timerCheckForInternetConnection.Enabled = true;
                 }
                 catch (Exception ex)
                 {
@@ -398,39 +400,39 @@ namespace SAI_Editor.Forms
         }
 
         [DllImportAttribute("user32.dll")]
-        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         [DllImportAttribute("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         [DllImportAttribute("user32.dll")]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        private void timerCheckForInternetConnection_Tick(object sender, EventArgs e)
+        private void TimerCheckForInternetConnection_Tick(object sender, EventArgs e)
         {
             //! Try to connect to google.com. If it can't connect, it means no internet connection
             //! is available.
             if (SAI_Editor_Manager.Instance.HasInternetConnection())
             {
-                timerCheckForInternetConnection.Enabled = false;
-                checkIfUpdatesAvailableThread.Start();
-                updateSurveyThread.Start();
+                _timerCheckForInternetConnection.Enabled = false;
+                _checkIfUpdatesAvailableThread.Start();
+                _updateSurveyThread.Start();
             }
         }
 
-        private void timerExpandOrContract_Tick(object sender, EventArgs e)
+        private void TimerExpandOrContract_Tick(object sender, EventArgs e)
         {
-            if (expandingToMainForm)
+            if (_expandingToMainForm)
             {
                 MaximumSize = new Size(0, 0);
                 MinimumSize = new Size(0, 0);
 
                 if (Height < MainFormHeight)
                 {
-                    Height += expandAndContractSpeed;
+                    Height += ExpandAndContractSpeed;
 
                     if (Height > MainFormHeight)
-                        timerExpandOrContract_Tick(sender, e);
+                        TimerExpandOrContract_Tick(sender, e);
                 }
                 else
                 {
@@ -440,17 +442,17 @@ namespace SAI_Editor.Forms
                     {
                         Width = MainFormWidth;
                         timerExpandOrContract.Enabled = false;
-                        expandingToMainForm = false;
+                        _expandingToMainForm = false;
                         FinishedExpandingOrContracting(true);
                     }
                 }
 
                 if (Width < MainFormWidth)
                 {
-                    Width += expandAndContractSpeed;
+                    Width += ExpandAndContractSpeed;
 
                     if (Width > MainFormWidth)
-                        timerExpandOrContract_Tick(sender, e);
+                        TimerExpandOrContract_Tick(sender, e);
                 }
                 else
                 {
@@ -460,39 +462,39 @@ namespace SAI_Editor.Forms
                     {
                         Height = MainFormHeight;
                         timerExpandOrContract.Enabled = false;
-                        expandingToMainForm = false;
+                        _expandingToMainForm = false;
                         FinishedExpandingOrContracting(true);
                     }
                 }
             }
-            else if (contractingToLoginForm)
+            else if (_contractingToLoginForm)
             {
-                if (Height > originalHeight)
-                    Height -= expandAndContractSpeed;
+                if (Height > _originalHeight)
+                    Height -= ExpandAndContractSpeed;
                 else
                 {
-                    Height = originalHeight;
+                    Height = _originalHeight;
 
-                    if (Width <= originalWidth && timerExpandOrContract.Enabled) //! If both finished
+                    if (Width <= _originalWidth && timerExpandOrContract.Enabled) //! If both finished
                     {
-                        Width = originalWidth;
+                        Width = _originalWidth;
                         timerExpandOrContract.Enabled = false;
-                        contractingToLoginForm = false;
+                        _contractingToLoginForm = false;
                         FinishedExpandingOrContracting(false);
                     }
                 }
 
-                if (Width > originalWidth)
-                    Width -= expandAndContractSpeed;
+                if (Width > _originalWidth)
+                    Width -= ExpandAndContractSpeed;
                 else
                 {
-                    Width = originalWidth;
+                    Width = _originalWidth;
 
-                    if (Height <= originalHeight && timerExpandOrContract.Enabled) //! If both finished
+                    if (Height <= _originalHeight && timerExpandOrContract.Enabled) //! If both finished
                     {
-                        Height = originalHeight;
+                        Height = _originalHeight;
                         timerExpandOrContract.Enabled = false;
-                        contractingToLoginForm = false;
+                        _contractingToLoginForm = false;
                         FinishedExpandingOrContracting(false);
                     }
                 }
@@ -502,7 +504,7 @@ namespace SAI_Editor.Forms
             Update();
         }
 
-        private void buttonConnect_Click(object sender, EventArgs e)
+        private void ButtonConnect_Click(object sender, EventArgs e)
         {
             if (radioButtonConnectToMySql.Checked)
             {
@@ -536,11 +538,13 @@ namespace SAI_Editor.Forms
                     return;
                 }
 
-                SAI_Editor_Manager.Instance.connString = new MySqlConnectionStringBuilder();
-                SAI_Editor_Manager.Instance.connString.Server = textBoxHost.Text;
-                SAI_Editor_Manager.Instance.connString.UserID = textBoxUsername.Text;
-                SAI_Editor_Manager.Instance.connString.Port = CustomConverter.ToUInt32(textBoxPort.Text);
-                SAI_Editor_Manager.Instance.connString.Database = textBoxWorldDatabase.Text;
+                SAI_Editor_Manager.Instance.connString = new MySqlConnectionStringBuilder
+                {
+                    Server = textBoxHost.Text,
+                    UserID = textBoxUsername.Text,
+                    Port = CustomConverter.ToUInt32(textBoxPort.Text),
+                    Database = textBoxWorldDatabase.Text
+                };
 
                 if (textBoxPassword.Text.Length > 0)
                     SAI_Editor_Manager.Instance.connString.Password = textBoxPassword.Text;
@@ -553,7 +557,7 @@ namespace SAI_Editor.Forms
             Settings.Default.UseWorldDatabase = radioButtonConnectToMySql.Checked;
             Settings.Default.Save();
 
-            if (!radioButtonConnectToMySql.Checked || SAI_Editor_Manager.Instance.worldDatabase.CanConnectToDatabase(SAI_Editor_Manager.Instance.connString))
+            if (!radioButtonConnectToMySql.Checked || SAI_Editor_Manager.Instance.WorldDatabase.CanConnectToDatabase(SAI_Editor_Manager.Instance.connString))
             {
                 StartExpandingToMainForm(Settings.Default.InstantExpand);
                 HandleUseWorldDatabaseSettingChanged();
@@ -586,9 +590,9 @@ namespace SAI_Editor.Forms
             ResetFieldsToDefault();
 
             if (radioButtonConnectToMySql.Checked)
-                SetFormTitle("SAI-Editor " + applicationVersion + " - Connection: " + textBoxUsername.Text + ", " + textBoxHost.Text + ", " + textBoxPort.Text);
+                SetFormTitle("SAI-Editor " + _applicationVersion + " - Connection: " + textBoxUsername.Text + ", " + textBoxHost.Text + ", " + textBoxPort.Text);
             else
-                SetFormTitle("SAI-Editor " + applicationVersion + " - Creator-only mode, no database connection");
+                SetFormTitle("SAI-Editor " + _applicationVersion + " - Creator-only mode, no database connection");
 
             if (instant)
             {
@@ -600,40 +604,40 @@ namespace SAI_Editor.Forms
             {
                 SAI_Editor_Manager.FormState = FormState.FormStateExpandingOrContracting;
                 timerExpandOrContract.Enabled = true;
-                expandingToMainForm = true;
+                _expandingToMainForm = true;
             }
 
             customPanelLogin.Visible = false;
 
-            userControl.panelStaticTooltipTypes.Visible = false;
-            userControl.panelStaticTooltipParameters.Visible = false;
+            UserControl.panelStaticTooltipTypes.Visible = false;
+            UserControl.panelStaticTooltipParameters.Visible = false;
         }
 
         private void ResetFieldsToDefault()
         {
-            userControl.ResetFieldsToDefault();
+            UserControl.ResetFieldsToDefault();
         }
 
         private void StartContractingToLoginForm(bool instant = false)
         {
             SetSizable(false);
 
-            SetFormTitle("SAI-Editor " + applicationVersion + ": Login");
+            SetFormTitle("SAI-Editor " + _applicationVersion + ": Login");
 
             if (Settings.Default.ShowTooltipsStaticly)
-                userControl.ListView.Height += (int)SaiEditorSizes.ListViewHeightContract;
+                UserControl.ListView.Height += (int)SaiEditorSizes.ListViewHeightContract;
 
             if (instant)
             {
-                Width = originalWidth;
-                Height = originalHeight;
+                Width = _originalWidth;
+                Height = _originalHeight;
                 FinishedExpandingOrContracting(false);
             }
             else
             {
                 SAI_Editor_Manager.FormState = FormState.FormStateExpandingOrContracting;
                 timerExpandOrContract.Enabled = true;
-                contractingToLoginForm = true;
+                _contractingToLoginForm = true;
             }
 
             tabControlWorkspaces.Visible = false;
@@ -641,7 +645,7 @@ namespace SAI_Editor.Forms
             pictureBoxDonate.Visible = false;
         }
 
-        private void buttonClear_Click(object sender, EventArgs e)
+        private void ButtonClear_Click(object sender, EventArgs e)
         {
             textBoxHost.Text = String.Empty;
             textBoxUsername.Text = String.Empty;
@@ -652,7 +656,7 @@ namespace SAI_Editor.Forms
             radioButtonConnectToMySql.Checked = true;
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void ButtonCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
@@ -674,22 +678,22 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void menuItemReconnect_Click(object sender, EventArgs e)
+        private void MenuItemReconnect_Click(object sender, EventArgs e)
         {
-            if (SAI_Editor_Manager.FormState != FormState.FormStateMain || userControl.contractingListView || userControl.expandingListView)
+            if (SAI_Editor_Manager.FormState != FormState.FormStateMain || UserControl.ContractingListView || UserControl.ExpandingListView)
                 return;
 
             for (int i = 0; i < Application.OpenForms.Count; ++i)
                 if (Application.OpenForms[i] != this)
                     Application.OpenForms[i].Close();
 
-            userControl.panelStaticTooltipTypes.Visible = false;
-            userControl.panelStaticTooltipParameters.Visible = false;
+            UserControl.panelStaticTooltipTypes.Visible = false;
+            UserControl.panelStaticTooltipParameters.Visible = false;
 
             SaveLastUsedFields();
             ResetFieldsToDefault();
 
-            userControl.ListViewList.ClearScripts();
+            UserControl.ListViewList.ClearScripts();
 
             StartContractingToLoginForm(Settings.Default.InstantExpand);
         }
@@ -711,7 +715,7 @@ namespace SAI_Editor.Forms
             tabControlWorkspaces.Size = new Size(width, height);
             HandleTabControlWorkspacesResized();
 
-            userControl.FinishedExpandingOrContracting(expanding);
+            UserControl.FinishedExpandingOrContracting(expanding);
 
             SetSizable(expanding);
 
@@ -720,7 +724,7 @@ namespace SAI_Editor.Forms
             HandleTabControlWorkspacesResized(true);
         }
 
-        private void menuItemExit_Click(object sender, System.EventArgs e)
+        private void MenuItemExit_Click(object sender, System.EventArgs e)
         {
             if (SAI_Editor_Manager.FormState == FormState.FormStateMain)
                 TryCloseApplication();
@@ -732,7 +736,7 @@ namespace SAI_Editor.Forms
                 Close();
         }
 
-        private void menuItemSettings_Click(object sender, EventArgs e)
+        private void MenuItemSettings_Click(object sender, EventArgs e)
         {
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain)
                 return;
@@ -741,7 +745,7 @@ namespace SAI_Editor.Forms
                 settingsForm.ShowDialog(this);
         }
 
-        private void menuItemAbout_Click(object sender, EventArgs e)
+        private void MenuItemAbout_Click(object sender, EventArgs e)
         {
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain)
                 return;
@@ -750,44 +754,44 @@ namespace SAI_Editor.Forms
                 aboutForm.ShowDialog(this);
         }
 
-        private void menuOptionDeleteSelectedRow_Click(object sender, EventArgs e)
+        private void MenuOptionDeleteSelectedRow_Click(object sender, EventArgs e)
         {
-            CustomObjectListView listViewSmartScripts = userControl.ListView;
+            CustomObjectListView listViewSmartScripts = UserControl.ListView;
 
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain || ((SmartScriptList)listViewSmartScripts.List).SelectedScript == null)
                 return;
 
-            userControl.DeleteSelectedRow();
+            UserControl.DeleteSelectedRow();
         }
 
-        private void menuItemCopySelectedRowListView_Click(object sender, EventArgs e)
+        private void MenuItemCopySelectedRowListView_Click(object sender, EventArgs e)
         {
-            CustomObjectListView listViewSmartScripts = userControl.ListView;
+            CustomObjectListView listViewSmartScripts = UserControl.ListView;
 
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain || ((SmartScriptList)listViewSmartScripts.List).SelectedScript == null)
                 return;
 
-            smartScriptsOnClipBoard.Add(((SmartScriptList)listViewSmartScripts.List).SelectedScript.Clone());
+            _smartScriptsOnClipBoard.Add(((SmartScriptList)listViewSmartScripts.List).SelectedScript.Clone());
         }
 
-        private void menuItemPasteLastCopiedRow_Click(object sender, EventArgs e)
+        private void MenuItemPasteLastCopiedRow_Click(object sender, EventArgs e)
         {
-            CustomObjectListView listViewSmartScripts = userControl.ListView;
+            CustomObjectListView listViewSmartScripts = UserControl.ListView;
 
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain || ((SmartScriptList)listViewSmartScripts.List).SelectedScript == null)
                 return;
 
-            if (smartScriptsOnClipBoard.Count <= 0)
+            if (_smartScriptsOnClipBoard.Count <= 0)
             {
                 MessageBox.Show("No smart scripts have been copied in this session!", "Something went wrong!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            SmartScript newSmartScript = smartScriptsOnClipBoard.Last().Clone();
+            SmartScript newSmartScript = _smartScriptsOnClipBoard.Last().Clone();
             listViewSmartScripts.List.AddScript(newSmartScript);
         }
 
-        private async void buttonSearchWorldDb_Click(object sender, EventArgs e)
+        private async void ButtonSearchWorldDb_Click(object sender, EventArgs e)
         {
             buttonSearchWorldDb.Enabled = false;
 
@@ -801,29 +805,29 @@ namespace SAI_Editor.Forms
             buttonSearchWorldDb.Enabled = true;
         }
 
-        private void testToolStripMenuItemDeleteRow_Click(object sender, EventArgs e)
+        private void TestToolStripMenuItemDeleteRow_Click(object sender, EventArgs e)
         {
-            userControl.DeleteSelectedRow();
+            UserControl.DeleteSelectedRow();
         }
 
-        private void smartAIWikiToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SmartAIWikiToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SAI_Editor_Manager.Instance.StartProcess("http://collab.kpsn.org/display/tc/smart_scripts");
+            SAI_Editor_Manager.Instance.StartProcess("https://trinitycore.atlassian.net/wiki/spaces/tc/pages/2130108/smart+scripts");
         }
 
-        private async void generateSQLToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void GenerateSQLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain)
                 return;
 
-            using (SqlOutputForm sqlOutputForm = new SqlOutputForm(await userControl.GenerateSmartAiSqlFromListView(), true, await userControl.GenerateSmartAiRevertQuery()))
+            using (SqlOutputForm sqlOutputForm = new SqlOutputForm(await UserControl.GenerateSmartAiSqlFromListView(), true, await UserControl.GenerateSmartAiRevertQuery()))
                 sqlOutputForm.ShowDialog(this);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (userControl != null)
-                foreach (Control control in userControl.Controls)
+            if (UserControl != null)
+                foreach (Control control in UserControl.Controls)
                     control.Enabled = false;
 
             foreach (Control control in Controls)
@@ -831,7 +835,7 @@ namespace SAI_Editor.Forms
 
             if (SAI_Editor_Manager.SaveSettingsOnExit)
             {
-                if (adjustedLoginSettings)
+                if (_adjustedLoginSettings)
                     SaveLastUsedFields();
 
                 if (SAI_Editor_Manager.FormState == FormState.FormStateMain)
@@ -842,28 +846,28 @@ namespace SAI_Editor.Forms
                 }
             }
 
-            if (updateSurveyThread != null)
-                updateSurveyThread.Abort();
+            if (_updateSurveyThread != null)
+                _updateSurveyThread.Abort();
         }
 
         private void SaveLastUsedFields()
         {
-            Settings.Default.ShowBasicInfo = userControl.checkBoxShowBasicInfo.Checked;
-            Settings.Default.LockSmartScriptId = userControl.checkBoxLockEventId.Checked;
-            Settings.Default.ListActionLists = userControl.checkBoxListActionlistsOrEntries.Checked;
-            Settings.Default.AllowChangingEntryAndSourceType = userControl.checkBoxAllowChangingEntryAndSourceType.Checked;
+            Settings.Default.ShowBasicInfo = UserControl.checkBoxShowBasicInfo.Checked;
+            Settings.Default.LockSmartScriptId = UserControl.checkBoxLockEventId.Checked;
+            Settings.Default.ListActionLists = UserControl.checkBoxListActionlistsOrEntries.Checked;
+            Settings.Default.AllowChangingEntryAndSourceType = UserControl.checkBoxAllowChangingEntryAndSourceType.Checked;
             Settings.Default.PhaseHighlighting = false;// userControl.checkBoxUsePhaseColors.Checked;
-            Settings.Default.ShowTooltipsStaticly = userControl.checkBoxUseStaticTooltips.Checked;
+            Settings.Default.ShowTooltipsStaticly = UserControl.checkBoxUseStaticTooltips.Checked;
 
             string lastStaticInfoPerTab = String.Empty;
 
             var objs = new List<object>();
 
-            userControl.CurrentState.Save(userControl);
+            UserControl.CurrentState.Save(UserControl);
 
             int ctr = 0;
 
-            foreach (SAIUserControlState state in userControl.States)
+            foreach (SAIUserControlState state in UserControl.States)
             {
                 objs.Add(new
                 {
@@ -895,7 +899,7 @@ namespace SAI_Editor.Forms
             Settings.Default.Save();
         }
 
-        private void menuItemRevertQuery_Click(object sender, EventArgs e)
+        private void MenuItemRevertQuery_Click(object sender, EventArgs e)
         {
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain)
                 return;
@@ -904,33 +908,33 @@ namespace SAI_Editor.Forms
                 revertQueryForm.ShowDialog(this);
         }
 
-        private async void menuItemGenerateCommentListView_Click(object sender, EventArgs e)
+        private async void MenuItemGenerateCommentListView_Click(object sender, EventArgs e)
         {
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain || !Settings.Default.UseWorldDatabase)
                 return;
 
-            await userControl.GenerateCommentListView();
+            await UserControl.GenerateCommentListView();
         }
 
-        private void menuItemDuplicateSelectedRow_Click(object sender, EventArgs e)
+        private void MenuItemDuplicateSelectedRow_Click(object sender, EventArgs e)
         {
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain)
                 return;
 
-            userControl.DuplicateSelectedRow();
+            UserControl.DuplicateSelectedRow();
         }
 
-        private void menuItemLoadSelectedEntry_Click(object sender, EventArgs e)
+        private void MenuItemLoadSelectedEntry_Click(object sender, EventArgs e)
         {
-            userControl.LoadSelectedEntry();
+            UserControl.LoadSelectedEntry();
         }
 
-        private void radioButtonConnectToMySql_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonConnectToMySql_CheckedChanged(object sender, EventArgs e)
         {
             HandleRadioButtonUseDatabaseChanged();
         }
 
-        private void radioButtonDontUseDatabase_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonDontUseDatabase_CheckedChanged(object sender, EventArgs e)
         {
             HandleRadioButtonUseDatabaseChanged();
         }
@@ -973,13 +977,13 @@ namespace SAI_Editor.Forms
             radioButtonConnectToMySql.Checked = Settings.Default.UseWorldDatabase;
             radioButtonDontUseDatabase.Checked = !Settings.Default.UseWorldDatabase;
 
-            userControl.buttonSearchForEntryOrGuid.Enabled = Settings.Default.UseWorldDatabase || userControl.comboBoxSourceType.SelectedIndex == 2;
-            userControl.pictureBoxLoadScript.Enabled = userControl.textBoxEntryOrGuid.Text.Length > 0 && Settings.Default.UseWorldDatabase;
-            userControl.checkBoxListActionlistsOrEntries.Enabled = Settings.Default.UseWorldDatabase;
-            userControl.buttonGenerateComments.Enabled = userControl.ListView.Items.Count > 0 && Settings.Default.UseWorldDatabase;
+            UserControl.buttonSearchForEntryOrGuid.Enabled = Settings.Default.UseWorldDatabase || UserControl.comboBoxSourceType.SelectedIndex == 2;
+            UserControl.pictureBoxLoadScript.Enabled = UserControl.textBoxEntryOrGuid.Text.Length > 0 && Settings.Default.UseWorldDatabase;
+            UserControl.checkBoxListActionlistsOrEntries.Enabled = Settings.Default.UseWorldDatabase;
+            UserControl.buttonGenerateComments.Enabled = UserControl.ListView.Items.Count > 0 && Settings.Default.UseWorldDatabase;
 
             menuItemRevertQuery.Enabled = Settings.Default.UseWorldDatabase;
-            menuItemGenerateComment.Enabled = userControl.ListView.Items.Count > 0 && Settings.Default.UseWorldDatabase;
+            menuItemGenerateComment.Enabled = UserControl.ListView.Items.Count > 0 && Settings.Default.UseWorldDatabase;
             menuItemGenerateCommentListView.Enabled = Settings.Default.UseWorldDatabase;
             menuItemLoadSelectedEntryListView.Enabled = Settings.Default.UseWorldDatabase;
             searchForAQuestToolStripMenuItem1.Enabled = Settings.Default.UseWorldDatabase;
@@ -996,7 +1000,7 @@ namespace SAI_Editor.Forms
             searchForAGossipMenuOptionToolStripMenuItem.Enabled = Settings.Default.UseWorldDatabase;
             searchForAGossipOptionIdToolStripMenuItem.Enabled = Settings.Default.UseWorldDatabase;
 
-            string newTitle = "SAI-Editor " + applicationVersion + " - ";
+            string newTitle = "SAI-Editor " + _applicationVersion + " - ";
 
             if (Settings.Default.UseWorldDatabase)
                 newTitle += "Connection: " + Settings.Default.User + ", " + Settings.Default.Host + ", " + Settings.Default.Port.ToString();
@@ -1006,129 +1010,129 @@ namespace SAI_Editor.Forms
             SetFormTitle(newTitle);
         }
 
-        private void menuItemRetrieveLastDeletedRow_Click(object sender, EventArgs e)
+        private void MenuItemRetrieveLastDeletedRow_Click(object sender, EventArgs e)
         {
-            if (lastDeletedSmartScripts.Count == 0)
+            if (_lastDeletedSmartScripts.Count == 0)
             {
                 MessageBox.Show("There are no items deleted in this session ready to be restored.", "Nothing to retrieve!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            userControl.ListViewList.AddScript(lastDeletedSmartScripts.Last());
-            lastDeletedSmartScripts.Remove(lastDeletedSmartScripts.Last());
+            UserControl.ListViewList.AddScript(_lastDeletedSmartScripts.Last());
+            _lastDeletedSmartScripts.Remove(_lastDeletedSmartScripts.Last());
         }
 
         private void ShowSearchFromDatabaseForm(TextBox textBoxToChange, DatabaseSearchFormType searchType)
         {
-            userControl.ShowSearchFromDatabaseForm(textBoxToChange, searchType);
+            UserControl.ShowSearchFromDatabaseForm(textBoxToChange, searchType);
         }
 
-        private void searchForASpellToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void SearchForASpellToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeSpell);
         }
 
-        private void searchForAFactionToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void SearchForAFactionToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeFaction);
         }
 
-        private void searchForAnEmoteToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void SearchForAnEmoteToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeEmote);
         }
 
-        private void searchForAMapToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void SearchForAMapToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeQuest);
         }
 
-        private void searchForAQuestToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void SearchForAQuestToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeMap);
         }
 
-        private void searchForAZoneToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForAZoneToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeAreaOrZone);
         }
 
-        private void searchForACreatureEntryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForACreatureEntryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeCreatureEntry);
         }
 
-        private void searchForACreatureGuidToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForACreatureGuidToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeCreatureGuid);
         }
 
-        private void searchForAGameobjectEntryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForAGameobjectEntryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeGameobjectEntry);
         }
 
-        private void searchForAGameobjectGuidToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForAGameobjectGuidToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeGameobjectGuid);
         }
 
-        private void searchForASoundToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForASoundToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeSound);
         }
 
-        private void searchForAnAreatriggerToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForAnAreatriggerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeAreaTrigger);
         }
 
-        private void searchForAGameEventToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForAGameEventToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeGameEvent);
         }
 
-        private void searchForAnItemEntryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForAnItemEntryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeItemEntry);
         }
 
-        private void searchForACreatureSummonsIdToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForACreatureSummonsIdToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeSummonsId);
         }
 
-        private void searchForATaxiPathToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForATaxiPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeTaxiPath);
         }
 
-        private void searchForAnEquipmentTemplateToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForAnEquipmentTemplateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeEquipTemplate);
         }
 
-        private void searchForAWaypointToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForAWaypointToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeWaypoint);
         }
 
-        private void searchForANpcTextToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForANpcTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeNpcText);
         }
 
-        private void searchForAGossipOptionIdToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForAGossipOptionIdToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeGossipMenuOptionMenuId);
         }
 
-        private void searchForAGossipMenuOptionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SearchForAGossipMenuOptionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowSearchFromDatabaseForm(null, DatabaseSearchFormType.DatabaseSearchFormTypeGossipMenuOptionId);
         }
 
-        private void conditionEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ConditionEditorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain)
                 return;
@@ -1144,12 +1148,14 @@ namespace SAI_Editor.Forms
                 }
             }
 
-            ConditionForm conditionForm = new ConditionForm();
-            conditionForm.formHidden = false;
+            ConditionForm conditionForm = new ConditionForm
+            {
+                formHidden = false
+            };
             conditionForm.Show();
         }
 
-        Dictionary<string, Type> searchEventHandlers = new Dictionary<string, Type>()
+        Dictionary<string, Type> _searchEventHandlers = new Dictionary<string, Type>()
         {
             {"Search for gameobject flags", typeof(MultiSelectForm<GoFlags>)},
             {"Search for unit flags", typeof(MultiSelectForm<UnitFlags>)},
@@ -1177,13 +1183,13 @@ namespace SAI_Editor.Forms
             {"Search for temp summon types", typeof(SingleSelectForm<TempSummonType>)},
         };
 
-        private void searchForFlagsMenuItem_Click(object sender, EventArgs e)
+        private void SearchForFlagsMenuItem_Click(object sender, EventArgs e)
         {
-            using (Form selectForm = (Form)Activator.CreateInstance(searchEventHandlers[((ToolStripItem)sender).Text], new object[] { null }))
+            using (Form selectForm = (Form)Activator.CreateInstance(_searchEventHandlers[((ToolStripItem)sender).Text], new object[] { null }))
                 selectForm.ShowDialog(this);
         }
 
-        private void tabControlWorkspaces_SelectedIndexChanged(object sender, EventArgs e)
+        private void TabControlWorkspaces_SelectedIndexChanged(object sender, EventArgs e)
         {
             //! New workspace is being created
             if (tabControlWorkspaces.SelectedTab != null && tabControlWorkspaces.SelectedTab.Text == "+")
@@ -1194,30 +1200,30 @@ namespace SAI_Editor.Forms
                         " different workspaces open at the same time. This limit is created to avoid start-up delays.",
                         "Workspace limit", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                    tabControlWorkspaces.SelectedIndex = lastSelectedWorkspaceIndex;
+                    tabControlWorkspaces.SelectedIndex = LastSelectedWorkspaceIndex;
                     return;
                 }
 
-                userControl.AddWorkSpace();
+                UserControl.AddWorkSpace();
 
                 CreateTabControl();
             }
 
-            if (lastSelectedWorkspaceIndex < tabControlWorkspaces.TabPages.Count)
-                tabControlWorkspaces.TabPages[lastSelectedWorkspaceIndex].Controls.Remove(userControl);
+            if (LastSelectedWorkspaceIndex < tabControlWorkspaces.TabPages.Count)
+                tabControlWorkspaces.TabPages[LastSelectedWorkspaceIndex].Controls.Remove(UserControl);
 
-            tabControlWorkspaces.TabPages[tabControlWorkspaces.SelectedIndex].Controls.Add(userControl);
+            tabControlWorkspaces.TabPages[tabControlWorkspaces.SelectedIndex].Controls.Add(UserControl);
 
-            if (tabControlWorkspaces.SelectedIndex < userControl.States.Count)
-                userControl.CurrentState = userControl.States[tabControlWorkspaces.SelectedIndex];
+            if (tabControlWorkspaces.SelectedIndex < UserControl.States.Count)
+                UserControl.CurrentState = UserControl.States[tabControlWorkspaces.SelectedIndex];
 
-            lastSelectedWorkspaceIndex = tabControlWorkspaces.SelectedIndex;
+            LastSelectedWorkspaceIndex = tabControlWorkspaces.SelectedIndex;
 
-            if (userControl.ListView.Objects.Cast<object>().Count<object>() > 0)
-                userControl.ListView.SelectObject(userControl.ListView.Objects.Cast<object>().ElementAt(0));
+            if (UserControl.ListView.Objects.Cast<object>().Count<object>() > 0)
+                UserControl.ListView.SelectObject(UserControl.ListView.Objects.Cast<object>().ElementAt(0));
 
-            userControl.ListView.Select();
-            userControl.ListView.Focus();
+            UserControl.ListView.Select();
+            UserControl.ListView.Focus();
         }
 
         private void CreateTabControl(bool first = false, bool addWorkspace = false)
@@ -1228,20 +1234,24 @@ namespace SAI_Editor.Forms
             if (!first)
                 tabControlWorkspaces.TabPages.RemoveAt(tabControlWorkspaces.TabPages.Count - 1);
 
-            UserControlSAI userControlSAI;
+            UserControlSAI userControlSai;
 
-            if (first && userControl == null)
+            if (first && UserControl == null)
             {
-                userControlSAI = new UserControlSAI();
-                userControlSAI.Parent = this;
-                userControlSAI.LoadUserControl();
+                userControlSai = new UserControlSAI
+                {
+                    Parent = this
+                };
+                userControlSai.LoadUserControl();
             }
             else
-                userControlSAI = userControl;
+                userControlSai = UserControl;
 
-            TabPage newPage = new TabPage();
-            newPage.Text = "Workspace " + (tabControlWorkspaces.TabPages.Count + 1);
-            newPage.Controls.Add(userControlSAI);
+            TabPage newPage = new TabPage
+            {
+                Text = "Workspace " + (tabControlWorkspaces.TabPages.Count + 1)
+            };
+            newPage.Controls.Add(userControlSai);
 
             for (int i = 0; i < tabControlWorkspaces.TabPages.Count; i++)
             {
@@ -1256,16 +1266,16 @@ namespace SAI_Editor.Forms
             tabControlWorkspaces.TabPages.Add(new TabPage("+"));
 
             if (addWorkspace)
-                userControlSAI.AddWorkSpace();
+                userControlSai.AddWorkSpace();
 
-            if (first && userControl == null)
-                userControl = userControlSAI;
+            if (first && UserControl == null)
+                UserControl = userControlSai;
 
             if (!first)
                 tabControlWorkspaces.SelectedIndex = tabControlWorkspaces.TabPages.Count - 2;
         }
 
-        private void pictureBoxDonate_Click(object sender, EventArgs e)
+        private void PictureBoxDonate_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1307,7 +1317,7 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain)
                 return;
@@ -1316,10 +1326,10 @@ namespace SAI_Editor.Forms
                 settingsForm.ShowDialog(this);
         }
 
-        private void tabControlWorkspaces_TabClosing(object sender, TabControlCancelEventArgs e)
+        private void TabControlWorkspaces_TabClosing(object sender, TabControlCancelEventArgs e)
         {
             tabControlWorkspaces.SelectedIndex = e.TabPageIndex > 0 ? e.TabPageIndex - 1 : 0;
-            userControl.States.RemoveAt(e.TabPageIndex);
+            UserControl.States.RemoveAt(e.TabPageIndex);
 
             List<TabPage> tabPages = new List<TabPage>();
 
@@ -1335,7 +1345,7 @@ namespace SAI_Editor.Forms
             tabControlWorkspaces.Update();
         }
 
-        private void tabControlWorkspaces_SizeChanged(object sender, EventArgs e)
+        private void TabControlWorkspaces_SizeChanged(object sender, EventArgs e)
         {
             HandleTabControlWorkspacesResized(true);
         }
@@ -1351,35 +1361,35 @@ namespace SAI_Editor.Forms
 
         private void SynchronizeSizeOfUserControlAndListView(bool fromResize = false)
         {
-            userControl.Width = tabControlWorkspaces.Width;
-            userControl.Height = tabControlWorkspaces.Height;
+            UserControl.Width = tabControlWorkspaces.Width;
+            UserControl.Height = tabControlWorkspaces.Height;
 
             //! Not sure why but height is really off...
             int contractHeightFromTabControl = 252, contractWidthFromTabControl = (int)SaiEditorSizes.StaticTooltipsPadding;
 
-            if (fromResize && userControl.checkBoxUseStaticTooltips.Checked)
+            if (fromResize && UserControl.checkBoxUseStaticTooltips.Checked)
                 contractHeightFromTabControl += 60 + 12; //! Height of two panels plus some extra padding
 
-            userControl.ListView.Width = tabControlWorkspaces.Width - contractWidthFromTabControl;
-            userControl.ListView.Height = tabControlWorkspaces.Height - contractHeightFromTabControl;
+            UserControl.ListView.Width = tabControlWorkspaces.Width - contractWidthFromTabControl;
+            UserControl.ListView.Height = tabControlWorkspaces.Height - contractHeightFromTabControl;
 
-            userControl.panelStaticTooltipTypes.Width = tabControlWorkspaces.Width - (int)SaiEditorSizes.StaticTooltipsPadding;
-            userControl.panelStaticTooltipParameters.Width = tabControlWorkspaces.Width - (int)SaiEditorSizes.StaticTooltipsPadding;
+            UserControl.panelStaticTooltipTypes.Width = tabControlWorkspaces.Width - (int)SaiEditorSizes.StaticTooltipsPadding;
+            UserControl.panelStaticTooltipParameters.Width = tabControlWorkspaces.Width - (int)SaiEditorSizes.StaticTooltipsPadding;
 
-            int increaseY = tabControlWorkspaces.Height - oldHeightTabControlWorkspaces;
-            userControl.panelStaticTooltipTypes.Location = new Point(userControl.panelStaticTooltipTypes.Location.X, userControl.panelStaticTooltipTypes.Location.Y + increaseY);
-            userControl.panelStaticTooltipParameters.Location = new Point(userControl.panelStaticTooltipParameters.Location.X, userControl.panelStaticTooltipParameters.Location.Y + increaseY);
+            int increaseY = tabControlWorkspaces.Height - _oldHeightTabControlWorkspaces;
+            UserControl.panelStaticTooltipTypes.Location = new Point(UserControl.panelStaticTooltipTypes.Location.X, UserControl.panelStaticTooltipTypes.Location.Y + increaseY);
+            UserControl.panelStaticTooltipParameters.Location = new Point(UserControl.panelStaticTooltipParameters.Location.X, UserControl.panelStaticTooltipParameters.Location.Y + increaseY);
 
-            oldHeightTabControlWorkspaces = tabControlWorkspaces.Height;
-            oldWidthTabControlWorkspaces = tabControlWorkspaces.Width;
+            _oldHeightTabControlWorkspaces = tabControlWorkspaces.Height;
+            _oldWidthTabControlWorkspaces = tabControlWorkspaces.Width;
         }
 
-        private void menuItemReportIssue_Click(object sender, EventArgs e)
+        private void MenuItemReportIssue_Click(object sender, EventArgs e)
         {
-            SAI_Editor_Manager.Instance.StartProcess("https://github.com/Discover-/SAI-Editor/issues/new");
+            SAI_Editor_Manager.Instance.StartProcess("https://github.com/jasperrietrae/SAI-Editor/issues/new");
         }
 
-        private void menuItemGiveFeedback_Click(object sender, EventArgs e)
+        private void MenuItemGiveFeedback_Click(object sender, EventArgs e)
         {
             SAI_Editor_Manager.Instance.StartProcess("http://jasper-rietrae.com/#contact/");
         }
@@ -1390,7 +1400,7 @@ namespace SAI_Editor.Forms
             Update();
         }
 
-        private void menuItemViewAllPastebins_Click(object sender, EventArgs e)
+        private void MenuItemViewAllPastebins_Click(object sender, EventArgs e)
         {
             if (SAI_Editor_Manager.FormState != FormState.FormStateMain)
                 return;

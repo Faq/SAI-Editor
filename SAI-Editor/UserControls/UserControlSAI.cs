@@ -26,16 +26,16 @@ namespace SAI_Editor
 {
     public partial class UserControlSAI : UserControl
     {
-        public int lastSmartScriptIdOfScript = 0, previousLinkFrom = -1;
-        public EntryOrGuidAndSourceType originalEntryOrGuidAndSourceType = new EntryOrGuidAndSourceType();
-        private bool updatingFieldsBasedOnSelectedScript = false;
-        public bool expandingListView = false, contractingListView = false;
-        public const int expandAndContractSpeedListView = 2;
-        private int customObjectListViewHeightToChangeTo;
-        private List<SmartScript> lastDeletedSmartScripts = new List<SmartScript>(), smartScriptsOnClipBoard = new List<SmartScript>();
-        private string applicationVersion = String.Empty;
-        private System.Windows.Forms.Timer timerCheckForInternetConnection = new System.Windows.Forms.Timer();
-        private MainForm MainForm;
+        public int LastSmartScriptIdOfScript = 0, PreviousLinkFrom = -1;
+        public EntryOrGuidAndSourceType OriginalEntryOrGuidAndSourceType = new EntryOrGuidAndSourceType();
+        private bool _updatingFieldsBasedOnSelectedScript = false;
+        public bool ExpandingListView = false, ContractingListView = false;
+        public const int ExpandAndContractSpeedListView = 2;
+        private int _customObjectListViewHeightToChangeTo;
+        private List<SmartScript> _lastDeletedSmartScripts = new List<SmartScript>(), _smartScriptsOnClipBoard = new List<SmartScript>();
+        private string _applicationVersion = String.Empty;
+        private System.Windows.Forms.Timer _timerCheckForInternetConnection = new System.Windows.Forms.Timer();
+        private MainForm _mainForm;
 
         public readonly SAIUserControlState DefaultState = new SAIUserControlState();
 
@@ -95,7 +95,7 @@ namespace SAI_Editor
 
         public void LoadUserControl()
         {
-            MainForm = Parent as MainForm;
+            _mainForm = Parent as MainForm;
 
             customObjectListView.List = new SmartScriptList(customObjectListView);
             customObjectListView.CellRightClick += customObjectListView_CellRightClick;
@@ -200,7 +200,7 @@ namespace SAI_Editor
                 textBox.Text = comboBox.SelectedIndex.ToString();
                 textBox.SelectionStart = 3; //! Set cursor to end of text
 
-                if (!MainForm.runningConstructor)
+                if (!_mainForm.RunningConstructor)
                 {
                     ChangeParameterFieldsBasedOnType();
                     UpdateStaticTooltipOfTypes(comboBox, scriptTypeId);
@@ -236,56 +236,56 @@ namespace SAI_Editor
         public void ChangeParameterFieldsBasedOnType()
         {
             //! Event parameters
-            int event_type = comboBoxEventType.SelectedIndex;
-            labelEventParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(event_type, 1, ScriptTypeId.ScriptTypeEvent);
-            labelEventParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(event_type, 2, ScriptTypeId.ScriptTypeEvent);
-            labelEventParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(event_type, 3, ScriptTypeId.ScriptTypeEvent);
-            labelEventParam4.Text = SAI_Editor_Manager.Instance.GetParameterStringById(event_type, 4, ScriptTypeId.ScriptTypeEvent);
+            int eventType = comboBoxEventType.SelectedIndex;
+            labelEventParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(eventType, 1, ScriptTypeId.ScriptTypeEvent);
+            labelEventParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(eventType, 2, ScriptTypeId.ScriptTypeEvent);
+            labelEventParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(eventType, 3, ScriptTypeId.ScriptTypeEvent);
+            labelEventParam4.Text = SAI_Editor_Manager.Instance.GetParameterStringById(eventType, 4, ScriptTypeId.ScriptTypeEvent);
 
             if (!Settings.Default.ShowTooltipsStaticly)
             {
-                AddTooltip(comboBoxEventType, comboBoxEventType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(event_type, ScriptTypeId.ScriptTypeEvent));
-                AddTooltip(labelEventParam1, labelEventParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(event_type, 1, ScriptTypeId.ScriptTypeEvent));
-                AddTooltip(labelEventParam2, labelEventParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(event_type, 2, ScriptTypeId.ScriptTypeEvent));
-                AddTooltip(labelEventParam3, labelEventParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(event_type, 3, ScriptTypeId.ScriptTypeEvent));
-                AddTooltip(labelEventParam4, labelEventParam4.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(event_type, 4, ScriptTypeId.ScriptTypeEvent));
+                AddTooltip(comboBoxEventType, comboBoxEventType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(eventType, ScriptTypeId.ScriptTypeEvent));
+                AddTooltip(labelEventParam1, labelEventParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(eventType, 1, ScriptTypeId.ScriptTypeEvent));
+                AddTooltip(labelEventParam2, labelEventParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(eventType, 2, ScriptTypeId.ScriptTypeEvent));
+                AddTooltip(labelEventParam3, labelEventParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(eventType, 3, ScriptTypeId.ScriptTypeEvent));
+                AddTooltip(labelEventParam4, labelEventParam4.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(eventType, 4, ScriptTypeId.ScriptTypeEvent));
             }
 
             //! Action parameters
-            int action_type = comboBoxActionType.SelectedIndex;
-            labelActionParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 1, ScriptTypeId.ScriptTypeAction);
-            labelActionParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 2, ScriptTypeId.ScriptTypeAction);
-            labelActionParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 3, ScriptTypeId.ScriptTypeAction);
-            labelActionParam4.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 4, ScriptTypeId.ScriptTypeAction);
-            labelActionParam5.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 5, ScriptTypeId.ScriptTypeAction);
-            labelActionParam6.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 6, ScriptTypeId.ScriptTypeAction);
+            int actionType = comboBoxActionType.SelectedIndex;
+            labelActionParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 1, ScriptTypeId.ScriptTypeAction);
+            labelActionParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 2, ScriptTypeId.ScriptTypeAction);
+            labelActionParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 3, ScriptTypeId.ScriptTypeAction);
+            labelActionParam4.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 4, ScriptTypeId.ScriptTypeAction);
+            labelActionParam5.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 5, ScriptTypeId.ScriptTypeAction);
+            labelActionParam6.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 6, ScriptTypeId.ScriptTypeAction);
 
             if (!Settings.Default.ShowTooltipsStaticly)
             {
-                AddTooltip(comboBoxActionType, comboBoxActionType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(action_type, ScriptTypeId.ScriptTypeAction));
-                AddTooltip(labelActionParam1, labelActionParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 1, ScriptTypeId.ScriptTypeAction));
-                AddTooltip(labelActionParam2, labelActionParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 2, ScriptTypeId.ScriptTypeAction));
-                AddTooltip(labelActionParam3, labelActionParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 3, ScriptTypeId.ScriptTypeAction));
-                AddTooltip(labelActionParam4, labelActionParam4.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 4, ScriptTypeId.ScriptTypeAction));
-                AddTooltip(labelActionParam5, labelActionParam5.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 5, ScriptTypeId.ScriptTypeAction));
-                AddTooltip(labelActionParam6, labelActionParam6.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 6, ScriptTypeId.ScriptTypeAction));
+                AddTooltip(comboBoxActionType, comboBoxActionType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(actionType, ScriptTypeId.ScriptTypeAction));
+                AddTooltip(labelActionParam1, labelActionParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 1, ScriptTypeId.ScriptTypeAction));
+                AddTooltip(labelActionParam2, labelActionParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 2, ScriptTypeId.ScriptTypeAction));
+                AddTooltip(labelActionParam3, labelActionParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 3, ScriptTypeId.ScriptTypeAction));
+                AddTooltip(labelActionParam4, labelActionParam4.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 4, ScriptTypeId.ScriptTypeAction));
+                AddTooltip(labelActionParam5, labelActionParam5.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 5, ScriptTypeId.ScriptTypeAction));
+                AddTooltip(labelActionParam6, labelActionParam6.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 6, ScriptTypeId.ScriptTypeAction));
             }
 
             //! Target parameters
-            int target_type = comboBoxTargetType.SelectedIndex;
-            labelTargetParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(target_type, 1, ScriptTypeId.ScriptTypeTarget);
-            labelTargetParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(target_type, 2, ScriptTypeId.ScriptTypeTarget);
-            labelTargetParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(target_type, 3, ScriptTypeId.ScriptTypeTarget);
+            int targetType = comboBoxTargetType.SelectedIndex;
+            labelTargetParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(targetType, 1, ScriptTypeId.ScriptTypeTarget);
+            labelTargetParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(targetType, 2, ScriptTypeId.ScriptTypeTarget);
+            labelTargetParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(targetType, 3, ScriptTypeId.ScriptTypeTarget);
 
             if (!Settings.Default.ShowTooltipsStaticly)
             {
-                AddTooltip(comboBoxTargetType, comboBoxTargetType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(target_type, ScriptTypeId.ScriptTypeTarget));
-                AddTooltip(labelTargetParam1, labelTargetParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(target_type, 1, ScriptTypeId.ScriptTypeTarget));
-                AddTooltip(labelTargetParam2, labelTargetParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(target_type, 2, ScriptTypeId.ScriptTypeTarget));
-                AddTooltip(labelTargetParam3, labelTargetParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(target_type, 3, ScriptTypeId.ScriptTypeTarget));
+                AddTooltip(comboBoxTargetType, comboBoxTargetType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(targetType, ScriptTypeId.ScriptTypeTarget));
+                AddTooltip(labelTargetParam1, labelTargetParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(targetType, 1, ScriptTypeId.ScriptTypeTarget));
+                AddTooltip(labelTargetParam2, labelTargetParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(targetType, 2, ScriptTypeId.ScriptTypeTarget));
+                AddTooltip(labelTargetParam3, labelTargetParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(targetType, 3, ScriptTypeId.ScriptTypeTarget));
             }
 
-            AdjustAllParameterFields(event_type, action_type, target_type);
+            AdjustAllParameterFields(eventType, actionType, targetType);
         }
 
         public void checkBoxLockEventId_CheckedChanged(object sender, EventArgs e)
@@ -304,7 +304,7 @@ namespace SAI_Editor
 
             try
             {
-                List<SmartScript> smartScripts = await SAI_Editor_Manager.Instance.worldDatabase.GetSmartScripts(CustomConverter.ToInt32(entryOrGuid), (int)sourceType);
+                List<SmartScript> smartScripts = await SAI_Editor_Manager.Instance.WorldDatabase.GetSmartScripts(CustomConverter.ToInt32(entryOrGuid), (int)sourceType);
 
                 if (smartScripts == null)
                 {
@@ -312,7 +312,7 @@ namespace SAI_Editor
                     {
                         bool showNormalErrorMessage = false;
                         string message = String.Format("The entryorguid '{0}' could not be found in the smart_scripts table for the given source_type!", entryOrGuid);
-                        smartScripts = await SAI_Editor_Manager.Instance.worldDatabase.GetSmartScriptsWithoutSourceType(CustomConverter.ToInt32(entryOrGuid), (int)sourceType);
+                        smartScripts = await SAI_Editor_Manager.Instance.WorldDatabase.GetSmartScriptsWithoutSourceType(CustomConverter.ToInt32(entryOrGuid), (int)sourceType);
 
                         if (smartScripts != null)
                         {
@@ -334,8 +334,8 @@ namespace SAI_Editor
                                     //! Get `id` from `creature` and check it for SAI
                                     if (CustomConverter.ToInt32(entryOrGuid) < 0) //! Guid
                                     {
-                                        int entry = await SAI_Editor_Manager.Instance.worldDatabase.GetCreatureIdByGuid(-CustomConverter.ToInt32(entryOrGuid));
-                                        smartScripts = await SAI_Editor_Manager.Instance.worldDatabase.GetSmartScripts(entry, (int)SourceTypes.SourceTypeCreature);
+                                        int entry = await SAI_Editor_Manager.Instance.WorldDatabase.GetCreatureIdByGuid(-CustomConverter.ToInt32(entryOrGuid));
+                                        smartScripts = await SAI_Editor_Manager.Instance.WorldDatabase.GetSmartScripts(entry, (int)SourceTypes.SourceTypeCreature);
 
                                         if (smartScripts != null)
                                         {
@@ -356,7 +356,7 @@ namespace SAI_Editor
                                     else //! Non-guid (entry)
                                     {
                                         int actualEntry = CustomConverter.ToInt32(entryOrGuid);
-                                        List<Creature> creatures = await SAI_Editor_Manager.Instance.worldDatabase.GetCreaturesById(actualEntry);
+                                        List<Creature> creatures = await SAI_Editor_Manager.Instance.WorldDatabase.GetCreaturesById(actualEntry);
 
                                         if (creatures != null)
                                         {
@@ -364,7 +364,7 @@ namespace SAI_Editor
 
                                             foreach (Creature creature in creatures)
                                             {
-                                                smartScripts = await SAI_Editor_Manager.Instance.worldDatabase.GetSmartScripts(-creature.guid, (int)SourceTypes.SourceTypeCreature);
+                                                smartScripts = await SAI_Editor_Manager.Instance.WorldDatabase.GetSmartScripts(-creature.guid, (int)SourceTypes.SourceTypeCreature);
 
                                                 if (smartScripts != null)
                                                     creaturesWithSmartAi.Add(smartScripts);
@@ -390,8 +390,8 @@ namespace SAI_Editor
                                     //! Get `id` from `gameobject` and check it for SAI
                                     if (CustomConverter.ToInt32(entryOrGuid) < 0) //! Guid
                                     {
-                                        int entry = await SAI_Editor_Manager.Instance.worldDatabase.GetGameobjectIdByGuid(-CustomConverter.ToInt32(entryOrGuid));
-                                        smartScripts = await SAI_Editor_Manager.Instance.worldDatabase.GetSmartScripts(entry, (int)SourceTypes.SourceTypeGameobject);
+                                        int entry = await SAI_Editor_Manager.Instance.WorldDatabase.GetGameobjectIdByGuid(-CustomConverter.ToInt32(entryOrGuid));
+                                        smartScripts = await SAI_Editor_Manager.Instance.WorldDatabase.GetSmartScripts(entry, (int)SourceTypes.SourceTypeGameobject);
 
                                         if (smartScripts != null)
                                         {
@@ -412,7 +412,7 @@ namespace SAI_Editor
                                     else //! Non-guid (entry)
                                     {
                                         int actualEntry = CustomConverter.ToInt32(entryOrGuid);
-                                        List<Gameobject> gameobjects = await SAI_Editor_Manager.Instance.worldDatabase.GetGameobjectsById(actualEntry);
+                                        List<Gameobject> gameobjects = await SAI_Editor_Manager.Instance.WorldDatabase.GetGameobjectsById(actualEntry);
 
                                         if (gameobjects != null)
                                         {
@@ -420,7 +420,7 @@ namespace SAI_Editor
 
                                             foreach (Gameobject gameobject in gameobjects)
                                             {
-                                                smartScripts = await SAI_Editor_Manager.Instance.worldDatabase.GetSmartScripts(-gameobject.guid, (int)SourceTypes.SourceTypeGameobject);
+                                                smartScripts = await SAI_Editor_Manager.Instance.WorldDatabase.GetSmartScripts(-gameobject.guid, (int)SourceTypes.SourceTypeGameobject);
 
                                                 if (smartScripts != null)
                                                     gameobjectsWithSmartAi.Add(smartScripts);
@@ -474,7 +474,7 @@ namespace SAI_Editor
                     if (!checkBoxListActionlistsOrEntries.Checked || !checkBoxListActionlistsOrEntries.Enabled)
                         continue;
 
-                    if (i == smartScripts.Count - 1 && originalEntryOrGuidAndSourceType.sourceType == SourceTypes.SourceTypeScriptedActionlist)
+                    if (i == smartScripts.Count - 1 && OriginalEntryOrGuidAndSourceType.sourceType == SourceTypes.SourceTypeScriptedActionlist)
                     {
                         List<EntryOrGuidAndSourceType> timedActionListOrEntries = await SAI_Editor_Manager.Instance.GetTimedActionlistsOrEntries(smartScripts[i], sourceType);
 
@@ -496,7 +496,7 @@ namespace SAI_Editor
                         }
                     }
 
-                    if (sourceType == originalEntryOrGuidAndSourceType.sourceType && originalEntryOrGuidAndSourceType.sourceType != SourceTypes.SourceTypeScriptedActionlist)
+                    if (sourceType == OriginalEntryOrGuidAndSourceType.sourceType && OriginalEntryOrGuidAndSourceType.sourceType != SourceTypes.SourceTypeScriptedActionlist)
                     {
                         List<EntryOrGuidAndSourceType> timedActionListOrEntries = await SAI_Editor_Manager.Instance.GetTimedActionlistsOrEntries(smartScripts[i], sourceType);
 
@@ -525,13 +525,13 @@ namespace SAI_Editor
 
         private void customObjectListView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            MainForm.menuItemDeleteSelectedRow.Enabled = customObjectListView.SelectedObjects.Count > 0;
-            MainForm.menuItemGenerateSql.Enabled = customObjectListView.SelectedObjects.Count > 0;
+            _mainForm.menuItemDeleteSelectedRow.Enabled = customObjectListView.SelectedObjects.Count > 0;
+            _mainForm.menuItemGenerateSql.Enabled = customObjectListView.SelectedObjects.Count > 0;
             buttonGenerateSql.Enabled = customObjectListView.SelectedObjects.Count > 0;
-            MainForm.menuitemLoadSelectedEntry.Enabled = customObjectListView.SelectedObjects.Count > 0;
-            MainForm.menuItemDuplicateRow.Enabled = customObjectListView.SelectedObjects.Count > 0;
-            MainForm.menuItemGenerateComment.Enabled = customObjectListView.SelectedObjects.Count > 0;
-            MainForm.menuItemCopySelectedRow.Enabled = customObjectListView.SelectedObjects.Count > 0;
+            _mainForm.menuitemLoadSelectedEntry.Enabled = customObjectListView.SelectedObjects.Count > 0;
+            _mainForm.menuItemDuplicateRow.Enabled = customObjectListView.SelectedObjects.Count > 0;
+            _mainForm.menuItemGenerateComment.Enabled = customObjectListView.SelectedObjects.Count > 0;
+            _mainForm.menuItemCopySelectedRow.Enabled = customObjectListView.SelectedObjects.Count > 0;
 
             if (!e.IsSelected)
                 return;
@@ -546,7 +546,7 @@ namespace SAI_Editor
         {
             try
             {
-                updatingFieldsBasedOnSelectedScript = true;
+                _updatingFieldsBasedOnSelectedScript = true;
                 SmartScript selectedScript = ((SmartScriptList)customObjectListView.List).SelectedScript;
 
                 if (checkBoxAllowChangingEntryAndSourceType.Checked)
@@ -559,8 +559,8 @@ namespace SAI_Editor
                 textBoxLinkTo.Text = selectedScript.link.ToString();
                 textBoxLinkFrom.Text = GetLinkFromForSelection();
 
-                int event_type = selectedScript.event_type;
-                comboBoxEventType.SelectedIndex = event_type;
+                int eventType = selectedScript.event_type;
+                comboBoxEventType.SelectedIndex = eventType;
                 textBoxEventPhasemask.Text = selectedScript.event_phase_mask.ToString();
                 textBoxEventChance.Text = selectedScript.event_chance.ToString();
                 textBoxEventFlags.Text = selectedScript.event_flags.ToString();
@@ -570,63 +570,63 @@ namespace SAI_Editor
                 textBoxEventParam2.Text = selectedScript.event_param2.ToString();
                 textBoxEventParam3.Text = selectedScript.event_param3.ToString();
                 textBoxEventParam4.Text = selectedScript.event_param4.ToString();
-                labelEventParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(event_type, 1, ScriptTypeId.ScriptTypeEvent);
-                labelEventParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(event_type, 2, ScriptTypeId.ScriptTypeEvent);
-                labelEventParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(event_type, 3, ScriptTypeId.ScriptTypeEvent);
-                labelEventParam4.Text = SAI_Editor_Manager.Instance.GetParameterStringById(event_type, 4, ScriptTypeId.ScriptTypeEvent);
+                labelEventParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(eventType, 1, ScriptTypeId.ScriptTypeEvent);
+                labelEventParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(eventType, 2, ScriptTypeId.ScriptTypeEvent);
+                labelEventParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(eventType, 3, ScriptTypeId.ScriptTypeEvent);
+                labelEventParam4.Text = SAI_Editor_Manager.Instance.GetParameterStringById(eventType, 4, ScriptTypeId.ScriptTypeEvent);
 
                 if (!Settings.Default.ShowTooltipsStaticly)
                 {
-                    AddTooltip(comboBoxEventType, comboBoxEventType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(event_type, ScriptTypeId.ScriptTypeEvent));
-                    AddTooltip(labelEventParam1, labelEventParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(event_type, 1, ScriptTypeId.ScriptTypeEvent));
-                    AddTooltip(labelEventParam2, labelEventParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(event_type, 2, ScriptTypeId.ScriptTypeEvent));
-                    AddTooltip(labelEventParam3, labelEventParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(event_type, 3, ScriptTypeId.ScriptTypeEvent));
-                    AddTooltip(labelEventParam4, labelEventParam4.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(event_type, 4, ScriptTypeId.ScriptTypeEvent));
+                    AddTooltip(comboBoxEventType, comboBoxEventType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(eventType, ScriptTypeId.ScriptTypeEvent));
+                    AddTooltip(labelEventParam1, labelEventParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(eventType, 1, ScriptTypeId.ScriptTypeEvent));
+                    AddTooltip(labelEventParam2, labelEventParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(eventType, 2, ScriptTypeId.ScriptTypeEvent));
+                    AddTooltip(labelEventParam3, labelEventParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(eventType, 3, ScriptTypeId.ScriptTypeEvent));
+                    AddTooltip(labelEventParam4, labelEventParam4.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(eventType, 4, ScriptTypeId.ScriptTypeEvent));
                 }
 
                 //! Action parameters
-                int action_type = selectedScript.action_type;
-                comboBoxActionType.SelectedIndex = action_type;
+                int actionType = selectedScript.action_type;
+                comboBoxActionType.SelectedIndex = actionType;
                 textBoxActionParam1.Text = selectedScript.action_param1.ToString();
                 textBoxActionParam2.Text = selectedScript.action_param2.ToString();
                 textBoxActionParam3.Text = selectedScript.action_param3.ToString();
                 textBoxActionParam4.Text = selectedScript.action_param4.ToString();
                 textBoxActionParam5.Text = selectedScript.action_param5.ToString();
                 textBoxActionParam6.Text = selectedScript.action_param6.ToString();
-                labelActionParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 1, ScriptTypeId.ScriptTypeAction);
-                labelActionParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 2, ScriptTypeId.ScriptTypeAction);
-                labelActionParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 3, ScriptTypeId.ScriptTypeAction);
-                labelActionParam4.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 4, ScriptTypeId.ScriptTypeAction);
-                labelActionParam5.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 5, ScriptTypeId.ScriptTypeAction);
-                labelActionParam6.Text = SAI_Editor_Manager.Instance.GetParameterStringById(action_type, 6, ScriptTypeId.ScriptTypeAction);
+                labelActionParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 1, ScriptTypeId.ScriptTypeAction);
+                labelActionParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 2, ScriptTypeId.ScriptTypeAction);
+                labelActionParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 3, ScriptTypeId.ScriptTypeAction);
+                labelActionParam4.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 4, ScriptTypeId.ScriptTypeAction);
+                labelActionParam5.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 5, ScriptTypeId.ScriptTypeAction);
+                labelActionParam6.Text = SAI_Editor_Manager.Instance.GetParameterStringById(actionType, 6, ScriptTypeId.ScriptTypeAction);
 
                 if (!Settings.Default.ShowTooltipsStaticly)
                 {
-                    AddTooltip(comboBoxActionType, comboBoxActionType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(action_type, ScriptTypeId.ScriptTypeAction));
-                    AddTooltip(labelActionParam1, labelActionParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 1, ScriptTypeId.ScriptTypeAction));
-                    AddTooltip(labelActionParam2, labelActionParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 2, ScriptTypeId.ScriptTypeAction));
-                    AddTooltip(labelActionParam3, labelActionParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 3, ScriptTypeId.ScriptTypeAction));
-                    AddTooltip(labelActionParam4, labelActionParam4.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 4, ScriptTypeId.ScriptTypeAction));
-                    AddTooltip(labelActionParam5, labelActionParam5.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 5, ScriptTypeId.ScriptTypeAction));
-                    AddTooltip(labelActionParam6, labelActionParam6.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(action_type, 6, ScriptTypeId.ScriptTypeAction));
+                    AddTooltip(comboBoxActionType, comboBoxActionType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(actionType, ScriptTypeId.ScriptTypeAction));
+                    AddTooltip(labelActionParam1, labelActionParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 1, ScriptTypeId.ScriptTypeAction));
+                    AddTooltip(labelActionParam2, labelActionParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 2, ScriptTypeId.ScriptTypeAction));
+                    AddTooltip(labelActionParam3, labelActionParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 3, ScriptTypeId.ScriptTypeAction));
+                    AddTooltip(labelActionParam4, labelActionParam4.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 4, ScriptTypeId.ScriptTypeAction));
+                    AddTooltip(labelActionParam5, labelActionParam5.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 5, ScriptTypeId.ScriptTypeAction));
+                    AddTooltip(labelActionParam6, labelActionParam6.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(actionType, 6, ScriptTypeId.ScriptTypeAction));
                 }
 
                 //! Target parameters
-                int target_type = selectedScript.target_type;
-                comboBoxTargetType.SelectedIndex = target_type;
+                int targetType = selectedScript.target_type;
+                comboBoxTargetType.SelectedIndex = targetType;
                 textBoxTargetParam1.Text = selectedScript.target_param1.ToString();
                 textBoxTargetParam2.Text = selectedScript.target_param2.ToString();
                 textBoxTargetParam3.Text = selectedScript.target_param3.ToString();
-                labelTargetParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(target_type, 1, ScriptTypeId.ScriptTypeTarget);
-                labelTargetParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(target_type, 2, ScriptTypeId.ScriptTypeTarget);
-                labelTargetParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(target_type, 3, ScriptTypeId.ScriptTypeTarget);
+                labelTargetParam1.Text = SAI_Editor_Manager.Instance.GetParameterStringById(targetType, 1, ScriptTypeId.ScriptTypeTarget);
+                labelTargetParam2.Text = SAI_Editor_Manager.Instance.GetParameterStringById(targetType, 2, ScriptTypeId.ScriptTypeTarget);
+                labelTargetParam3.Text = SAI_Editor_Manager.Instance.GetParameterStringById(targetType, 3, ScriptTypeId.ScriptTypeTarget);
 
                 if (!Settings.Default.ShowTooltipsStaticly)
                 {
-                    AddTooltip(comboBoxTargetType, comboBoxTargetType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(target_type, ScriptTypeId.ScriptTypeTarget));
-                    AddTooltip(labelTargetParam1, labelTargetParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(target_type, 1, ScriptTypeId.ScriptTypeTarget));
-                    AddTooltip(labelTargetParam2, labelTargetParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(target_type, 2, ScriptTypeId.ScriptTypeTarget));
-                    AddTooltip(labelTargetParam3, labelTargetParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(target_type, 3, ScriptTypeId.ScriptTypeTarget));
+                    AddTooltip(comboBoxTargetType, comboBoxTargetType.SelectedItem.ToString(), SAI_Editor_Manager.Instance.GetScriptTypeTooltipById(targetType, ScriptTypeId.ScriptTypeTarget));
+                    AddTooltip(labelTargetParam1, labelTargetParam1.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(targetType, 1, ScriptTypeId.ScriptTypeTarget));
+                    AddTooltip(labelTargetParam2, labelTargetParam2.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(targetType, 2, ScriptTypeId.ScriptTypeTarget));
+                    AddTooltip(labelTargetParam3, labelTargetParam3.Text, SAI_Editor_Manager.Instance.GetParameterTooltipById(targetType, 3, ScriptTypeId.ScriptTypeTarget));
                 }
 
                 textBoxTargetX.Text = selectedScript.target_x;
@@ -635,12 +635,12 @@ namespace SAI_Editor
                 textBoxTargetO.Text = selectedScript.target_o;
                 textBoxComments.Text = selectedScript.comment;
 
-                AdjustAllParameterFields(event_type, action_type, target_type);
-                updatingFieldsBasedOnSelectedScript = false;
+                AdjustAllParameterFields(eventType, actionType, targetType);
+                _updatingFieldsBasedOnSelectedScript = false;
             }
             catch
             {
-                updatingFieldsBasedOnSelectedScript = false;
+                _updatingFieldsBasedOnSelectedScript = false;
                 MessageBox.Show("Something went wrong while attempting to edit the fields based on the new selection.", "Something went wrong!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -661,7 +661,7 @@ namespace SAI_Editor
             return "None";
         }
 
-        public void AdjustAllParameterFields(int event_type, int action_type, int target_type)
+        public void AdjustAllParameterFields(int event_type, int actionType, int targetType)
         {
             SetVisibilityOfAllParamButtons(false);
 
@@ -706,7 +706,7 @@ namespace SAI_Editor
                     break;
             }
 
-            switch ((SmartAction)action_type)
+            switch ((SmartAction)actionType)
             {
                 case SmartAction.SMART_ACTION_CAST: //! Spell entry & Cast flags
                 case SmartAction.SMART_ACTION_INVOKER_CAST: //! Spell entry & Cast flags
@@ -800,7 +800,7 @@ namespace SAI_Editor
                     break;
             }
 
-            switch ((SmartTarget)target_type)
+            switch ((SmartTarget)targetType)
             {
                 case SmartTarget.SMART_TARGET_CREATURE_GUID:
                     buttonTargetParamOneSearch.Visible = true; //! Creature guid
@@ -868,8 +868,7 @@ namespace SAI_Editor
             }
             else
             {
-                int targetType;
-                Int32.TryParse(textBox.Text, out targetType);
+                Int32.TryParse(textBox.Text, out var targetType);
 
                 if (targetType > max)
                 {
@@ -890,7 +889,7 @@ namespace SAI_Editor
             SmartScript clonedSmartScript = ((SmartScriptList)customObjectListView.List).SelectedScript.Clone();
 
             if (!Settings.Default.DuplicatePrimaryFields)
-                clonedSmartScript.id = ++lastSmartScriptIdOfScript;
+                clonedSmartScript.id = ++LastSmartScriptIdOfScript;
 
             customObjectListView.List.AddScript(clonedSmartScript, selectNewItem: true);
 
@@ -907,11 +906,11 @@ namespace SAI_Editor
 
             int prevSelectedIndex = customObjectListView.SelectedIndex;
 
-            if (((SmartScript)customObjectListView.SelectedObjects[0]).entryorguid == originalEntryOrGuidAndSourceType.entryOrGuid)
-                if (((SmartScript)customObjectListView.SelectedObjects[0]).id == lastSmartScriptIdOfScript)
-                    lastSmartScriptIdOfScript--;
+            if (((SmartScript)customObjectListView.SelectedObjects[0]).entryorguid == OriginalEntryOrGuidAndSourceType.entryOrGuid)
+                if (((SmartScript)customObjectListView.SelectedObjects[0]).id == LastSmartScriptIdOfScript)
+                    LastSmartScriptIdOfScript--;
 
-            lastDeletedSmartScripts.Add(((SmartScriptList)customObjectListView.List).SelectedScript.Clone());
+            _lastDeletedSmartScripts.Add(((SmartScriptList)customObjectListView.List).SelectedScript.Clone());
             customObjectListView.List.RemoveScript(((SmartScriptList)customObjectListView.List).SelectedScript);
             SetGenerateCommentsEnabled(customObjectListView.Items.Count > 0 && Settings.Default.UseWorldDatabase);
 
@@ -927,7 +926,7 @@ namespace SAI_Editor
         public void SetGenerateCommentsEnabled(bool enabled)
         {
             buttonGenerateComments.Enabled = enabled;
-            MainForm.menuItemGenerateComment.Enabled = enabled;
+            _mainForm.menuItemGenerateComment.Enabled = enabled;
         }
 
         public void ReSelectListViewItemWithPrevIndex(int prevIndex)
@@ -944,12 +943,12 @@ namespace SAI_Editor
                 return;
 
             buttonGenerateSql.Enabled = false;
-            MainForm.menuItemGenerateSql.Enabled = false;
+            _mainForm.menuItemGenerateSql.Enabled = false;
             //int prevSelectedIndex = customObjectListView.SelectedObjects.Count > 0 ? customObjectListView.SelectedObjects[0].Index : 0;
 
             if (checkBoxListActionlistsOrEntries.Checked)
             {
-                List<SmartScript> smartScripts = await GetSmartScriptsForEntryAndSourceType(originalEntryOrGuidAndSourceType.entryOrGuid.ToString(), originalEntryOrGuidAndSourceType.sourceType);
+                List<SmartScript> smartScripts = await GetSmartScriptsForEntryAndSourceType(OriginalEntryOrGuidAndSourceType.entryOrGuid.ToString(), OriginalEntryOrGuidAndSourceType.sourceType);
 
                 //! Only add the new smartscript if it doesn't yet exist
                 foreach (SmartScript newSmartScript in smartScripts)
@@ -987,12 +986,12 @@ namespace SAI_Editor
                 customObjectListView.SelectObject(customObjectListView.SelectedObjects.Count > 0 ? customObjectListView.SelectedObjects[0] : customObjectListView.Objects.Cast<object>().ElementAt(0));
 
             buttonGenerateSql.Enabled = customObjectListView.Items.Count > 0;
-            MainForm.menuItemGenerateSql.Enabled = customObjectListView.Items.Count > 0;
+            _mainForm.menuItemGenerateSql.Enabled = customObjectListView.Items.Count > 0;
         }
 
         public void RemoveNonOriginalScriptsFromView()
         {
-            List<DatabaseClass> smartScriptsToRemove = ListViewList.SmartScripts.Where(smartScript => smartScript.source_type != (int)originalEntryOrGuidAndSourceType.sourceType).Cast<DatabaseClass>().ToList();
+            List<DatabaseClass> smartScriptsToRemove = ListViewList.SmartScripts.Where(smartScript => smartScript.source_type != (int)OriginalEntryOrGuidAndSourceType.sourceType).Cast<DatabaseClass>().ToList();
 
             foreach (SmartScript smartScript in smartScriptsToRemove.Cast<SmartScript>())
                 customObjectListView.List.RemoveScript(smartScript);
@@ -1054,18 +1053,18 @@ namespace SAI_Editor
                 return;
             }
 
-            lastSmartScriptIdOfScript = 0;
-            int source_type = (int)GetSourceTypeByIndex();
-            string sourceTypeString = SAI_Editor_Manager.Instance.GetSourceTypeString((SourceTypes)source_type).ToLower();
+            LastSmartScriptIdOfScript = 0;
+            int sourceType = (int)GetSourceTypeByIndex();
+            string sourceTypeString = SAI_Editor_Manager.Instance.GetSourceTypeString((SourceTypes)sourceType).ToLower();
 
             if (!Settings.Default.UseWorldDatabase)
                 goto SkipWorldDatabaseChecks;
 
-            string aiName = await SAI_Editor_Manager.Instance.worldDatabase.GetObjectAiName(entryorguid, source_type);
-            List<SmartScript> smartScripts = await SAI_Editor_Manager.Instance.worldDatabase.GetSmartScripts(entryorguid, source_type);
+            string aiName = await SAI_Editor_Manager.Instance.WorldDatabase.GetObjectAiName(entryorguid, sourceType);
+            List<SmartScript> smartScripts = await SAI_Editor_Manager.Instance.WorldDatabase.GetSmartScripts(entryorguid, sourceType);
 
             //! Allow adding new lines even if the AIName is already set
-            if ((SourceTypes)source_type == SourceTypes.SourceTypeAreaTrigger)
+            if ((SourceTypes)sourceType == SourceTypes.SourceTypeAreaTrigger)
             {
                 if (aiName != String.Empty)
                 {
@@ -1115,7 +1114,7 @@ namespace SAI_Editor
                         if (!aiNameIsSmart)
                         {
                             //! We don't have to target areatrigger_scripts here, as we've already done this a few lines up
-                            string sqlOutput = "UPDATE `" + GetTemplateTableBySourceType((SourceTypes)source_type) + "` SET `AIName`=" + '"' + '"' + " WHERE `entry`=" + entryorguid + ";\n";
+                            string sqlOutput = "UPDATE `" + GetTemplateTableBySourceType((SourceTypes)sourceType) + "` SET `AIName`=" + '"' + '"' + " WHERE `entry`=" + entryorguid + ";\n";
 
                             using (SqlOutputForm sqlOutputForm = new SqlOutputForm(sqlOutput, false, saveToFile: false))
                                 sqlOutputForm.ShowDialog(this);
@@ -1127,7 +1126,7 @@ namespace SAI_Editor
                     return;
                 }
 
-                string scriptName = await SAI_Editor_Manager.Instance.worldDatabase.GetObjectScriptName(entryorguid, source_type);
+                string scriptName = await SAI_Editor_Manager.Instance.WorldDatabase.GetObjectScriptName(entryorguid, sourceType);
 
                 if (scriptName != String.Empty)
                 {
@@ -1142,7 +1141,7 @@ namespace SAI_Editor
             {
                 string errorMessage = "This " + sourceTypeString + " already has smart scripts";// (without its AIName set to SmartAI)! Do you want to load it instead?";
 
-                if ((SourceTypes)source_type != SourceTypes.SourceTypeScriptedActionlist)
+                if ((SourceTypes)sourceType != SourceTypes.SourceTypeScriptedActionlist)
                     errorMessage += " (without its AIName set to SmartAI)!";
                 else
                     errorMessage += "!";
@@ -1162,14 +1161,16 @@ namespace SAI_Editor
             pictureBoxLoadScript.Enabled = false;
             pictureBoxCreateScript.Enabled = false;
 
-            originalEntryOrGuidAndSourceType.entryOrGuid = entryorguid;
-            originalEntryOrGuidAndSourceType.sourceType = (SourceTypes)source_type;
+            OriginalEntryOrGuidAndSourceType.entryOrGuid = entryorguid;
+            OriginalEntryOrGuidAndSourceType.sourceType = (SourceTypes)sourceType;
 
             ListViewList.ClearScripts();
 
-            SmartScript newSmartScript = new SmartScript();
-            newSmartScript.entryorguid = entryorguid;
-            newSmartScript.source_type = source_type;
+            SmartScript newSmartScript = new SmartScript
+            {
+                entryorguid = entryorguid,
+                source_type = sourceType
+            };
 
             if (checkBoxLockEventId.Checked)
                 newSmartScript.id = 0;
@@ -1202,7 +1203,7 @@ namespace SAI_Editor
             newSmartScript.target_o = textBoxTargetO.Text;
 
             if (Settings.Default.GenerateComments && Settings.Default.UseWorldDatabase)
-                newSmartScript.comment = await CommentGenerator.Instance.GenerateCommentFor(newSmartScript, originalEntryOrGuidAndSourceType);
+                newSmartScript.comment = await CommentGenerator.Instance.GenerateCommentFor(newSmartScript, OriginalEntryOrGuidAndSourceType);
             else if (textBoxComments.Text.Contains(" - Event - Action (phase) (dungeon difficulty)"))
                 newSmartScript.comment = SAI_Editor_Manager.Instance.GetDefaultCommentForSourceType((SourceTypes)newSmartScript.source_type);
             else
@@ -1249,15 +1250,15 @@ namespace SAI_Editor
                 return;
 
             buttonGenerateSql.Enabled = false;
-            MainForm.menuItemGenerateSql.Enabled = false;
+            _mainForm.menuItemGenerateSql.Enabled = false;
             pictureBoxLoadScript.Enabled = false;
             pictureBoxCreateScript.Enabled = false;
-            lastSmartScriptIdOfScript = 0;
+            LastSmartScriptIdOfScript = 0;
 
             if (entryorguid != -1 && sourceType != SourceTypes.SourceTypeNone)
             {
-                originalEntryOrGuidAndSourceType.entryOrGuid = entryorguid;
-                originalEntryOrGuidAndSourceType.sourceType = sourceType;
+                OriginalEntryOrGuidAndSourceType.entryOrGuid = entryorguid;
+                OriginalEntryOrGuidAndSourceType.sourceType = sourceType;
                 textBoxEntryOrGuid.Text = entryorguid.ToString();
                 comboBoxSourceType.SelectedIndex = GetIndexBySourceType(sourceType);
             }
@@ -1265,7 +1266,7 @@ namespace SAI_Editor
             {
                 try
                 {
-                    originalEntryOrGuidAndSourceType.entryOrGuid = Int32.Parse(textBoxEntryOrGuid.Text);
+                    OriginalEntryOrGuidAndSourceType.entryOrGuid = Int32.Parse(textBoxEntryOrGuid.Text);
                 }
                 catch (OverflowException)
                 {
@@ -1278,12 +1279,12 @@ namespace SAI_Editor
                     return;
                 }
 
-                originalEntryOrGuidAndSourceType.sourceType = GetSourceTypeByIndex();
+                OriginalEntryOrGuidAndSourceType.sourceType = GetSourceTypeByIndex();
             }
 
-            List<SmartScript> smartScripts = await GetSmartScriptsForEntryAndSourceType(originalEntryOrGuidAndSourceType.entryOrGuid.ToString(), originalEntryOrGuidAndSourceType.sourceType, showErrorIfNoneFound, promptCreateIfNoneFound);
+            List<SmartScript> smartScripts = await GetSmartScriptsForEntryAndSourceType(OriginalEntryOrGuidAndSourceType.entryOrGuid.ToString(), OriginalEntryOrGuidAndSourceType.sourceType, showErrorIfNoneFound, promptCreateIfNoneFound);
             ListViewList.ReplaceScripts(smartScripts.Cast<DatabaseClass>().ToList());
-            checkBoxListActionlistsOrEntries.Text = originalEntryOrGuidAndSourceType.sourceType == SourceTypes.SourceTypeScriptedActionlist ? "List entries too" : "List actionlists too";
+            checkBoxListActionlistsOrEntries.Text = OriginalEntryOrGuidAndSourceType.sourceType == SourceTypes.SourceTypeScriptedActionlist ? "List entries too" : "List actionlists too";
 
             buttonNewLine.Enabled = false;
             SetGenerateCommentsEnabled(customObjectListView.Items.Count > 0 && Settings.Default.UseWorldDatabase);
@@ -1303,17 +1304,17 @@ namespace SAI_Editor
                     {
                         ListViewItem item = customObjectListView.Items[i];
 
-                        if (item.Text == originalEntryOrGuidAndSourceType.entryOrGuid.ToString())
-                            lastSmartScriptIdOfScript = CustomConverter.ToInt32(item.SubItems[2].Text);
+                        if (item.Text == OriginalEntryOrGuidAndSourceType.entryOrGuid.ToString())
+                            LastSmartScriptIdOfScript = CustomConverter.ToInt32(item.SubItems[2].Text);
                     }
                 }
                 else
-                    lastSmartScriptIdOfScript = CustomConverter.ToInt32(customObjectListView.Items[customObjectListView.Items.Count - 1].SubItems[2].Text);
+                    LastSmartScriptIdOfScript = CustomConverter.ToInt32(customObjectListView.Items[customObjectListView.Items.Count - 1].SubItems[2].Text);
             }
 
             buttonNewLine.Enabled = textBoxEntryOrGuid.Text.Length > 0;
             buttonGenerateSql.Enabled = customObjectListView.Items.Count > 0;
-            MainForm.menuItemGenerateSql.Enabled = customObjectListView.Items.Count > 0;
+            _mainForm.menuItemGenerateSql.Enabled = customObjectListView.Items.Count > 0;
             pictureBoxCreateScript.Enabled = textBoxEntryOrGuid.Text.Length > 0;
             ResizeColumns();
         }
@@ -2054,7 +2055,7 @@ namespace SAI_Editor
                     return;
                 }
 
-                string aiName = await SAI_Editor_Manager.Instance.worldDatabase.GetObjectAiName(CustomConverter.ToInt32(textBoxEntryOrGuid.Text), (int)GetSourceTypeByIndex());
+                string aiName = await SAI_Editor_Manager.Instance.WorldDatabase.GetObjectAiName(CustomConverter.ToInt32(textBoxEntryOrGuid.Text), (int)GetSourceTypeByIndex());
 
                 if (!SAI_Editor_Manager.Instance.IsAiNameSmartAi(aiName))
                 {
@@ -2070,17 +2071,19 @@ namespace SAI_Editor
             }
 
             buttonNewLine.Enabled = false;
-            SmartScript newSmartScript = new SmartScript();
-            newSmartScript.entryorguid = originalEntryOrGuidAndSourceType.entryOrGuid;
-            newSmartScript.source_type = (int)originalEntryOrGuidAndSourceType.sourceType;
+            SmartScript newSmartScript = new SmartScript
+            {
+                entryorguid = OriginalEntryOrGuidAndSourceType.entryOrGuid,
+                source_type = (int)OriginalEntryOrGuidAndSourceType.sourceType
+            };
 
             if (checkBoxLockEventId.Checked)
-                newSmartScript.id = ++lastSmartScriptIdOfScript;
+                newSmartScript.id = ++LastSmartScriptIdOfScript;
             else
                 newSmartScript.id = -1;
 
             if (Settings.Default.GenerateComments && Settings.Default.UseWorldDatabase)
-                newSmartScript.comment = await CommentGenerator.Instance.GenerateCommentFor(newSmartScript, originalEntryOrGuidAndSourceType);
+                newSmartScript.comment = await CommentGenerator.Instance.GenerateCommentFor(newSmartScript, OriginalEntryOrGuidAndSourceType);
             else
                 newSmartScript.comment = SAI_Editor_Manager.Instance.GetDefaultCommentForSourceType((SourceTypes)newSmartScript.source_type);
 
@@ -2111,7 +2114,7 @@ namespace SAI_Editor
         {
             if (customObjectListView.SelectedObjects.Count > 0)
             {
-                if (!updatingFieldsBasedOnSelectedScript && ListViewList.SelectedScript.id.ToString() == textBoxLinkTo.Text)
+                if (!_updatingFieldsBasedOnSelectedScript && ListViewList.SelectedScript.id.ToString() == textBoxLinkTo.Text)
                 {
                     MessageBox.Show("You can not link to or from the same id you're linking to.", "Something went wrong!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     textBoxLinkFrom.Text = GetLinkFromForSelection();
@@ -2192,32 +2195,32 @@ namespace SAI_Editor
             }
             catch
             {
-                previousLinkFrom = -1;
+                PreviousLinkFrom = -1;
                 return;
             }
 
             //! Only if the property was changed by hand (by user) and not by selecting a line
-            if (!updatingFieldsBasedOnSelectedScript)
+            if (!_updatingFieldsBasedOnSelectedScript)
             {
                 if (newLinkFrom == ListViewList.SelectedScript.id)
                 {
                     MessageBox.Show("You can not link to or from the same id you're linking to.", "Something went wrong!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     textBoxLinkFrom.Text = GetLinkFromForSelection();
-                    previousLinkFrom = -1;
+                    PreviousLinkFrom = -1;
                     return;
                 }
 
-                if (previousLinkFrom == newLinkFrom)
+                if (PreviousLinkFrom == newLinkFrom)
                     return;
 
                 for (int i = 0; i < ListViewList.SmartScripts.Count; ++i)
                 {
                     SmartScript smartScript = ListViewList.SmartScripts[i];
 
-                    if (smartScript.entryorguid != originalEntryOrGuidAndSourceType.entryOrGuid || smartScript.source_type != (int)originalEntryOrGuidAndSourceType.sourceType)
+                    if (smartScript.entryorguid != OriginalEntryOrGuidAndSourceType.entryOrGuid || smartScript.source_type != (int)OriginalEntryOrGuidAndSourceType.sourceType)
                         continue;
 
-                    if (smartScript.link == previousLinkFrom)
+                    if (smartScript.link == PreviousLinkFrom)
                     {
                         smartScript.link = 0;
                         await GenerateCommentForSmartScript(smartScript, false);
@@ -2233,7 +2236,7 @@ namespace SAI_Editor
                 ListViewList.Apply(true);
             }
 
-            previousLinkFrom = newLinkFrom;
+            PreviousLinkFrom = newLinkFrom;
         }
 
         private async void textBoxEventParam1_Leave(object sender, EventArgs e)
@@ -2374,9 +2377,8 @@ namespace SAI_Editor
             if (!Char.IsPunctuation(e.KeyChar) && !Char.IsDigit(e.KeyChar))
                 return;
 
-            double result;
 
-            if (!Double.TryParse((sender as TextBox).Text + e.KeyChar, out result))
+            if (!Double.TryParse((sender as TextBox).Text + e.KeyChar, out double result))
                 e.Handled = true;
         }
 
@@ -2445,8 +2447,8 @@ namespace SAI_Editor
 
                 if (uniqueEntriesOrGuidsAndSourceTypes != null && uniqueEntriesOrGuidsAndSourceTypes.Count == 1)
                 {
-                    originalEntryOrGuidAndSourceType.entryOrGuid = uniqueEntriesOrGuidsAndSourceTypes[0].entryOrGuid;
-                    originalEntryOrGuidAndSourceType.sourceType = uniqueEntriesOrGuidsAndSourceTypes[0].sourceType;
+                    OriginalEntryOrGuidAndSourceType.entryOrGuid = uniqueEntriesOrGuidsAndSourceTypes[0].entryOrGuid;
+                    OriginalEntryOrGuidAndSourceType.sourceType = uniqueEntriesOrGuidsAndSourceTypes[0].sourceType;
                 }
             }
         }
@@ -2483,16 +2485,18 @@ namespace SAI_Editor
                 {
                     if (!entriesOrGuidsAndSourceTypesPerSourceType.ContainsKey(entryOrGuidAndSourceType.sourceType))
                     {
-                        List<EntryOrGuidAndSourceType> _newEntryOrGuidAndSourceType = new List<EntryOrGuidAndSourceType>();
-                        _newEntryOrGuidAndSourceType.Add(entryOrGuidAndSourceType);
-                        entriesOrGuidsAndSourceTypesPerSourceType[entryOrGuidAndSourceType.sourceType] = _newEntryOrGuidAndSourceType;
+                        List<EntryOrGuidAndSourceType> newEntryOrGuidAndSourceType = new List<EntryOrGuidAndSourceType>
+                        {
+                            entryOrGuidAndSourceType
+                        };
+                        entriesOrGuidsAndSourceTypesPerSourceType[entryOrGuidAndSourceType.sourceType] = newEntryOrGuidAndSourceType;
                     }
                     else
                         entriesOrGuidsAndSourceTypesPerSourceType[entryOrGuidAndSourceType.sourceType].Add(entryOrGuidAndSourceType);
                 }
             }
 
-            switch (originalEntryOrGuidAndSourceType.sourceType)
+            switch (OriginalEntryOrGuidAndSourceType.sourceType)
             {
                 case SourceTypes.SourceTypeCreature:
                 case SourceTypes.SourceTypeGameobject:
@@ -2502,7 +2506,7 @@ namespace SAI_Editor
                         break;
                     }
 
-                    sourceName = " " + await SAI_Editor_Manager.Instance.worldDatabase.GetObjectNameByIdOrGuidAndSourceType(originalEntryOrGuidAndSourceType.sourceType, originalEntryOrGuidAndSourceType.entryOrGuid);
+                    sourceName = " " + await SAI_Editor_Manager.Instance.WorldDatabase.GetObjectNameByIdOrGuidAndSourceType(OriginalEntryOrGuidAndSourceType.sourceType, OriginalEntryOrGuidAndSourceType.entryOrGuid);
                     break;
                 case SourceTypes.SourceTypeAreaTrigger:
                     sourceName = " Areatrigger";
@@ -2523,7 +2527,7 @@ namespace SAI_Editor
                                 if (entryOrGuidAndSourceType.sourceType != SourceTypes.SourceTypeGameobject && entryOrGuidAndSourceType.sourceType != SourceTypes.SourceTypeCreature)
                                     continue;
 
-                                sourceName = " " + await SAI_Editor_Manager.Instance.worldDatabase.GetObjectNameByIdOrGuidAndSourceType(entryOrGuidAndSourceType.sourceType, entryOrGuidAndSourceType.entryOrGuid);
+                                sourceName = " " + await SAI_Editor_Manager.Instance.WorldDatabase.GetObjectNameByIdOrGuidAndSourceType(entryOrGuidAndSourceType.sourceType, entryOrGuidAndSourceType.entryOrGuid);
                                 break;
                             }
                         }
@@ -2537,15 +2541,15 @@ namespace SAI_Editor
                     break;
             }
 
-            bool originalEntryIsGuid = originalEntryOrGuidAndSourceType.entryOrGuid < 0;
+            bool originalEntryIsGuid = OriginalEntryOrGuidAndSourceType.entryOrGuid < 0;
             string sourceSet = originalEntryIsGuid ? "@GUID" : "@ENTRY";
 
             generatedSql += "--" + sourceName + " SAI\n";
-            generatedSql += "SET " + sourceSet + " := " + originalEntryOrGuidAndSourceType.entryOrGuid + ";\n";
+            generatedSql += "SET " + sourceSet + " := " + OriginalEntryOrGuidAndSourceType.entryOrGuid + ";\n";
 
             if (entriesOrGuidsAndSourceTypes.Count == 1)
             {
-                switch (originalEntryOrGuidAndSourceType.sourceType)
+                switch (OriginalEntryOrGuidAndSourceType.sourceType)
                 {
                     case SourceTypes.SourceTypeCreature:
                         if (!Settings.Default.UseWorldDatabase)
@@ -2556,7 +2560,7 @@ namespace SAI_Editor
 
                         if (originalEntryIsGuid)
                         {
-                            int actualEntry = await SAI_Editor_Manager.Instance.worldDatabase.GetCreatureIdByGuid(-originalEntryOrGuidAndSourceType.entryOrGuid);
+                            int actualEntry = await SAI_Editor_Manager.Instance.WorldDatabase.GetCreatureIdByGuid(-OriginalEntryOrGuidAndSourceType.entryOrGuid);
                             generatedSql += "UPDATE `creature_template` SET `AIName`=" + '"' + "SmartAI" + '"' + " WHERE `entry`=" + actualEntry + ";\n";
                         }
                         else
@@ -2572,7 +2576,7 @@ namespace SAI_Editor
 
                         if (originalEntryIsGuid)
                         {
-                            int actualEntry = await SAI_Editor_Manager.Instance.worldDatabase.GetGameobjectIdByGuid(-originalEntryOrGuidAndSourceType.entryOrGuid);
+                            int actualEntry = await SAI_Editor_Manager.Instance.WorldDatabase.GetGameobjectIdByGuid(-OriginalEntryOrGuidAndSourceType.entryOrGuid);
                             generatedSql += "UPDATE `gameobject_template` SET `AIName`=" + '"' + "SmartGameObjectAI" + '"' + " WHERE `entry`=" + actualEntry + ";\n";
                         }
                         else
@@ -2588,7 +2592,7 @@ namespace SAI_Editor
                         break;
                 }
 
-                generatedSql += "DELETE FROM `smart_scripts` WHERE `entryorguid`=" + sourceSet + " AND `source_type`=" + (int)originalEntryOrGuidAndSourceType.sourceType + ";\n";
+                generatedSql += "DELETE FROM `smart_scripts` WHERE `entryorguid`=" + sourceSet + " AND `source_type`=" + (int)OriginalEntryOrGuidAndSourceType.sourceType + ";\n";
             }
             else if (entriesOrGuidsAndSourceTypes.Count > 1)
             {
@@ -2609,7 +2613,7 @@ namespace SAI_Editor
                                 string tableToTarget = sourceTypeIsCreature ? "creature_template" : "gameobject_template";
                                 string newAiName = sourceTypeIsCreature ? "SmartAI" : "SmartGameObjectAI";
 
-                                if (entryOrGuidAndSourceType.entryOrGuid == originalEntryOrGuidAndSourceType.entryOrGuid)
+                                if (entryOrGuidAndSourceType.entryOrGuid == OriginalEntryOrGuidAndSourceType.entryOrGuid)
                                     entryOrGuidToUse = sourceSet;
 
                                 if (entryOrGuidAndSourceType.entryOrGuid < 0)
@@ -2620,7 +2624,7 @@ namespace SAI_Editor
                                         break;
                                     }
 
-                                    entryOrGuidToUse = (await SAI_Editor_Manager.Instance.worldDatabase.GetObjectIdByGuidAndSourceType(-entryOrGuidAndSourceType.entryOrGuid, (int)entryOrGuidAndSourceType.sourceType)).ToString();
+                                    entryOrGuidToUse = (await SAI_Editor_Manager.Instance.WorldDatabase.GetObjectIdByGuidAndSourceType(-entryOrGuidAndSourceType.entryOrGuid, (int)entryOrGuidAndSourceType.sourceType)).ToString();
 
                                     if (entryOrGuidToUse == "0")
                                     {
@@ -2673,7 +2677,7 @@ namespace SAI_Editor
                             EntryOrGuidAndSourceType entryOrGuidAndSourceType = listEntryOrGuidAndSourceTypes[i];
                             sourceTypeOfSource = entryOrGuidAndSourceType.sourceType;
 
-                            if (entryOrGuidAndSourceType.entryOrGuid == originalEntryOrGuidAndSourceType.entryOrGuid)
+                            if (entryOrGuidAndSourceType.entryOrGuid == OriginalEntryOrGuidAndSourceType.entryOrGuid)
                                 generatedSql += sourceSet;
                             else
                                 generatedSql += entryOrGuidAndSourceType.entryOrGuid;
@@ -2690,7 +2694,7 @@ namespace SAI_Editor
                     {
                         generatedSql += "DELETE FROM `smart_scripts` WHERE `entryorguid`=";
 
-                        if (listEntryOrGuidAndSourceTypes[0].entryOrGuid == originalEntryOrGuidAndSourceType.entryOrGuid)
+                        if (listEntryOrGuidAndSourceTypes[0].entryOrGuid == OriginalEntryOrGuidAndSourceType.entryOrGuid)
                             generatedSql += sourceSet;
                         else
                             generatedSql += listEntryOrGuidAndSourceTypes[0].entryOrGuid;
@@ -2712,7 +2716,7 @@ namespace SAI_Editor
                 SmartScript smartScript = smartScripts[i];
                 string actualSourceSet = sourceSet;
 
-                if (originalEntryOrGuidAndSourceType.entryOrGuid != smartScripts[i].entryorguid)
+                if (OriginalEntryOrGuidAndSourceType.entryOrGuid != smartScripts[i].entryorguid)
                     actualSourceSet = smartScripts[i].entryorguid.ToString();
 
                 int[] eventParameters = new int[4];
@@ -2749,17 +2753,17 @@ namespace SAI_Editor
                 }
 
                 //! SQL accepts a period instead of a comma for float/double values
-                string target_x = smartScript.target_x.Replace(",", ".");
-                string target_y = smartScript.target_y.Replace(",", ".");
-                string target_z = smartScript.target_z.Replace(",", ".");
-                string target_o = smartScript.target_o.Replace(",", ".");
+                string targetX = smartScript.target_x.Replace(",", ".");
+                string targetY = smartScript.target_y.Replace(",", ".");
+                string targetZ = smartScript.target_z.Replace(",", ".");
+                string targetO = smartScript.target_o.Replace(",", ".");
 
                 generatedSql += "(" + actualSourceSet + "," + smartScript.source_type + "," + smartScript.id + "," + smartScript.link + "," + smartScript.event_type + "," +
                                               smartScript.event_phase_mask + "," + smartScript.event_chance + "," + smartScript.event_flags + "," + eventParameters[0] + "," +
                                               eventParameters[1] + "," + eventParameters[2] + "," + eventParameters[3] + "," + smartScript.action_type + "," +
                                               actionParameters[0] + "," + actionParameters[1] + "," + actionParameters[2] + "," + actionParameters[3] + "," +
                                               actionParameters[4] + "," + actionParameters[5] + "," + smartScript.target_type + "," + targetParameters[0] + "," +
-                                              targetParameters[1] + "," + targetParameters[2] + "," + target_x + "," + target_y + "," + target_z + "," + target_o + "," +
+                                              targetParameters[1] + "," + targetParameters[2] + "," + targetX + "," + targetY + "," + targetZ + "," + targetO + "," +
                                               '"' + smartScript.comment + '"' + ")";
 
                 if (i == smartScripts.Count - 1)
@@ -2779,11 +2783,11 @@ namespace SAI_Editor
                 for (int j = 0; j < 3; ++j)
                 {
                     string characterToReplace = charactersToReplace[j];
-                    string stringToReplace = originalEntryOrGuidAndSourceType.entryOrGuid + "0" + i.ToString() + characterToReplace;
+                    string stringToReplace = OriginalEntryOrGuidAndSourceType.entryOrGuid + "0" + i.ToString() + characterToReplace;
 
                     if (!generatedSql.Contains(stringToReplace))
                     {
-                        stringToReplace = originalEntryOrGuidAndSourceType.entryOrGuid + "0" + i.ToString() + ")";
+                        stringToReplace = OriginalEntryOrGuidAndSourceType.entryOrGuid + "0" + i.ToString() + ")";
 
                         if (!generatedSql.Contains(stringToReplace))
                             continue;
@@ -2811,25 +2815,25 @@ namespace SAI_Editor
 
             foreach (EntryOrGuidAndSourceType entryOrGuidAndSourceType in entriesOrGuidsAndSourceTypes)
             {
-                List<SmartScript> smartScripts = await SAI_Editor_Manager.Instance.worldDatabase.GetSmartScripts(entryOrGuidAndSourceType.entryOrGuid, (int)entryOrGuidAndSourceType.sourceType);
+                List<SmartScript> smartScripts = await SAI_Editor_Manager.Instance.WorldDatabase.GetSmartScripts(entryOrGuidAndSourceType.entryOrGuid, (int)entryOrGuidAndSourceType.sourceType);
                 string scriptName = String.Empty, aiName = String.Empty;
 
                 switch (entryOrGuidAndSourceType.sourceType)
                 {
                     case SourceTypes.SourceTypeCreature:
-                        scriptName = await SAI_Editor_Manager.Instance.worldDatabase.GetCreatureScriptNameById(entryOrGuidAndSourceType.entryOrGuid);
-                        aiName = await SAI_Editor_Manager.Instance.worldDatabase.GetCreatureAiNameById(entryOrGuidAndSourceType.entryOrGuid);
+                        scriptName = await SAI_Editor_Manager.Instance.WorldDatabase.GetCreatureScriptNameById(entryOrGuidAndSourceType.entryOrGuid);
+                        aiName = await SAI_Editor_Manager.Instance.WorldDatabase.GetCreatureAiNameById(entryOrGuidAndSourceType.entryOrGuid);
 
                         revertQuery += "UPDATE creature_template SET Ainame='" + aiName + "',Scriptname='" + scriptName + "' WHERE entry=" + entryOrGuidAndSourceType.entryOrGuid + ";";
                         break;
                     case SourceTypes.SourceTypeGameobject:
-                        scriptName = await SAI_Editor_Manager.Instance.worldDatabase.GetGameobjectScriptNameById(entryOrGuidAndSourceType.entryOrGuid);
-                        aiName = await SAI_Editor_Manager.Instance.worldDatabase.GetGameobjectAiNameById(entryOrGuidAndSourceType.entryOrGuid);
+                        scriptName = await SAI_Editor_Manager.Instance.WorldDatabase.GetGameobjectScriptNameById(entryOrGuidAndSourceType.entryOrGuid);
+                        aiName = await SAI_Editor_Manager.Instance.WorldDatabase.GetGameobjectAiNameById(entryOrGuidAndSourceType.entryOrGuid);
 
-                        revertQuery += "UPDATE gameobject_template SET Ainame='" + aiName + "',Scriptname='" + await SAI_Editor_Manager.Instance.worldDatabase.GetGameobjectScriptNameById(entryOrGuidAndSourceType.entryOrGuid) + "' WHERE entry=" + entryOrGuidAndSourceType.entryOrGuid + ";";
+                        revertQuery += "UPDATE gameobject_template SET Ainame='" + aiName + "',Scriptname='" + await SAI_Editor_Manager.Instance.WorldDatabase.GetGameobjectScriptNameById(entryOrGuidAndSourceType.entryOrGuid) + "' WHERE entry=" + entryOrGuidAndSourceType.entryOrGuid + ";";
                         break;
                     case SourceTypes.SourceTypeAreaTrigger:
-                        scriptName = await SAI_Editor_Manager.Instance.worldDatabase.GetAreaTriggerScriptNameById(entryOrGuidAndSourceType.entryOrGuid);
+                        scriptName = await SAI_Editor_Manager.Instance.WorldDatabase.GetAreaTriggerScriptNameById(entryOrGuidAndSourceType.entryOrGuid);
 
                         if (scriptName != String.Empty)
                             revertQuery += "UPDATE areatrigger_scripts SET Scriptname='" + scriptName + "' WHERE entry=" + entryOrGuidAndSourceType.entryOrGuid + ";";
@@ -2878,7 +2882,7 @@ namespace SAI_Editor
             for (int i = 0; i < ListViewList.SmartScripts.Count; ++i)
             {
                 SmartScript smartScript = ListViewList.SmartScripts[i];
-                string newComment = await CommentGenerator.Instance.GenerateCommentFor(smartScript, originalEntryOrGuidAndSourceType, true, GetInitialSmartScriptLink(smartScript));
+                string newComment = await CommentGenerator.Instance.GenerateCommentFor(smartScript, OriginalEntryOrGuidAndSourceType, true, GetInitialSmartScriptLink(smartScript));
                 smartScript.comment = newComment;
                 ListViewList.ReplaceScript(smartScript);
                 FillFieldsBasedOnSelectedScript();
@@ -2910,9 +2914,9 @@ namespace SAI_Editor
 
             string newComment = smartScript.comment;
 
-            if (!updatingFieldsBasedOnSelectedScript)
+            if (!_updatingFieldsBasedOnSelectedScript)
             {
-                newComment = await CommentGenerator.Instance.GenerateCommentFor(smartScript, originalEntryOrGuidAndSourceType, true, GetInitialSmartScriptLink(smartScript));
+                newComment = await CommentGenerator.Instance.GenerateCommentFor(smartScript, OriginalEntryOrGuidAndSourceType, true, GetInitialSmartScriptLink(smartScript));
 
                 if (smartScript.link != 0 && (SmartEvent)smartScript.event_type != SmartEvent.SMART_EVENT_LINK)
                     await GenerateCommentForAllEventsLinkingFromSmartScript(smartScript);
@@ -2926,7 +2930,7 @@ namespace SAI_Editor
             smartScript.comment = newComment;
             ListViewList.ReplaceScript(smartScript);
 
-            if (!updatingFieldsBasedOnSelectedScript)
+            if (!_updatingFieldsBasedOnSelectedScript)
                 FillFieldsBasedOnSelectedScript();
 
             if (oldComment != newComment)
@@ -2950,7 +2954,7 @@ namespace SAI_Editor
                 if (smartScriptListView.entryorguid != smartScript.entryorguid)
                     continue;
 
-                smartScriptListView.comment = await CommentGenerator.Instance.GenerateCommentFor(smartScriptListView, originalEntryOrGuidAndSourceType, true, smartScript);
+                smartScriptListView.comment = await CommentGenerator.Instance.GenerateCommentFor(smartScriptListView, OriginalEntryOrGuidAndSourceType, true, smartScript);
                 ListViewList.ReplaceScript(smartScriptListView);
             }
         }
@@ -2969,12 +2973,12 @@ namespace SAI_Editor
 
                 if (smartScript.link == smartScriptListView.id)
                 {
-                    smartScriptListView.comment = await CommentGenerator.Instance.GenerateCommentFor(smartScriptListView, originalEntryOrGuidAndSourceType, true, GetInitialSmartScriptLink(smartScriptListView));
+                    smartScriptListView.comment = await CommentGenerator.Instance.GenerateCommentFor(smartScriptListView, OriginalEntryOrGuidAndSourceType, true, GetInitialSmartScriptLink(smartScriptListView));
                     ListViewList.ReplaceScript(smartScriptListView);
                 }
                 else if (smartScriptListView.link == smartScript.id)
                 {
-                    smartScript.comment = await CommentGenerator.Instance.GenerateCommentFor(smartScript, originalEntryOrGuidAndSourceType, true, GetInitialSmartScriptLink(smartScript));
+                    smartScript.comment = await CommentGenerator.Instance.GenerateCommentFor(smartScript, OriginalEntryOrGuidAndSourceType, true, GetInitialSmartScriptLink(smartScript));
                     ListViewList.ReplaceScript(smartScript);
                 }
             }
@@ -3020,8 +3024,10 @@ namespace SAI_Editor
             if (smartScriptInitial == null || smartScriptInitial.link == 0)
                 return null;
 
-            List<SmartScript> smartScriptsLinking = new List<SmartScript>();
-            smartScriptsLinking.Add(smartScriptInitial);
+            List<SmartScript> smartScriptsLinking = new List<SmartScript>
+            {
+                smartScriptInitial
+            };
             SmartScript lastInitialSmartScript = smartScriptInitial;
 
             foreach (SmartScript smartScriptInListView in ListViewList.SmartScripts)
@@ -3049,28 +3055,29 @@ namespace SAI_Editor
         {
             //int prevSelectedIndex = customObjectListView.SelectedObjects.Count > 0 ? customObjectListView.SelectedObjects[0].Index : 0;
 
-            List<string> properties = new List<string>();
-
-            properties.Add("event_phase_mask");
-            properties.Add("event_chance");
-            properties.Add("event_flags");
-            properties.Add("event_param1");
-            properties.Add("event_param2");
-            properties.Add("event_param3");
-            properties.Add("event_param4");
-            properties.Add("action_param1");
-            properties.Add("action_param2");
-            properties.Add("action_param3");
-            properties.Add("action_param4");
-            properties.Add("action_param5");
-            properties.Add("action_param6");
-            properties.Add("target_param1");
-            properties.Add("target_param2");
-            properties.Add("target_param3");
-            properties.Add("target_x");
-            properties.Add("target_y");
-            properties.Add("target_z");
-            properties.Add("target_o");
+            List<string> properties = new List<string>
+            {
+                "event_phase_mask",
+                "event_chance",
+                "event_flags",
+                "event_param1",
+                "event_param2",
+                "event_param3",
+                "event_param4",
+                "action_param1",
+                "action_param2",
+                "action_param3",
+                "action_param4",
+                "action_param5",
+                "action_param6",
+                "target_param1",
+                "target_param2",
+                "target_param3",
+                "target_x",
+                "target_y",
+                "target_z",
+                "target_o"
+            };
 
             //TODO: Performance check
             if (checkBoxShowBasicInfo.Checked)
@@ -3194,7 +3201,7 @@ namespace SAI_Editor
                 if (checkBoxUseStaticTooltips.Checked)
                     ExpandOrContractToShowStaticTooltips(false);
 
-                if (MainForm.radioButtonConnectToMySql.Checked)
+                if (_mainForm.radioButtonConnectToMySql.Checked)
                     TryToLoadScript(showErrorIfNoneFound: false);
 
                 ResizeColumns();
@@ -3204,21 +3211,21 @@ namespace SAI_Editor
         private void customObjectListView_CellRightClick(object sender, BrightIdeasSoftware.CellRightClickEventArgs e)
         {
             if (customObjectListView.FocusedItem.Bounds.Contains(e.Location))
-                MainForm.contextMenuStripListView.Show(Cursor.Position);
+                _mainForm.contextMenuStripListView.Show(Cursor.Position);
         }
 
         public void ExpandOrContractToShowStaticTooltips(bool expand)
         {
-            if (expandingListView == expand && contractingListView == !expand)
+            if (ExpandingListView == expand && ContractingListView == !expand)
                 return;
 
-            expandingListView = expand;
-            contractingListView = !expand;
+            ExpandingListView = expand;
+            ContractingListView = !expand;
 
             if (expand)
-                customObjectListViewHeightToChangeTo = customObjectListView.Height + (int)SaiEditorSizes.ListViewHeightContract;
+                _customObjectListViewHeightToChangeTo = customObjectListView.Height + (int)SaiEditorSizes.ListViewHeightContract;
             else
-                customObjectListViewHeightToChangeTo = customObjectListView.Height - (int)SaiEditorSizes.ListViewHeightContract;
+                _customObjectListViewHeightToChangeTo = customObjectListView.Height - (int)SaiEditorSizes.ListViewHeightContract;
 
             timerShowStaticTooltips.Enabled = true;
             checkBoxUseStaticTooltips.Checked = !expand;
@@ -3228,40 +3235,40 @@ namespace SAI_Editor
             {
                 panelStaticTooltipTypes.Visible = false;
                 panelStaticTooltipParameters.Visible = false;
-                customObjectListViewHeightToChangeTo = customObjectListView.Height + (int)SaiEditorSizes.ListViewHeightContract;
+                _customObjectListViewHeightToChangeTo = customObjectListView.Height + (int)SaiEditorSizes.ListViewHeightContract;
                 ChangeParameterFieldsBasedOnType();
             }
             else
             {
-                customObjectListViewHeightToChangeTo = customObjectListView.Height - (int)SaiEditorSizes.ListViewHeightContract;
+                _customObjectListViewHeightToChangeTo = customObjectListView.Height - (int)SaiEditorSizes.ListViewHeightContract;
                 //ChangeParameterFieldsBasedOnType();
             }
         }
 
         public void timerShowStaticTooltips_Tick(object sender, EventArgs e)
         {
-            if (expandingListView)
+            if (ExpandingListView)
             {
-                if (customObjectListView.Height < customObjectListViewHeightToChangeTo)
-                    customObjectListView.Height += expandAndContractSpeedListView;
+                if (customObjectListView.Height < _customObjectListViewHeightToChangeTo)
+                    customObjectListView.Height += ExpandAndContractSpeedListView;
                 else
                 {
-                    customObjectListView.Height = customObjectListViewHeightToChangeTo;
+                    customObjectListView.Height = _customObjectListViewHeightToChangeTo;
                     timerShowStaticTooltips.Enabled = false;
-                    expandingListView = false;
+                    ExpandingListView = false;
                     ToolTipHelper.DisableOrEnableAllToolTips(true);
                     checkBoxUseStaticTooltips.Enabled = true;
                 }
             }
-            else if (contractingListView)
+            else if (ContractingListView)
             {
-                if (customObjectListView.Height > customObjectListViewHeightToChangeTo)
-                    customObjectListView.Height -= expandAndContractSpeedListView;
+                if (customObjectListView.Height > _customObjectListViewHeightToChangeTo)
+                    customObjectListView.Height -= ExpandAndContractSpeedListView;
                 else
                 {
-                    customObjectListView.Height = customObjectListViewHeightToChangeTo;
+                    customObjectListView.Height = _customObjectListViewHeightToChangeTo;
                     timerShowStaticTooltips.Enabled = false;
-                    contractingListView = false;
+                    ContractingListView = false;
                     panelStaticTooltipTypes.Visible = true;
                     panelStaticTooltipParameters.Visible = true;
                     checkBoxUseStaticTooltips.Enabled = true;
@@ -3281,7 +3288,7 @@ namespace SAI_Editor
                 if (smartScript != ListViewList.SelectedScript)
                     continue;
 
-                string newComment = await CommentGenerator.Instance.GenerateCommentFor(smartScript, originalEntryOrGuidAndSourceType, true, GetInitialSmartScriptLink(smartScript));
+                string newComment = await CommentGenerator.Instance.GenerateCommentFor(smartScript, OriginalEntryOrGuidAndSourceType, true, GetInitialSmartScriptLink(smartScript));
                 smartScript.comment = newComment;
                 ListViewList.ReplaceScript(smartScript);
                 FillFieldsBasedOnSelectedScript();
@@ -3296,10 +3303,10 @@ namespace SAI_Editor
                 return;
 
             int entryorguid = ListViewList.SelectedScript.entryorguid;
-            SourceTypes source_type = (SourceTypes)ListViewList.SelectedScript.source_type;
+            SourceTypes sourceType = (SourceTypes)ListViewList.SelectedScript.source_type;
             ListViewList.ClearScripts();
             customObjectListView.Items.Clear();
-            TryToLoadScript(entryorguid, source_type);
+            TryToLoadScript(entryorguid, sourceType);
         }
 
         private async void buttonGenerateSql_Click(object sender, EventArgs e)

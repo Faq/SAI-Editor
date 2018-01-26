@@ -9,13 +9,13 @@ namespace SAI_Editor.Forms.SearchForms
 {
     public partial class SelectSmartScriptForm : Form
     {
-        private readonly List<List<SmartScript>> items;
+        private readonly List<List<SmartScript>> _items;
 
         public SelectSmartScriptForm(List<List<SmartScript>> items)
         {
             InitializeComponent();
 
-            this.items = items;
+            this._items = items;
 
             foreach (List<SmartScript> smartScripts in items)
                 listBoxGuids.Items.Add(-smartScripts[0].entryorguid);
@@ -32,7 +32,7 @@ namespace SAI_Editor.Forms.SearchForms
                 listBoxGuids.SelectedIndex = 0;
 
             listViewSmartScripts.Items.Clear();
-            listViewSmartScripts.AddScripts(items[listBoxGuids.SelectedIndex]);
+            listViewSmartScripts.AddScripts(_items[listBoxGuids.SelectedIndex]);
 
             foreach (ColumnHeader header in listViewSmartScripts.Columns)
                 header.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
@@ -48,9 +48,9 @@ namespace SAI_Editor.Forms.SearchForms
             if (listBoxGuids.SelectedItem == null)
                 return;
 
-            ((MainForm)Owner).userControl.textBoxEntryOrGuid.Text = (-CustomConverter.ToInt32(listBoxGuids.SelectedItem.ToString())).ToString();
-            ((MainForm)Owner).userControl.comboBoxSourceType.SelectedIndex = (int)SourceTypes.SourceTypeCreature;
-            ((MainForm)Owner).userControl.TryToLoadScript();
+            ((MainForm)Owner).UserControl.textBoxEntryOrGuid.Text = (-CustomConverter.ToInt32(listBoxGuids.SelectedItem.ToString())).ToString();
+            ((MainForm)Owner).UserControl.comboBoxSourceType.SelectedIndex = (int)SourceTypes.SourceTypeCreature;
+            ((MainForm)Owner).UserControl.TryToLoadScript();
             Close();
         }
 

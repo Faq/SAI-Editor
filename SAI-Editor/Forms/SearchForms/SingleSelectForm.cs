@@ -6,14 +6,14 @@ namespace SAI_Editor.Forms.SearchForms
 {
     public partial class SingleSelectForm<T> : Form where T : struct, IConvertible
     {
-        private readonly ListViewColumnSorter lvwColumnSorter = new ListViewColumnSorter();
-        private readonly TextBox textBoxToChange = null;
+        private readonly ListViewColumnSorter _lvwColumnSorter = new ListViewColumnSorter();
+        private readonly TextBox _textBoxToChange = null;
 
         public SingleSelectForm(TextBox textBoxToChange)
         {
             InitializeComponent();
 
-            this.textBoxToChange = textBoxToChange;
+            this._textBoxToChange = textBoxToChange;
             listViewSelectableItems.Columns.Add(typeof(T).Name, 235, HorizontalAlignment.Left);
 
             foreach (var en in Enum.GetNames(typeof(T)))
@@ -41,7 +41,7 @@ namespace SAI_Editor.Forms.SearchForms
 
         private void buttonContinue_Click(object sender, EventArgs e)
         {
-            if (textBoxToChange == null)
+            if (_textBoxToChange == null)
             {
                 Close();
                 return;
@@ -51,7 +51,7 @@ namespace SAI_Editor.Forms.SearchForms
                 return;
 
             int selectedValue = (int)Enum.Parse(typeof(T), listViewSelectableItems.SelectedItems[0].Text);
-            textBoxToChange.Text = selectedValue.ToString();
+            _textBoxToChange.Text = selectedValue.ToString();
             Close();
         }
 
@@ -63,15 +63,15 @@ namespace SAI_Editor.Forms.SearchForms
         private void listViewSelectableItems_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             var myListView = (ListView)sender;
-            myListView.ListViewItemSorter = lvwColumnSorter;
+            myListView.ListViewItemSorter = _lvwColumnSorter;
 
-            if (e.Column != lvwColumnSorter.SortColumn)
+            if (e.Column != _lvwColumnSorter.SortColumn)
             {
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
+                _lvwColumnSorter.SortColumn = e.Column;
+                _lvwColumnSorter.Order = SortOrder.Ascending;
             }
             else
-                lvwColumnSorter.Order = lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+                _lvwColumnSorter.Order = _lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
 
             myListView.Sort();
         }

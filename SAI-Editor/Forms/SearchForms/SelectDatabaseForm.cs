@@ -7,14 +7,14 @@ namespace SAI_Editor.Forms.SearchForms
 {
     public partial class SelectDatabaseForm : Form
     {
-        private readonly ListViewColumnSorter lvwColumnSorter = new ListViewColumnSorter();
-        private readonly TextBox textBoxToChange = null;
+        private readonly ListViewColumnSorter _lvwColumnSorter = new ListViewColumnSorter();
+        private readonly TextBox _textBoxToChange = null;
 
         public SelectDatabaseForm(List<string> databaseNames, TextBox textBoxToChange)
         {
             InitializeComponent();
 
-            this.textBoxToChange = textBoxToChange;
+            this._textBoxToChange = textBoxToChange;
 
             for (int i = 0; i < databaseNames.Count; ++i)
             {
@@ -41,7 +41,7 @@ namespace SAI_Editor.Forms.SearchForms
             if (listViewDatabases.SelectedItems.Count == 0)
                 return;
 
-            textBoxToChange.Text = listViewDatabases.SelectedItems[0].Text;
+            _textBoxToChange.Text = listViewDatabases.SelectedItems[0].Text;
             Close();
         }
 
@@ -58,18 +58,18 @@ namespace SAI_Editor.Forms.SearchForms
         private void listViewDatabases_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             var myListView = (ListView)sender;
-            myListView.ListViewItemSorter = lvwColumnSorter;
+            myListView.ListViewItemSorter = _lvwColumnSorter;
 
             //! Determine if clicked column is already the column that is being sorted
-            if (e.Column != lvwColumnSorter.SortColumn)
+            if (e.Column != _lvwColumnSorter.SortColumn)
             {
                 //! Set the column number that is to be sorted; default to ascending
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
+                _lvwColumnSorter.SortColumn = e.Column;
+                _lvwColumnSorter.Order = SortOrder.Ascending;
             }
             else
                 //! Reverse the current sort direction for this column
-                lvwColumnSorter.Order = lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+                _lvwColumnSorter.Order = _lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
 
             //! Perform the sort with these new sort options
             myListView.Sort();

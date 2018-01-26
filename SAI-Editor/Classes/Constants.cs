@@ -5,7 +5,7 @@ namespace SAI_Editor.Classes
 {
     public static class Constants
     {
-        public static List<Color> phaseColors = new List<Color>()
+        public static List<Color> PhaseColors = new List<Color>()
         {
             Color.FromArgb(255, 206, 240, 125), // lime green
             Color.LightSkyBlue,

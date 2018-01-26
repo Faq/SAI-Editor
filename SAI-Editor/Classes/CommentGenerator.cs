@@ -6,14 +6,13 @@ using SAI_Editor.Enumerators;
 using SAI_Editor.Properties;
 using SAI_Editor.Classes.Database;
 using SAI_Editor.Classes.Database.Classes;
-using SAI_Editor.Forms;
 
 namespace SAI_Editor.Classes
 {
     class CommentGenerator
     {
-        private readonly Dictionary<SmartEvent, string> smartEventStrings = new Dictionary<SmartEvent, string>();
-        private readonly Dictionary<SmartAction, string> smartActionStrings = new Dictionary<SmartAction, string>();
+        private readonly Dictionary<SmartEvent, string> _smartEventStrings = new Dictionary<SmartEvent, string>();
+        private readonly Dictionary<SmartAction, string> _smartActionStrings = new Dictionary<SmartAction, string>();
 
         private static object _lock = new object();
         private static CommentGenerator _instance;
@@ -29,200 +28,200 @@ namespace SAI_Editor.Classes
 
         public CommentGenerator()
         {
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_SPELLHIT, "On Spellhit '_spellNameEventParamOne_'");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_HAS_AURA, "On _hasAuraEventParamOne_ '_spellNameEventParamOne_'");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_TARGET_BUFFED, "On Target Buffed With '_spellNameEventParamOne_'");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_SPELLHIT_TARGET, "On Target Spellhit '_spellNameEventParamOne_'");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_FRIENDLY_MISSING_BUFF, "On Friendly Unit Missing Buff '_spellNameEventParamOne_'");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_HEALT_PCT, "Between _eventParamOne_-_eventParamTwo_% Health");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_MANA_PCT, "Between _eventParamOne_-_eventParamTwo_% Mana");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_RANGE, "Within _eventParamOne_-_eventParamTwo_ Range");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_OOC_LOS, "Within _eventParamOne_-_eventParamTwo_ Range Out of Combat LoS");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_TARGET_HEALTH_PCT, "Target Between _eventParamOne_-_eventParamTwo_% Health");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_FRIENDLY_HEALTH, "Friendly At _eventParamOne_ Health");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_TARGET_MANA_PCT, "Target Between _eventParamOne_-_eventParamTwo_% Mana");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_RECEIVE_EMOTE, "Received Emote _eventParamOne_");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_DAMAGED, "On Damaged Between _eventParamOne_-_eventParamTwo_");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_DAMAGED_TARGET, "On Target Damaged Between _eventParamOne_-_eventParamTwo_");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_MOVEMENTINFORM, "On Reached Point _eventParamTwo_");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_SUMMON_DESPAWNED, "On Summon _npcNameFirstParam_ Despawned");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_DATA_SET, "On Data Set _eventParamOne_ _eventParamTwo_");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_REACHED, "On Waypoint _eventParamOne_ Reached");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_TEXT_OVER, "On Text _eventParamOne_ Over");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_RECEIVE_HEAL, "On Received Heal Between _eventParamOne_-_eventParamTwo_");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_TIMED_EVENT_TRIGGERED, "On Timed Event _eventParamOne_ Triggered");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_GOSSIP_SELECT, "On Gossip Option _eventParamTwo_ Selected");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_GAME_EVENT_START, "On Game Event _eventParamOne_ Started");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_GAME_EVENT_END, "On Game Event _eventParamOne_ Ended");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_GO_EVENT_INFORM, "On Event _eventParamOne_ Inform");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_ACTION_DONE, "On Action _eventParamOne_ Done");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_FRIENDLY_HEALTH_PCT, "On Friendly Between _eventParamOne_-_eventParamTwo_% Health");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_UPDATE_IC, "In Combat");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_UPDATE_OOC, "Out of Combat");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_AGGRO, "On Aggro");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_KILL, "On Killed Unit");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_DEATH, "On Just Died");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_EVADE, "On Evade");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_RESPAWN, "On Respawn");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_VICTIM_CASTING, "On Victim Casting '_targetCastingSpellName_'");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_FRIENDLY_IS_CC, "On Friendly Crowd Controlled");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_SUMMONED_UNIT, "On Summoned Unit");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_ACCEPTED_QUEST, "On Quest '_questNameEventParamOne_' Taken");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_REWARD_QUEST, "On Quest '_questNameEventParamOne_' Finished");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_REACHED_HOME, "On Reached Home");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_RESET, "On Reset");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_IC_LOS, "In Combat LoS");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_PASSENGER_BOARDED, "On Passenger Boarded");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_PASSENGER_REMOVED, "On Passenger Removed");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_CHARMED, "On Charmed");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_CHARMED_TARGET, "On Target Charmed");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_CORPSE_REMOVED, "On Corpse Removed");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_AI_INIT, "On Initialize");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_START, "On Waypoint Started");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_TRANSPORT_ADDPLAYER_NYI, "On Transport Player Added");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_TRANSPORT_ADDCREATURE_NYI, "On Transport Creature Added");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_TRANSPORT_REMOVE_PLAYER_NYI, "On Transport Player Removed");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_TRANSPORT_RELOCATE_NYI, "On Transport Relocate");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_INSTANCE_PLAYER_ENTER_NYI, "On Instance Player Enter");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_AREATRIGGER_ONTRIGGER, "On Trigger");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_QUEST_ACCEPTED_NYI, "On Quest Accepted");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_QUEST_OBJ_COPLETETION_NYI, "On Quest Object Completed");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_QUEST_COMPLETION_NYI, "On Quest Completed");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_QUEST_REWARDED_NYI, "On Quest Rewarded");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_QUEST_FAIL_NYI, "On Quest Failed");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_JUST_SUMMONED, "On Just Summoned");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_PAUSED, "On Waypoint Paused");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_RESUMED, "On Waypoint Resumed");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_STOPPED, "On Waypoint Stopped");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_ENDED, "On Waypoint Finished");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_UPDATE, "On Update");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_JUST_CREATED, "On Just Created");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_GOSSIP_HELLO, "On Gossip Hello");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_FOLLOW_COMPLETED, "On Follow Complete");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_DUMMY_EFFECT_NYI, "On Dummy Effect");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_IS_BEHIND_TARGET, "On Behind Target");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_GO_STATE_CHANGED, "On Gameobject State Changed");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_ON_SPELLCLICK, "On Spellclick");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_DISTANCE_CREATURE, "On Distance To Creature");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_DISTANCE_GAMEOBJECT, "On Distance To GameObject");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_COUNTER_SET, "On Counter Set");
-            smartEventStrings.Add(SmartEvent.SMART_EVENT_LINK, "_previousLineComment_");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_SPELLHIT, "On Spellhit '_spellNameEventParamOne_'");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_HAS_AURA, "On _hasAuraEventParamOne_ '_spellNameEventParamOne_'");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_TARGET_BUFFED, "On Target Buffed With '_spellNameEventParamOne_'");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_SPELLHIT_TARGET, "On Target Spellhit '_spellNameEventParamOne_'");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_FRIENDLY_MISSING_BUFF, "On Friendly Unit Missing Buff '_spellNameEventParamOne_'");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_HEALT_PCT, "Between _eventParamOne_-_eventParamTwo_% Health");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_MANA_PCT, "Between _eventParamOne_-_eventParamTwo_% Mana");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_RANGE, "Within _eventParamOne_-_eventParamTwo_ Range");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_OOC_LOS, "Within _eventParamOne_-_eventParamTwo_ Range Out of Combat LoS");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_TARGET_HEALTH_PCT, "Target Between _eventParamOne_-_eventParamTwo_% Health");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_FRIENDLY_HEALTH, "Friendly At _eventParamOne_ Health");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_TARGET_MANA_PCT, "Target Between _eventParamOne_-_eventParamTwo_% Mana");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_RECEIVE_EMOTE, "Received Emote _eventParamOne_");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_DAMAGED, "On Damaged Between _eventParamOne_-_eventParamTwo_");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_DAMAGED_TARGET, "On Target Damaged Between _eventParamOne_-_eventParamTwo_");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_MOVEMENTINFORM, "On Reached Point _eventParamTwo_");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_SUMMON_DESPAWNED, "On Summon _npcNameFirstParam_ Despawned");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_DATA_SET, "On Data Set _eventParamOne_ _eventParamTwo_");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_REACHED, "On Waypoint _eventParamOne_ Reached");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_TEXT_OVER, "On Text _eventParamOne_ Over");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_RECEIVE_HEAL, "On Received Heal Between _eventParamOne_-_eventParamTwo_");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_TIMED_EVENT_TRIGGERED, "On Timed Event _eventParamOne_ Triggered");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_GOSSIP_SELECT, "On Gossip Option _eventParamTwo_ Selected");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_GAME_EVENT_START, "On Game Event _eventParamOne_ Started");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_GAME_EVENT_END, "On Game Event _eventParamOne_ Ended");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_GO_EVENT_INFORM, "On Event _eventParamOne_ Inform");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_ACTION_DONE, "On Action _eventParamOne_ Done");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_FRIENDLY_HEALTH_PCT, "On Friendly Between _eventParamOne_-_eventParamTwo_% Health");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_UPDATE_IC, "In Combat");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_UPDATE_OOC, "Out of Combat");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_AGGRO, "On Aggro");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_KILL, "On Killed Unit");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_DEATH, "On Just Died");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_EVADE, "On Evade");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_RESPAWN, "On Respawn");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_VICTIM_CASTING, "On Victim Casting '_targetCastingSpellName_'");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_FRIENDLY_IS_CC, "On Friendly Crowd Controlled");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_SUMMONED_UNIT, "On Summoned Unit");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_ACCEPTED_QUEST, "On Quest '_questNameEventParamOne_' Taken");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_REWARD_QUEST, "On Quest '_questNameEventParamOne_' Finished");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_REACHED_HOME, "On Reached Home");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_RESET, "On Reset");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_IC_LOS, "In Combat LoS");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_PASSENGER_BOARDED, "On Passenger Boarded");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_PASSENGER_REMOVED, "On Passenger Removed");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_CHARMED, "On Charmed");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_CHARMED_TARGET, "On Target Charmed");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_CORPSE_REMOVED, "On Corpse Removed");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_AI_INIT, "On Initialize");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_START, "On Waypoint Started");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_TRANSPORT_ADDPLAYER_NYI, "On Transport Player Added");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_TRANSPORT_ADDCREATURE_NYI, "On Transport Creature Added");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_TRANSPORT_REMOVE_PLAYER_NYI, "On Transport Player Removed");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_TRANSPORT_RELOCATE_NYI, "On Transport Relocate");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_INSTANCE_PLAYER_ENTER_NYI, "On Instance Player Enter");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_AREATRIGGER_ONTRIGGER, "On Trigger");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_QUEST_ACCEPTED_NYI, "On Quest Accepted");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_QUEST_OBJ_COPLETETION_NYI, "On Quest Object Completed");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_QUEST_COMPLETION_NYI, "On Quest Completed");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_QUEST_REWARDED_NYI, "On Quest Rewarded");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_QUEST_FAIL_NYI, "On Quest Failed");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_JUST_SUMMONED, "On Just Summoned");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_PAUSED, "On Waypoint Paused");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_RESUMED, "On Waypoint Resumed");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_STOPPED, "On Waypoint Stopped");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_WAYPOINT_ENDED, "On Waypoint Finished");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_UPDATE, "On Update");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_JUST_CREATED, "On Just Created");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_GOSSIP_HELLO, "On Gossip Hello");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_FOLLOW_COMPLETED, "On Follow Complete");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_DUMMY_EFFECT_NYI, "On Dummy Effect");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_IS_BEHIND_TARGET, "On Behind Target");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_GO_STATE_CHANGED, "On Gameobject State Changed");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_ON_SPELLCLICK, "On Spellclick");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_DISTANCE_CREATURE, "On Distance To Creature");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_DISTANCE_GAMEOBJECT, "On Distance To GameObject");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_COUNTER_SET, "On Counter Set");
+            _smartEventStrings.Add(SmartEvent.SMART_EVENT_LINK, "_previousLineComment_");
 
             //! Filling up actions
-            smartActionStrings.Add(SmartAction.SMART_ACTION_NONE, "No Action Type");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_TALK, "Say Line _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_FACTION, "Set Faction _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_MORPH_TO_ENTRY_OR_MODEL, "_morphToEntryOrModelActionParams_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SOUND, "Play Sound _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_EMOTE, "Play Emote _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_FAIL_QUEST, "Fail Quest '_questNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_QUEST, "Add Quest '_questNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_REACT_STATE, "Set Reactstate _reactStateParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_ACTIVATE_GOBJECT, "Activate Gameobject");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_RANDOM_EMOTE, "Play Random Emote (_actionRandomParameters_)");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CAST, "Cast '_spellNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SUMMON_CREATURE, "Summon Creature '_creatureNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_THREAT_SINGLE_PCT, "Set Single Threat _actionParamOne_-_actionParamTwo_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_THREAT_ALL_PCT, "Set All Threat _actionParamOne_-_actionParamTwo_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_AREAEXPLOREDOREVENTHAPPENS, "Quest Credit '_questNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_UNUSED_16, "Unused Action Type (16)");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_EMOTE_STATE, "Set Emote State _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_UNIT_FLAG, "Set Flag_getUnitFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_UNIT_FLAG, "Remove Flag_getUnitFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_AUTO_ATTACK, "_startOrStopActionParamOne_ Attacking");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_COMBAT_MOVEMENT, "_enableDisableActionParamOne_ Combat Movement");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_EVENT_PHASE, "Set Event Phase _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_INC_EVENT_PHASE, "_incrementOrDecrementActionParamOne_ Phase");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_EVADE, "Evade");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_FLEE_FOR_ASSIST, "Flee For Assist");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_GROUPEVENTHAPPENS, "Quest Credit '_questNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_CASTEDCREATUREORGO, "Quest Credit '_questNameCastCreatureOrGo_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVEAURASFROMSPELL, "Remove Aura '_spellNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_FOLLOW, "_startOrStopBasedOnTargetType_ Follow _getTargetType_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_RANDOM_PHASE, "Set Random Phase(_actionRandomParameters_)");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_RANDOM_PHASE_RANGE, "Set Phase Random Between _actionParamOne_-_actionParamTwo_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_RESET_GOBJECT, "Reset Gameobject");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_KILLED_MONSTER, "Quest Credit '_questNameKillCredit_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_INST_DATA, "Set Instance Data _actionParamOne_ to _actionParamTwo_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_INST_DATA64, "Set Instance Data _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_UPDATE_TEMPLATE, "Update Template To '_creatureNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_DIE, "Kill Self");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_IN_COMBAT_WITH_ZONE, "Set In Combat With Zone");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_FOR_HELP, "Call For Help");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_SHEATH, "Set Sheath _sheathActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_FORCE_DESPAWN, "Despawn _forceDespawnActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_INVINCIBILITY_HP_LEVEL, "_invincibilityHpActionParamsOneTwo_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_MOUNT_TO_ENTRY_OR_MODEL, "_mountToEntryOrModelActionParams_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_PHASE_MASK, "Set Phase _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_DATA, "Set Data _actionParamOne_ _actionParamTwo_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_MOVE_FORWARD, "Move Forward _actionParamOne_ Yards");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_VISIBILITY, "Set Visibility _onOffActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_ACTIVE, "Set Active _onOffActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_ATTACK_START, "Start Attacking");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SUMMON_GO, "Summon Gameobject '_gameobjectNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_KILL_UNIT, "Kill Target");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_ACTIVATE_TAXI, "Activate Taxi Path _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_WP_START, "Start Waypoint");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_WP_PAUSE, "Pause Waypoint");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_WP_STOP, "Stop Waypoint");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_ITEM, "Add Item _addItemBasedOnActionParams_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_ITEM, "Remove Item _addItemBasedOnActionParams_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_INSTALL_AI_TEMPLATE, "Install _updateAiTemplateActionParamOne_ Template");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_RUN, "Set Run _onOffActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_FLY, "Set Fly _onOffActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_SWIM, "Set Swim _onOffActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_TELEPORT, "Teleport");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_STORE_TARGET_LIST, "Store Targetlist");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_UNUSED_63, "Unused Action Type (63)");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_WP_RESUME, "Resume Waypoint");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_ORIENTATION, "Set Orientation _setOrientationTargetType_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CREATE_TIMED_EVENT, "Create Timed Event");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_PLAYMOVIE, "Play Movie _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_MOVE_TO_POS, "Move To _getTargetType_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_RESPAWN_TARGET, "Respawn _getTargetType_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_EQUIP, "Change Equipment");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CLOSE_GOSSIP, "Close Gossip");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_TRIGGER_TIMED_EVENT, "Trigger Timed Event _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_TIMED_EVENT, "Remove Timed Event _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_AURA, "Add Aura '_spellNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_OVERRIDE_SCRIPT_BASE_OBJECT, "Override Base Object Script");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_RESET_SCRIPT_BASE_OBJECT, "Reset Base Object Script");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_SCRIPT_RESET, "Reset All Scripts");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_RANGED_MOVEMENT, "Set Ranged Movement");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_TIMED_ACTIONLIST, "Run Script");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_NPC_FLAG, "Set Npc Flag_getNpcFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_NPC_FLAG, "Add Npc Flag_getNpcFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_NPC_FLAG, "Remove Npc Flag_getNpcFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SIMPLE_TALK, "Say Line _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_INVOKER_CAST, "Invoker Cast '_spellNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CROSS_CAST, "Cross Cast '_spellNameActionParamOne_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_RANDOM_TIMED_ACTIONLIST, "Run Random Script");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_RANDOM_RANGE_TIMED_ACTIONLIST, "Run Random Script");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_RANDOM_MOVE, "Start Random Movement");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_UNIT_FIELD_BYTES_1, "Set Flag _getBytes1Flags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_UNIT_FIELD_BYTES_1, "Remove Flag _getBytes1Flags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_INTERRUPT_SPELL, "Interrupt Spell '_spellNameActionParamTwo_'");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SEND_GO_CUSTOM_ANIM, "Send Custom Animation _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_DYNAMIC_FLAG, "Set Dynamic Flag_getDynamicFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_DYNAMIC_FLAG, "Add Dynamic Flag_getDynamicFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_DYNAMIC_FLAG, "Remove Dynamic Flag_getDynamicFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_JUMP_TO_POS, "Jump To Pos");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SEND_GOSSIP_MENU, "Send Gossip");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_GO_SET_LOOT_STATE, "Set Lootstate _goStateActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SEND_TARGET_TO_TARGET, "Send Target _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_HOME_POS, "Set Home Position");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_HEALTH_REGEN, "Set Health Regeneration _onOffActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_ROOT, "Set Rooted _onOffActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_GO_FLAG, "Set Gameobject Flag_getGoFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_GO_FLAG, "Add Gameobject Flag_getGoFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_GO_FLAG, "Remove Gameobject Flag_getGoFlags_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SUMMON_CREATURE_GROUP, "Summon Creature Group _actionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_SET_POWER, "Set _powerTypeActionParamOne_ To _actionParamTwo_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_POWER, "Add _actionParamTwo_ _powerTypeActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_POWER, "Remove _actionParamTwo_ _powerTypeActionParamOne_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_GAME_EVENT_STOP, "Stop game event _actionParamTwo_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_GAME_EVENT_START, "Start game event _actionParamTwo_");
-            smartActionStrings.Add(SmartAction.SMART_ACTION_START_CLOSEST_WAYPOINT, "Pick Closest Waypoint _actionParamOne_ _actionParamTwo_ _actionParamThree_ _actionParamFour_ _actionParamFive_ _actionParamSix_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_NONE, "No Action Type");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_TALK, "Say Line _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_FACTION, "Set Faction _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_MORPH_TO_ENTRY_OR_MODEL, "_morphToEntryOrModelActionParams_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SOUND, "Play Sound _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_EMOTE, "Play Emote _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_FAIL_QUEST, "Fail Quest '_questNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_QUEST, "Add Quest '_questNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_REACT_STATE, "Set Reactstate _reactStateParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_ACTIVATE_GOBJECT, "Activate Gameobject");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_RANDOM_EMOTE, "Play Random Emote (_actionRandomParameters_)");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CAST, "Cast '_spellNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SUMMON_CREATURE, "Summon Creature '_creatureNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_THREAT_SINGLE_PCT, "Set Single Threat _actionParamOne_-_actionParamTwo_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_THREAT_ALL_PCT, "Set All Threat _actionParamOne_-_actionParamTwo_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_AREAEXPLOREDOREVENTHAPPENS, "Quest Credit '_questNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_UNUSED_16, "Unused Action Type (16)");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_EMOTE_STATE, "Set Emote State _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_UNIT_FLAG, "Set Flag_getUnitFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_UNIT_FLAG, "Remove Flag_getUnitFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_AUTO_ATTACK, "_startOrStopActionParamOne_ Attacking");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_COMBAT_MOVEMENT, "_enableDisableActionParamOne_ Combat Movement");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_EVENT_PHASE, "Set Event Phase _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_INC_EVENT_PHASE, "_incrementOrDecrementActionParamOne_ Phase");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_EVADE, "Evade");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_FLEE_FOR_ASSIST, "Flee For Assist");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_GROUPEVENTHAPPENS, "Quest Credit '_questNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_CASTEDCREATUREORGO, "Quest Credit '_questNameCastCreatureOrGo_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVEAURASFROMSPELL, "Remove Aura '_spellNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_FOLLOW, "_startOrStopBasedOnTargetType_ Follow _getTargetType_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_RANDOM_PHASE, "Set Random Phase(_actionRandomParameters_)");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_RANDOM_PHASE_RANGE, "Set Phase Random Between _actionParamOne_-_actionParamTwo_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_RESET_GOBJECT, "Reset Gameobject");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_KILLED_MONSTER, "Quest Credit '_questNameKillCredit_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_INST_DATA, "Set Instance Data _actionParamOne_ to _actionParamTwo_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_INST_DATA64, "Set Instance Data _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_UPDATE_TEMPLATE, "Update Template To '_creatureNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_DIE, "Kill Self");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_IN_COMBAT_WITH_ZONE, "Set In Combat With Zone");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_FOR_HELP, "Call For Help");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_SHEATH, "Set Sheath _sheathActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_FORCE_DESPAWN, "Despawn _forceDespawnActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_INVINCIBILITY_HP_LEVEL, "_invincibilityHpActionParamsOneTwo_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_MOUNT_TO_ENTRY_OR_MODEL, "_mountToEntryOrModelActionParams_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_PHASE_MASK, "Set Phase _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_DATA, "Set Data _actionParamOne_ _actionParamTwo_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_MOVE_FORWARD, "Move Forward _actionParamOne_ Yards");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_VISIBILITY, "Set Visibility _onOffActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_ACTIVE, "Set Active _onOffActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_ATTACK_START, "Start Attacking");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SUMMON_GO, "Summon Gameobject '_gameobjectNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_KILL_UNIT, "Kill Target");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_ACTIVATE_TAXI, "Activate Taxi Path _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_WP_START, "Start Waypoint");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_WP_PAUSE, "Pause Waypoint");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_WP_STOP, "Stop Waypoint");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_ITEM, "Add Item _addItemBasedOnActionParams_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_ITEM, "Remove Item _addItemBasedOnActionParams_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_INSTALL_AI_TEMPLATE, "Install _updateAiTemplateActionParamOne_ Template");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_RUN, "Set Run _onOffActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_FLY, "Set Fly _onOffActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_SWIM, "Set Swim _onOffActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_TELEPORT, "Teleport");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_STORE_TARGET_LIST, "Store Targetlist");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_UNUSED_63, "Unused Action Type (63)");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_WP_RESUME, "Resume Waypoint");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_ORIENTATION, "Set Orientation _setOrientationTargetType_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CREATE_TIMED_EVENT, "Create Timed Event");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_PLAYMOVIE, "Play Movie _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_MOVE_TO_POS, "Move To _getTargetType_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_RESPAWN_TARGET, "Respawn _getTargetType_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_EQUIP, "Change Equipment");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CLOSE_GOSSIP, "Close Gossip");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_TRIGGER_TIMED_EVENT, "Trigger Timed Event _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_TIMED_EVENT, "Remove Timed Event _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_AURA, "Add Aura '_spellNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_OVERRIDE_SCRIPT_BASE_OBJECT, "Override Base Object Script");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_RESET_SCRIPT_BASE_OBJECT, "Reset Base Object Script");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_SCRIPT_RESET, "Reset All Scripts");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_RANGED_MOVEMENT, "Set Ranged Movement");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_TIMED_ACTIONLIST, "Run Script");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_NPC_FLAG, "Set Npc Flag_getNpcFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_NPC_FLAG, "Add Npc Flag_getNpcFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_NPC_FLAG, "Remove Npc Flag_getNpcFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SIMPLE_TALK, "Say Line _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_INVOKER_CAST, "Invoker Cast '_spellNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CROSS_CAST, "Cross Cast '_spellNameActionParamOne_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_RANDOM_TIMED_ACTIONLIST, "Run Random Script");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_CALL_RANDOM_RANGE_TIMED_ACTIONLIST, "Run Random Script");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_RANDOM_MOVE, "Start Random Movement");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_UNIT_FIELD_BYTES_1, "Set Flag _getBytes1Flags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_UNIT_FIELD_BYTES_1, "Remove Flag _getBytes1Flags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_INTERRUPT_SPELL, "Interrupt Spell '_spellNameActionParamTwo_'");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SEND_GO_CUSTOM_ANIM, "Send Custom Animation _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_DYNAMIC_FLAG, "Set Dynamic Flag_getDynamicFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_DYNAMIC_FLAG, "Add Dynamic Flag_getDynamicFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_DYNAMIC_FLAG, "Remove Dynamic Flag_getDynamicFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_JUMP_TO_POS, "Jump To Pos");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SEND_GOSSIP_MENU, "Send Gossip");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_GO_SET_LOOT_STATE, "Set Lootstate _goStateActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SEND_TARGET_TO_TARGET, "Send Target _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_HOME_POS, "Set Home Position");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_HEALTH_REGEN, "Set Health Regeneration _onOffActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_ROOT, "Set Rooted _onOffActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_GO_FLAG, "Set Gameobject Flag_getGoFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_GO_FLAG, "Add Gameobject Flag_getGoFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_GO_FLAG, "Remove Gameobject Flag_getGoFlags_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SUMMON_CREATURE_GROUP, "Summon Creature Group _actionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_SET_POWER, "Set _powerTypeActionParamOne_ To _actionParamTwo_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_ADD_POWER, "Add _actionParamTwo_ _powerTypeActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_REMOVE_POWER, "Remove _actionParamTwo_ _powerTypeActionParamOne_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_GAME_EVENT_STOP, "Stop game event _actionParamTwo_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_GAME_EVENT_START, "Start game event _actionParamTwo_");
+            _smartActionStrings.Add(SmartAction.SMART_ACTION_START_CLOSEST_WAYPOINT, "Pick Closest Waypoint _actionParamOne_ _actionParamTwo_ _actionParamThree_ _actionParamFour_ _actionParamFive_ _actionParamSix_");
         }
 
         public async Task<string> GenerateCommentFor(SmartScript smartScript, EntryOrGuidAndSourceType entryOrGuidAndSourceType, bool forced = false, SmartScript smartScriptLink = null)
@@ -237,8 +236,8 @@ namespace SAI_Editor.Classes
 
             try
             {
-                WorldDatabase worldDatabase = SAI_Editor_Manager.Instance.worldDatabase;
-                SQLiteDatabase sqliteDatabase = SAI_Editor_Manager.Instance.sqliteDatabase;
+                WorldDatabase worldDatabase = SAI_Editor_Manager.Instance.WorldDatabase;
+                SQLiteDatabase sqliteDatabase = SAI_Editor_Manager.Instance.SqliteDatabase;
 
                 int entry = smartScript.entryorguid;
 
@@ -246,11 +245,11 @@ namespace SAI_Editor.Classes
                 {
                     case 0: //! Creature
                         fullLine += await worldDatabase.GetObjectNameByIdOrGuidAndSourceType(SourceTypes.SourceTypeCreature, smartScript.entryorguid, true) + " - ";
-                        fullLine += smartEventStrings[(SmartEvent)smartScript.event_type];
+                        fullLine += _smartEventStrings[(SmartEvent)smartScript.event_type];
                         break;
                     case 1: //! Gameobject
                         fullLine += await worldDatabase.GetObjectNameByIdOrGuidAndSourceType(SourceTypes.SourceTypeGameobject, smartScript.entryorguid, true) + " - ";
-                        fullLine += smartEventStrings[(SmartEvent)smartScript.event_type];
+                        fullLine += _smartEventStrings[(SmartEvent)smartScript.event_type];
                         break;
                     case 2: //! Areatrigger
                         fullLine += "Areatrigger - ";
@@ -283,7 +282,7 @@ namespace SAI_Editor.Classes
                 }
 
                 if (fullLine.Contains("_previousLineComment_") && smartScriptLink != null)
-                    fullLine = fullLine.Replace("_previousLineComment_", smartEventStrings[(SmartEvent)smartScriptLink.event_type]);
+                    fullLine = fullLine.Replace("_previousLineComment_", _smartEventStrings[(SmartEvent)smartScriptLink.event_type]);
 
                 fullLine = fullLine.Replace("_previousLineComment_", "MISSING LINK");
 
@@ -328,7 +327,7 @@ namespace SAI_Editor.Classes
                     fullLine = fullLine.Replace("_hasAuraEventParamOne_", smartScript.event_param1 > 0 ? "Has Aura" : "Aura Not Present");
 
                 //! Action type
-                fullLine += " - " + smartActionStrings[(SmartAction)smartScript.action_type];
+                fullLine += " - " + _smartActionStrings[(SmartAction)smartScript.action_type];
 
                 if (fullLine.Contains("_actionParamOne_"))
                     fullLine = fullLine.Replace("_actionParamOne_", smartScript.action_param1.ToString());
@@ -889,18 +888,18 @@ namespace SAI_Editor.Classes
                         fullLine = fullLine.Replace("_startOrStopBasedOnTargetType_", "Start");
                 }
 
-                int event_phase_mask = smartScriptLink != null ? smartScriptLink.event_phase_mask : smartScript.event_phase_mask;
+                int eventPhaseMask = smartScriptLink != null ? smartScriptLink.event_phase_mask : smartScript.event_phase_mask;
 
-                if ((SmartPhaseMasks)event_phase_mask != SmartPhaseMasks.SMART_EVENT_PHASE_ALWAYS)
+                if ((SmartPhaseMasks)eventPhaseMask != SmartPhaseMasks.SMART_EVENT_PHASE_ALWAYS)
                 {
                     List<int> listOfSplitPhases = new List<int>();
 
-                    int event_phase_mask2 = event_phase_mask;
+                    int eventPhaseMask2 = eventPhaseMask;
                     int log2 = 0;
 
-                    while (event_phase_mask2 >= 2)
+                    while (eventPhaseMask2 >= 2)
                     {
-                        event_phase_mask2 /= 2;
+                        eventPhaseMask2 /= 2;
                         log2++;
                     }
 
@@ -908,9 +907,9 @@ namespace SAI_Editor.Classes
                     {
                         int power = (int)Math.Pow(2, l2);
 
-                        if (event_phase_mask >= power)
+                        if (eventPhaseMask >= power)
                         {
-                            event_phase_mask -= power;
+                            eventPhaseMask -= power;
                             listOfSplitPhases.Add(power);
                         }
                     }
@@ -925,40 +924,40 @@ namespace SAI_Editor.Classes
                     fullLine += " " + String.Join(" & ", arrayOfSplitPhases) + ")";
                 }
 
-                SmartEventFlags event_flags = (SmartEventFlags)(smartScriptLink != null ? smartScriptLink.event_flags : smartScript.event_flags);
+                SmartEventFlags eventFlags = (SmartEventFlags)(smartScriptLink != null ? smartScriptLink.event_flags : smartScript.event_flags);
 
-                if (event_flags != SmartEventFlags.EVENT_FLAG_NONE)
+                if (eventFlags != SmartEventFlags.EVENT_FLAG_NONE)
                 {
-                    if (((event_flags & SmartEventFlags.EVENT_FLAG_NOT_REPEATABLE) != 0))
+                    if (((eventFlags & SmartEventFlags.EVENT_FLAG_NOT_REPEATABLE) != 0))
                         fullLine += " (No Repeat)";
 
-                    if (((event_flags & SmartEventFlags.EVENT_FLAG_NORMAL_DUNGEON) != 0) && ((event_flags & SmartEventFlags.EVENT_FLAG_HEROIC_DUNGEON) != 0) &&
-                        ((event_flags & SmartEventFlags.EVENT_FLAG_NORMAL_RAID) != 0) && ((event_flags & SmartEventFlags.EVENT_FLAG_HEROIC_RAID) != 0))
+                    if (((eventFlags & SmartEventFlags.EVENT_FLAG_NORMAL_DUNGEON) != 0) && ((eventFlags & SmartEventFlags.EVENT_FLAG_HEROIC_DUNGEON) != 0) &&
+                        ((eventFlags & SmartEventFlags.EVENT_FLAG_NORMAL_RAID) != 0) && ((eventFlags & SmartEventFlags.EVENT_FLAG_HEROIC_RAID) != 0))
                         fullLine += " (Dungeon & Raid)";
                     else
                     {
-                        if (((event_flags & SmartEventFlags.EVENT_FLAG_NORMAL_DUNGEON) != 0) && ((event_flags & SmartEventFlags.EVENT_FLAG_HEROIC_DUNGEON) != 0))
+                        if (((eventFlags & SmartEventFlags.EVENT_FLAG_NORMAL_DUNGEON) != 0) && ((eventFlags & SmartEventFlags.EVENT_FLAG_HEROIC_DUNGEON) != 0))
                             fullLine += " (Dungeon)";
                         else
                         {
-                            if (((event_flags & SmartEventFlags.EVENT_FLAG_NORMAL_DUNGEON) != 0))
+                            if (((eventFlags & SmartEventFlags.EVENT_FLAG_NORMAL_DUNGEON) != 0))
                                 fullLine += " (Normal Dungeon)";
-                            else if (((event_flags & SmartEventFlags.EVENT_FLAG_HEROIC_DUNGEON) != 0))
+                            else if (((eventFlags & SmartEventFlags.EVENT_FLAG_HEROIC_DUNGEON) != 0))
                                 fullLine += " (Heroic Dungeon)";
                         }
 
-                        if (((event_flags & SmartEventFlags.EVENT_FLAG_NORMAL_RAID) != 0) && ((event_flags & SmartEventFlags.EVENT_FLAG_HEROIC_RAID) != 0))
+                        if (((eventFlags & SmartEventFlags.EVENT_FLAG_NORMAL_RAID) != 0) && ((eventFlags & SmartEventFlags.EVENT_FLAG_HEROIC_RAID) != 0))
                             fullLine += " (Raid)";
                         else
                         {
-                            if (((event_flags & SmartEventFlags.EVENT_FLAG_NORMAL_RAID) != 0))
+                            if (((eventFlags & SmartEventFlags.EVENT_FLAG_NORMAL_RAID) != 0))
                                 fullLine += " (Normal Raid)";
-                            else if (((event_flags & SmartEventFlags.EVENT_FLAG_HEROIC_RAID) != 0))
+                            else if (((eventFlags & SmartEventFlags.EVENT_FLAG_HEROIC_RAID) != 0))
                                 fullLine += " (Heroic Raid)";
                         }
                     }
 
-                    if (((event_flags & SmartEventFlags.EVENT_FLAG_DEBUG_ONLY) != 0))
+                    if (((eventFlags & SmartEventFlags.EVENT_FLAG_DEBUG_ONLY) != 0))
                         fullLine += " (Debug)";
                 }
 

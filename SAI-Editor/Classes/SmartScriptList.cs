@@ -13,7 +13,7 @@ namespace SAI_Editor.Classes
 {
     public class SmartScriptList : CList
     {
-        private Stack<Color> _colors = new Stack<Color>(Constants.phaseColors);
+        private Stack<Color> _colors = new Stack<Color>(Constants.PhaseColors);
         private readonly Dictionary<int, Color> _phaseColors = new Dictionary<int, Color>();
 
         private readonly FastObjectListView _oListView;
@@ -56,14 +56,14 @@ namespace SAI_Editor.Classes
             int lastSelectedIndex = _oListView.SelectedIndices.Count > 0 ? _oListView.SelectedIndices[0] : -1;
             base.Apply(keepSelection);
 
-            _colors = new Stack<Color>(Constants.phaseColors);
+            _colors = new Stack<Color>(Constants.PhaseColors);
             _phaseColors.Clear();
 
             if (Scripts != null)
             {
                 int[] phasemasks = Scripts.Select(p => ((SmartScript)p).event_phase_mask).Distinct().ToArray();
 
-                if (phasemasks.Length > Constants.phaseColors.Count)
+                if (phasemasks.Length > Constants.PhaseColors.Count)
                 {
                     MessageBox.Show("There are not enough colors in the application because you are using too many different phasemasks.", "Not enough colors!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -79,9 +79,11 @@ namespace SAI_Editor.Classes
 
         public override object Clone()
         {
-            SmartScriptList newList = new SmartScriptList(ListView);
-            newList.Scripts = new List<DatabaseClass>(Scripts);
-            newList.ExcludedProperties = new List<string>(ExcludedProperties);
+            SmartScriptList newList = new SmartScriptList(ListView)
+            {
+                Scripts = new List<DatabaseClass>(Scripts),
+                ExcludedProperties = new List<string>(ExcludedProperties)
+            };
 
             return newList;
         }

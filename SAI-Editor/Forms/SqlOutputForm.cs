@@ -16,29 +16,29 @@ namespace SAI_Editor.Forms
 {
     public partial class SqlOutputForm : Form
     {
-        private EntryOrGuidAndSourceType originalEntryOrGuidAndSourceType = new EntryOrGuidAndSourceType();
-        private readonly string revertQuery, originalSqlOutput;
-        private readonly List<EntryOrGuidAndSourceType> entriesOrGuidsAndSourceTypes;
-        private readonly bool sqlForSmartScripts, saveToFile;
+        private EntryOrGuidAndSourceType _originalEntryOrGuidAndSourceType = new EntryOrGuidAndSourceType();
+        private readonly string _revertQuery, _originalSqlOutput;
+        private readonly List<EntryOrGuidAndSourceType> _entriesOrGuidsAndSourceTypes;
+        private readonly bool _sqlForSmartScripts, _saveToFile;
 
         public SqlOutputForm(string sqlOutput, bool sqlForSmartScripts, string revertQuery = "", List<EntryOrGuidAndSourceType> entriesOrGuidsAndSourceTypes = null, bool saveToFile = true)
         {
             InitializeComponent();
 
             richTextBoxSqlOutput.Text = sqlOutput;
-            originalSqlOutput = richTextBoxSqlOutput.Text; //! We have to assign it to the .Text instead of `sqlOutput` as it adds some linefeeds here
-            this.revertQuery = revertQuery;
-            this.entriesOrGuidsAndSourceTypes = entriesOrGuidsAndSourceTypes;
-            this.sqlForSmartScripts = sqlForSmartScripts;
-            this.saveToFile = saveToFile;
+            _originalSqlOutput = richTextBoxSqlOutput.Text; //! We have to assign it to the .Text instead of `sqlOutput` as it adds some linefeeds here
+            this._revertQuery = revertQuery;
+            this._entriesOrGuidsAndSourceTypes = entriesOrGuidsAndSourceTypes;
+            this._sqlForSmartScripts = sqlForSmartScripts;
+            this._saveToFile = saveToFile;
         }
 
         private void SqlOutputForm_Load(object sender, EventArgs e)
         {
-            if (sqlForSmartScripts)
-                originalEntryOrGuidAndSourceType = ((MainForm)Owner).userControl.originalEntryOrGuidAndSourceType;
+            if (_sqlForSmartScripts)
+                _originalEntryOrGuidAndSourceType = ((MainForm)Owner).UserControl.OriginalEntryOrGuidAndSourceType;
 
-            buttonSaveToFile.Enabled = saveToFile;
+            buttonSaveToFile.Enabled = _saveToFile;
             buttonExecuteScript.Enabled = Settings.Default.UseWorldDatabase;
         }
 
@@ -54,13 +54,13 @@ namespace SAI_Editor.Forms
                     query = richTextBoxSqlOutput.SelectedText;
             }
 
-            if (await SAI_Editor_Manager.Instance.worldDatabase.ExecuteNonQuery(query))
+            if (await SAI_Editor_Manager.Instance.WorldDatabase.ExecuteNonQuery(query))
             {
                 string message = "The SQL has been executed succesfully!";
 
-                if (Settings.Default.CreateRevertQuery && sqlForSmartScripts)
+                if (Settings.Default.CreateRevertQuery && _sqlForSmartScripts)
                 {
-                    if (query != originalSqlOutput)
+                    if (query != _originalSqlOutput)
                     {
                         DialogResult dialogResult = MessageBox.Show("Changes have been made to the SQL. Do you still wish you generate a revert query to be able to reset the original SAI (for the entryorguid and source_type that opened this form) to its current state?", "Changes have been made...", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -81,20 +81,20 @@ namespace SAI_Editor.Forms
         {
             saveFileDialog.Filter = "SQL files (*.sql)|*.sql|All files (*.*)|*.*";
 
-            switch (originalEntryOrGuidAndSourceType.sourceType)
+            switch (_originalEntryOrGuidAndSourceType.sourceType)
             {
                 case SourceTypes.SourceTypeCreature:
                 case SourceTypes.SourceTypeGameobject:
                 case SourceTypes.SourceTypeAreaTrigger:
                 case SourceTypes.SourceTypeScriptedActionlist:
-                    if (sqlForSmartScripts)
+                    if (_sqlForSmartScripts)
                     {
-                        saveFileDialog.FileName = "SAI for " + SAI_Editor_Manager.Instance.GetSourceTypeString(originalEntryOrGuidAndSourceType.sourceType).ToLower() + " ";
+                        saveFileDialog.FileName = "SAI for " + SAI_Editor_Manager.Instance.GetSourceTypeString(_originalEntryOrGuidAndSourceType.sourceType).ToLower() + " ";
 
                         if (Settings.Default.UseWorldDatabase)
-                            saveFileDialog.FileName += await SAI_Editor_Manager.Instance.worldDatabase.GetObjectNameByIdOrGuidAndSourceType(originalEntryOrGuidAndSourceType);
+                            saveFileDialog.FileName += await SAI_Editor_Manager.Instance.WorldDatabase.GetObjectNameByIdOrGuidAndSourceType(_originalEntryOrGuidAndSourceType);
                         else
-                            saveFileDialog.FileName += originalEntryOrGuidAndSourceType.entryOrGuid;
+                            saveFileDialog.FileName += _originalEntryOrGuidAndSourceType.entryOrGuid;
                     }
                     else
                         saveFileDialog.FileName = "Condition SQL";
@@ -135,26 +135,26 @@ namespace SAI_Editor.Forms
 
         private void CreateRevertQuery()
         {
-            if (!sqlForSmartScripts)
+            if (!_sqlForSmartScripts)
                 return;
 
             //! Example filename:
             //! [Creature] [33303] 3-10-2013 15.32.40.sql
             //! [Creature] [33303 - 3330300] 3-10-2013 15.32.40.sql
-            string filename = @"Reverts\[" + SAI_Editor_Manager.Instance.GetSourceTypeString(originalEntryOrGuidAndSourceType.sourceType) + "] [";
+            string filename = @"Reverts\[" + SAI_Editor_Manager.Instance.GetSourceTypeString(_originalEntryOrGuidAndSourceType.sourceType) + "] [";
 
-            if (entriesOrGuidsAndSourceTypes != null)
+            if (_entriesOrGuidsAndSourceTypes != null)
             {
-                for (int i = 0; i < entriesOrGuidsAndSourceTypes.Count; ++i)
+                for (int i = 0; i < _entriesOrGuidsAndSourceTypes.Count; ++i)
                 {
-                    filename += entriesOrGuidsAndSourceTypes[i].entryOrGuid;
+                    filename += _entriesOrGuidsAndSourceTypes[i].entryOrGuid;
 
-                    if (i < entriesOrGuidsAndSourceTypes.Count - 1)
+                    if (i < _entriesOrGuidsAndSourceTypes.Count - 1)
                         filename += " - ";
                 }
             }
             else
-                filename += originalEntryOrGuidAndSourceType.entryOrGuid;
+                filename += _originalEntryOrGuidAndSourceType.entryOrGuid;
 
             //! GetUniversalTimeStamp will return something like '27-12-2013 19;55;22'
             filename += "] " + SAI_Editor_Manager.Instance.GetUniversalTimeStamp() + ".sql";
@@ -164,7 +164,7 @@ namespace SAI_Editor.Forms
 
             try
             {
-                File.WriteAllText(filename, revertQuery);
+                File.WriteAllText(filename, _revertQuery);
             }
             catch
             {
@@ -176,7 +176,7 @@ namespace SAI_Editor.Forms
         {
             try
             {
-                WebRequest wr = WebRequest.Create(@"http://pastebin.com/api/api_post.php");
+                WebRequest wr = WebRequest.Create(@"https://pastebin.com/api/api_post.php");
                 ASCIIEncoding encoding = new ASCIIEncoding();
 
                 string pasteName = "SAI-Editor: ";
@@ -237,20 +237,20 @@ namespace SAI_Editor.Forms
         {
             openFileDialog.Filter = "SQL files (*.sql)|*.sql|All files (*.*)|*.*";
 
-            switch (originalEntryOrGuidAndSourceType.sourceType)
+            switch (_originalEntryOrGuidAndSourceType.sourceType)
             {
                 case SourceTypes.SourceTypeCreature:
                 case SourceTypes.SourceTypeGameobject:
                 case SourceTypes.SourceTypeAreaTrigger:
                 case SourceTypes.SourceTypeScriptedActionlist:
-                    if (sqlForSmartScripts)
+                    if (_sqlForSmartScripts)
                     {
-                        openFileDialog.FileName = "SAI for " + SAI_Editor_Manager.Instance.GetSourceTypeString(originalEntryOrGuidAndSourceType.sourceType).ToLower() + " ";
+                        openFileDialog.FileName = "SAI for " + SAI_Editor_Manager.Instance.GetSourceTypeString(_originalEntryOrGuidAndSourceType.sourceType).ToLower() + " ";
 
                         if (Settings.Default.UseWorldDatabase)
-                            openFileDialog.FileName += await SAI_Editor_Manager.Instance.worldDatabase.GetObjectNameByIdOrGuidAndSourceType(originalEntryOrGuidAndSourceType);
+                            openFileDialog.FileName += await SAI_Editor_Manager.Instance.WorldDatabase.GetObjectNameByIdOrGuidAndSourceType(_originalEntryOrGuidAndSourceType);
                         else
-                            openFileDialog.FileName += originalEntryOrGuidAndSourceType.entryOrGuid;
+                            openFileDialog.FileName += _originalEntryOrGuidAndSourceType.entryOrGuid;
                     }
                     else
                         openFileDialog.FileName = "Condition SQL";

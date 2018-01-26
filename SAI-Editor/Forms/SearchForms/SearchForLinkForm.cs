@@ -9,16 +9,16 @@ namespace SAI_Editor.Forms.SearchForms
 {
     public partial class SearchForLinkForm : Form
     {
-        private readonly ListViewColumnSorter lvwColumnSorter = new ListViewColumnSorter();
-        private int indexOfLineToDisable = 0;
-        private readonly TextBox textBoxToChange = null;
+        private readonly ListViewColumnSorter _lvwColumnSorter = new ListViewColumnSorter();
+        private int _indexOfLineToDisable = 0;
+        private readonly TextBox _textBoxToChange = null;
 
         public SearchForLinkForm(List<SmartScript> smartScripts, int indexOfLineToDisable, TextBox textBoxToChange)
         {
             InitializeComponent();
 
-            this.indexOfLineToDisable = indexOfLineToDisable;
-            this.textBoxToChange = textBoxToChange;
+            this._indexOfLineToDisable = indexOfLineToDisable;
+            this._textBoxToChange = textBoxToChange;
 
             foreach (SmartScript smartScript in smartScripts)
                 listViewScripts.AddScript(smartScript);
@@ -39,7 +39,7 @@ namespace SAI_Editor.Forms.SearchForms
                 return;
             }
 
-            textBoxToChange.Text = listViewScripts.SelectedItems[0].SubItems[2].Text;
+            _textBoxToChange.Text = listViewScripts.SelectedItems[0].SubItems[2].Text;
             Close();
         }
 
@@ -52,7 +52,7 @@ namespace SAI_Editor.Forms.SearchForms
         {
             if (listViewScripts.SelectedItems.Count > 0)
             {
-                if (listViewScripts.SelectedItems[0].Index == indexOfLineToDisable)
+                if (listViewScripts.SelectedItems[0].Index == _indexOfLineToDisable)
                 {
                     listViewScripts.SelectedItems[0].Selected = false;
                     return;
@@ -68,18 +68,18 @@ namespace SAI_Editor.Forms.SearchForms
         private void listViewScripts_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             var myListView = (ListView)sender;
-            myListView.ListViewItemSorter = lvwColumnSorter;
+            myListView.ListViewItemSorter = _lvwColumnSorter;
 
             //! Determine if clicked column is already the column that is being sorted
-            if (e.Column != lvwColumnSorter.SortColumn)
+            if (e.Column != _lvwColumnSorter.SortColumn)
             {
                 //! Set the column number that is to be sorted; default to ascending
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
+                _lvwColumnSorter.SortColumn = e.Column;
+                _lvwColumnSorter.Order = SortOrder.Ascending;
             }
             else
                 //! Reverse the current sort direction for this column
-                lvwColumnSorter.Order = lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+                _lvwColumnSorter.Order = _lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
 
             //! Perform the sort with these new sort options
             myListView.Sort();

@@ -8,14 +8,14 @@ namespace SAI_Editor.Forms.SearchForms
 {
     public partial class MultiSelectForm<T> : Form where T : struct, IConvertible
     {
-        private readonly ListViewColumnSorter lvwColumnSorter = new ListViewColumnSorter();
-        private readonly TextBox textBoxToChange = null;
+        private readonly ListViewColumnSorter _lvwColumnSorter = new ListViewColumnSorter();
+        private readonly TextBox _textBoxToChange = null;
 
         public MultiSelectForm(TextBox textBoxToChange)
         {
             InitializeComponent();
 
-            this.textBoxToChange = textBoxToChange;
+            this._textBoxToChange = textBoxToChange;
 
             listViewSelectableItems.Columns.Add(typeof(T).Name, 235, HorizontalAlignment.Left);
 
@@ -50,12 +50,12 @@ namespace SAI_Editor.Forms.SearchForms
             }
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void ButtonCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void buttonContinue_Click(object sender, EventArgs e)
+        private void ButtonContinue_Click(object sender, EventArgs e)
         {
             long mask = 0L;
             string[] names = Enum.GetNames(typeof(T));
@@ -64,9 +64,9 @@ namespace SAI_Editor.Forms.SearchForms
                 if (names.Any(p => p == item.SubItems[1].Text))
                     mask |= Convert.ToInt64(Enum.Parse(typeof(T), item.SubItems[1].Text));
             
-            if (textBoxToChange != null)
+            if (_textBoxToChange != null)
             {
-                textBoxToChange.Text = mask.ToString();
+                _textBoxToChange.Text = mask.ToString();
                 Close();
             }
             else
@@ -88,7 +88,7 @@ namespace SAI_Editor.Forms.SearchForms
             }
         }
 
-        private void listViewSelectableItems_ItemChecked(object sender, ItemCheckedEventArgs e)
+        private void ListViewSelectableItems_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             //! TODO: Fix this. It's also called when the form loads and for some reason this if-check passes...
             //if (listViewSelectableItems.Items[0].Checked)
@@ -107,18 +107,18 @@ namespace SAI_Editor.Forms.SearchForms
             }
         }
 
-        private void listViewSelectableItems_ColumnClick(object sender, ColumnClickEventArgs e)
+        private void ListViewSelectableItems_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             var myListView = (ListView)sender;
-            myListView.ListViewItemSorter = lvwColumnSorter;
+            myListView.ListViewItemSorter = _lvwColumnSorter;
 
-            if (e.Column != lvwColumnSorter.SortColumn)
+            if (e.Column != _lvwColumnSorter.SortColumn)
             {
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
+                _lvwColumnSorter.SortColumn = e.Column;
+                _lvwColumnSorter.Order = SortOrder.Ascending;
             }
             else
-                lvwColumnSorter.Order = lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+                _lvwColumnSorter.Order = _lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
 
             myListView.Sort();
         }

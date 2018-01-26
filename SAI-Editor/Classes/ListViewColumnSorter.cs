@@ -12,21 +12,21 @@ namespace SAI_Editor.Classes
         /// <summary>
         /// Specifies the column to be sorted
         /// </summary>
-        private int ColumnToSort;
+        private int _columnToSort;
         /// <summary>
         /// Specifies the order in which to sort (i.e. 'Ascending').
         /// </summary>
-        private SortOrder OrderOfSort;
+        private SortOrder _orderOfSort;
         /// <summary>
         /// Class constructor.  Initializes various elements
         /// </summary>
         public ListViewColumnSorter()
         {
             // Initialize the column to '0'
-            ColumnToSort = 0;
+            _columnToSort = 0;
             // Initialize the sort order to 'none'
             //OrderOfSort = SortOrder.None;
-            OrderOfSort = SortOrder.Ascending;
+            _orderOfSort = SortOrder.Ascending;
         }  
         /// <summary>
         /// This method is inherited from the IComparer interface.
@@ -47,13 +47,13 @@ namespace SAI_Editor.Classes
 
             if (listviewX != listviewY)
             {
-                if (CustomConverter.ToInt32(listviewX.SubItems[ColumnToSort].Text) > 0 && CustomConverter.ToInt32(listviewY.SubItems[ColumnToSort].Text) > 0)
-                    compareResult = Decimal.Compare(CustomConverter.ToInt32(listviewX.SubItems[ColumnToSort].Text), CustomConverter.ToInt32(listviewY.SubItems[ColumnToSort].Text));
+                if (CustomConverter.ToInt32(listviewX.SubItems[_columnToSort].Text) > 0 && CustomConverter.ToInt32(listviewY.SubItems[_columnToSort].Text) > 0)
+                    compareResult = Decimal.Compare(CustomConverter.ToInt32(listviewX.SubItems[_columnToSort].Text), CustomConverter.ToInt32(listviewY.SubItems[_columnToSort].Text));
                 else
-                    compareResult = String.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
+                    compareResult = String.Compare(listviewX.SubItems[_columnToSort].Text, listviewY.SubItems[_columnToSort].Text);
             }
 
-            if (OrderOfSort == SortOrder.Ascending)
+            if (_orderOfSort == SortOrder.Ascending)
                 return compareResult;
 
             return -compareResult;
@@ -67,11 +67,11 @@ namespace SAI_Editor.Classes
         {
             set
             {
-                ColumnToSort = value;
+                _columnToSort = value;
             }
             get
             {
-                return ColumnToSort;
+                return _columnToSort;
             }
         }
         /// <summary>
@@ -82,11 +82,11 @@ namespace SAI_Editor.Classes
         {
             set
             {
-                OrderOfSort = value;
+                _orderOfSort = value;
             }
             get
             {
-                return OrderOfSort;
+                return _orderOfSort;
             }
         }
     }

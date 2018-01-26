@@ -21,7 +21,7 @@ namespace SAI_Editor.Classes
 {
     public struct EntryOrGuidAndSourceType
     {
-        public EntryOrGuidAndSourceType(int _entryOrGuid, SourceTypes _sourceType) { entryOrGuid = _entryOrGuid; sourceType = _sourceType; }
+        public EntryOrGuidAndSourceType(int _entryOrGuid, SourceTypes sourceType) { entryOrGuid = _entryOrGuid; this.sourceType = sourceType; }
 
         public int entryOrGuid;
         public SourceTypes sourceType;
@@ -32,7 +32,7 @@ namespace SAI_Editor.Classes
         public WowExpansion Expansion = WowExpansion.ExpansionWotlk;
 
         public WorldDatabase _worldDatabase = null;
-        public WorldDatabase worldDatabase
+        public WorldDatabase WorldDatabase
         {
             get
             {
@@ -95,7 +95,7 @@ namespace SAI_Editor.Classes
             { "UnitFieldBytes1Types", typeof(SingleSelectForm<UnitFieldBytes1Types>)},
         };
 
-        public SQLiteDatabase sqliteDatabase { get; set; }
+        public SQLiteDatabase SqliteDatabase { get; set; }
         public List<EventTypeInformation> eventTypeInformations;
         public List<ActionTypeInformation> actionTypeInformations;
         public List<TargetTypeInformation> targetTypeInformations;
@@ -132,29 +132,29 @@ namespace SAI_Editor.Classes
         public async Task<DataTable> ExecuteQuery(bool useWorldDatabase, string queryToExecute)
         {
             if (useWorldDatabase)
-                return await SAI_Editor_Manager.Instance.worldDatabase.ExecuteQuery(queryToExecute);
+                return await SAI_Editor_Manager.Instance.WorldDatabase.ExecuteQuery(queryToExecute);
 
-            return await SAI_Editor_Manager.Instance.sqliteDatabase.ExecuteQuery(queryToExecute);
+            return await SAI_Editor_Manager.Instance.SqliteDatabase.ExecuteQuery(queryToExecute);
         }
 
         public void ResetWorldDatabase(bool useConnStr)
         {
             if (useConnStr)
-                worldDatabase = new WorldDatabase(SAI_Editor_Manager.Instance.connString.Server, SAI_Editor_Manager.Instance.connString.Port, SAI_Editor_Manager.Instance.connString.UserID, SAI_Editor_Manager.Instance.connString.Password, SAI_Editor_Manager.Instance.connString.Database);
+                WorldDatabase = new WorldDatabase(SAI_Editor_Manager.Instance.connString.Server, SAI_Editor_Manager.Instance.connString.Port, SAI_Editor_Manager.Instance.connString.UserID, SAI_Editor_Manager.Instance.connString.Password, SAI_Editor_Manager.Instance.connString.Database);
             else
-                worldDatabase = new WorldDatabase(Settings.Default.Host, Settings.Default.Port, Settings.Default.User, GetPasswordSetting(), Settings.Default.Database);
+                WorldDatabase = new WorldDatabase(Settings.Default.Host, Settings.Default.Port, Settings.Default.User, GetPasswordSetting(), Settings.Default.Database);
         }
 
         public void ResetSQLiteDatabase()
         {
-            sqliteDatabase = new SQLiteDatabase("sqlite_database.db");
+            SqliteDatabase = new SQLiteDatabase("sqlite_database.db");
         }
 
         public async Task LoadSQLiteDatabaseInfo()
         {
-            eventTypeInformations = await sqliteDatabase.GetEventTypeInformation();
-            actionTypeInformations = await sqliteDatabase.GetActionTypeInformation();
-            targetTypeInformations = await sqliteDatabase.GetTargetTypeInformation();
+            eventTypeInformations = await SqliteDatabase.GetEventTypeInformation();
+            actionTypeInformations = await SqliteDatabase.GetActionTypeInformation();
+            targetTypeInformations = await SqliteDatabase.GetTargetTypeInformation();
         }
 
         private BaseTypeInformation GetTypeByScriptTypeId(int type, ScriptTypeId scriptTypeId)
@@ -271,7 +271,7 @@ namespace SAI_Editor.Classes
 
             if (sourceType == SourceTypes.SourceTypeScriptedActionlist)
             {
-                List<SmartScript> smartScriptsCallingActionlist = await worldDatabase.GetSmartScriptsCallingActionLists();
+                List<SmartScript> smartScriptsCallingActionlist = await WorldDatabase.GetSmartScriptsCallingActionLists();
 
                 if (smartScriptsCallingActionlist != null)
                 {
@@ -353,16 +353,18 @@ namespace SAI_Editor.Classes
                     return null;
                 }
 
-                MySqlConnectionStringBuilder _connectionString = new MySqlConnectionStringBuilder();
-                _connectionString.Server = host;
-                _connectionString.UserID = username;
-                _connectionString.Port = port;
+                MySqlConnectionStringBuilder _connectionString = new MySqlConnectionStringBuilder
+                {
+                    Server = host,
+                    UserID = username,
+                    Port = port
+                };
 
                 if (password.Length > 0)
                     _connectionString.Password = password;
 
                 //! Will throw an error message itself if no connection can be made.
-                if (!(_worldDatabase ?? Instance.worldDatabase).CanConnectToDatabase(_connectionString))
+                if (!(_worldDatabase ?? Instance.WorldDatabase).CanConnectToDatabase(_connectionString))
                     return null;
 
                 List<string> databaseNames = new List<string>();
@@ -405,9 +407,11 @@ namespace SAI_Editor.Classes
 
             foreach (SmartScript smartScript in smartScripts)
             {
-                EntryOrGuidAndSourceType entryOrGuidAndSourceType = new EntryOrGuidAndSourceType();
-                entryOrGuidAndSourceType.entryOrGuid = smartScript.entryorguid;
-                entryOrGuidAndSourceType.sourceType = (SourceTypes)smartScript.source_type;
+                EntryOrGuidAndSourceType entryOrGuidAndSourceType = new EntryOrGuidAndSourceType
+                {
+                    entryOrGuid = smartScript.entryorguid,
+                    sourceType = (SourceTypes)smartScript.source_type
+                };
 
                 if (entriesOrGuidsAndSourceTypes.Contains(entryOrGuidAndSourceType))
                     continue;
@@ -468,7 +472,7 @@ namespace SAI_Editor.Classes
             try
             {
                 using (WebClient client = new WebClient())
-                    using (Stream stream = client.OpenRead("http://www.google.com"))
+                    using (Stream stream = client.OpenRead("https://www.google.com"))
                         return true;
             }
             catch

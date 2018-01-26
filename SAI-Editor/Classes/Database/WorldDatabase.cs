@@ -14,14 +14,16 @@ namespace SAI_Editor.Classes.Database
     {
         public WorldDatabase(string host, uint port, string username, string password, string databaseName)
         {
-            connectionString = new MySqlConnectionStringBuilder();
-            connectionString.Server = host;
-            connectionString.Port = port;
-            connectionString.UserID = username;
-            connectionString.Password = password;
-            connectionString.Database = databaseName;
-            connectionString.AllowUserVariables = true;
-            connectionString.AllowZeroDateTime = true;
+            ConnectionString = new MySqlConnectionStringBuilder
+            {
+                Server = host,
+                Port = port,
+                UserID = username,
+                Password = password,
+                Database = databaseName,
+                AllowUserVariables = true,
+                AllowZeroDateTime = true
+            };
         }
 
         public async Task<int> GetCreatureIdByGuid(int guid)
@@ -393,83 +395,89 @@ namespace SAI_Editor.Classes.Database
 
         private SmartScript BuildSmartScript(DataRow row)
         {
-            var smartScript = new SmartScript();
-            smartScript.entryorguid = row["entryorguid"] != DBNull.Value ? CustomConverter.ToInt32(row["entryorguid"]) : -1;
-            smartScript.source_type = row["source_type"] != DBNull.Value ? CustomConverter.ToInt32(row["source_type"]) : 0;
-            smartScript.id = row["id"] != DBNull.Value ? CustomConverter.ToInt32(row["id"]) : 0;
-            smartScript.link = row["link"] != DBNull.Value ? CustomConverter.ToInt32(row["link"]) : 0;
-            smartScript.event_type = row["event_type"] != DBNull.Value ? CustomConverter.ToInt32(row["event_type"]) : 0;
-            smartScript.event_phase_mask = row["event_phase_mask"] != DBNull.Value ? CustomConverter.ToInt32(row["event_phase_mask"]) : 0;
-            smartScript.event_chance = row["event_chance"] != DBNull.Value ? CustomConverter.ToInt32(row["event_chance"]) : 0;
-            smartScript.event_flags = row["event_flags"] != DBNull.Value ? CustomConverter.ToInt32(row["event_flags"]) : 0;
-            smartScript.event_param1 = row["event_param1"] != DBNull.Value ? CustomConverter.ToInt32(row["event_param1"]) : 0;
-            smartScript.event_param2 = row["event_param2"] != DBNull.Value ? CustomConverter.ToInt32(row["event_param2"]) : 0;
-            smartScript.event_param3 = row["event_param3"] != DBNull.Value ? CustomConverter.ToInt32(row["event_param3"]) : 0;
-            smartScript.event_param4 = row["event_param4"] != DBNull.Value ? CustomConverter.ToInt32(row["event_param4"]) : 0;
-            smartScript.action_type = row["action_type"] != DBNull.Value ? CustomConverter.ToInt32(row["action_type"]) : 0;
-            smartScript.action_param1 = row["action_param1"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param1"]) : 0;
-            smartScript.action_param2 = row["action_param2"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param2"]) : 0;
-            smartScript.action_param3 = row["action_param3"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param3"]) : 0;
-            smartScript.action_param4 = row["action_param4"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param4"]) : 0;
-            smartScript.action_param5 = row["action_param5"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param5"]) : 0;
-            smartScript.action_param6 = row["action_param6"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param6"]) : 0;
-            smartScript.target_type = row["target_type"] != DBNull.Value ? CustomConverter.ToInt32(row["target_type"]) : 0;
-            smartScript.target_param1 = row["target_param1"] != DBNull.Value ? CustomConverter.ToInt32(row["target_param1"]) : 0;
-            smartScript.target_param2 = row["target_param2"] != DBNull.Value ? CustomConverter.ToInt32(row["target_param2"]) : 0;
-            smartScript.target_param3 = row["target_param3"] != DBNull.Value ? CustomConverter.ToInt32(row["target_param3"]) : 0;
-            smartScript.target_x = row["target_x"] != DBNull.Value ? row["target_x"].ToString() : String.Empty;
-            smartScript.target_y = row["target_y"] != DBNull.Value ? row["target_y"].ToString() : String.Empty;
-            smartScript.target_z = row["target_z"] != DBNull.Value ? row["target_z"].ToString() : String.Empty;
-            smartScript.target_o = row["target_o"] != DBNull.Value ? row["target_o"].ToString() : String.Empty;
-            smartScript.comment = row["comment"] != DBNull.Value ? (string)row["comment"] : String.Empty;
+            var smartScript = new SmartScript
+            {
+                entryorguid = row["entryorguid"] != DBNull.Value ? CustomConverter.ToInt32(row["entryorguid"]) : -1,
+                source_type = row["source_type"] != DBNull.Value ? CustomConverter.ToInt32(row["source_type"]) : 0,
+                id = row["id"] != DBNull.Value ? CustomConverter.ToInt32(row["id"]) : 0,
+                link = row["link"] != DBNull.Value ? CustomConverter.ToInt32(row["link"]) : 0,
+                event_type = row["event_type"] != DBNull.Value ? CustomConverter.ToInt32(row["event_type"]) : 0,
+                event_phase_mask = row["event_phase_mask"] != DBNull.Value ? CustomConverter.ToInt32(row["event_phase_mask"]) : 0,
+                event_chance = row["event_chance"] != DBNull.Value ? CustomConverter.ToInt32(row["event_chance"]) : 0,
+                event_flags = row["event_flags"] != DBNull.Value ? CustomConverter.ToInt32(row["event_flags"]) : 0,
+                event_param1 = row["event_param1"] != DBNull.Value ? CustomConverter.ToInt32(row["event_param1"]) : 0,
+                event_param2 = row["event_param2"] != DBNull.Value ? CustomConverter.ToInt32(row["event_param2"]) : 0,
+                event_param3 = row["event_param3"] != DBNull.Value ? CustomConverter.ToInt32(row["event_param3"]) : 0,
+                event_param4 = row["event_param4"] != DBNull.Value ? CustomConverter.ToInt32(row["event_param4"]) : 0,
+                action_type = row["action_type"] != DBNull.Value ? CustomConverter.ToInt32(row["action_type"]) : 0,
+                action_param1 = row["action_param1"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param1"]) : 0,
+                action_param2 = row["action_param2"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param2"]) : 0,
+                action_param3 = row["action_param3"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param3"]) : 0,
+                action_param4 = row["action_param4"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param4"]) : 0,
+                action_param5 = row["action_param5"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param5"]) : 0,
+                action_param6 = row["action_param6"] != DBNull.Value ? CustomConverter.ToInt32(row["action_param6"]) : 0,
+                target_type = row["target_type"] != DBNull.Value ? CustomConverter.ToInt32(row["target_type"]) : 0,
+                target_param1 = row["target_param1"] != DBNull.Value ? CustomConverter.ToInt32(row["target_param1"]) : 0,
+                target_param2 = row["target_param2"] != DBNull.Value ? CustomConverter.ToInt32(row["target_param2"]) : 0,
+                target_param3 = row["target_param3"] != DBNull.Value ? CustomConverter.ToInt32(row["target_param3"]) : 0,
+                target_x = row["target_x"] != DBNull.Value ? row["target_x"].ToString() : String.Empty,
+                target_y = row["target_y"] != DBNull.Value ? row["target_y"].ToString() : String.Empty,
+                target_z = row["target_z"] != DBNull.Value ? row["target_z"].ToString() : String.Empty,
+                target_o = row["target_o"] != DBNull.Value ? row["target_o"].ToString() : String.Empty,
+                comment = row["comment"] != DBNull.Value ? (string)row["comment"] : String.Empty
+            };
             return smartScript;
         }
 
         private Creature BuildCreature(DataRow row)
         {
-            var creature = new Creature();
-            creature.guid = row["guid"] != DBNull.Value ? CustomConverter.ToInt32(row["guid"]) : 0;
-            creature.id = row["id"] != DBNull.Value ? CustomConverter.ToInt32(row["id"]) : 0;
-            creature.map = row["map"] != DBNull.Value ? CustomConverter.ToInt32(row["map"]) : 0;
-            creature.spawnMask = row["spawnMask"] != DBNull.Value ? CustomConverter.ToInt32(row["spawnMask"]) : 0;
-            creature.phaseMask = row["phaseMask"] != DBNull.Value ? CustomConverter.ToInt32(row["phaseMask"]) : 0;
-            creature.modelid = row["modelid"] != DBNull.Value ? CustomConverter.ToInt32(row["modelid"]) : 0;
-            creature.equipment_id = row["equipment_id"] != DBNull.Value ? CustomConverter.ToInt32(row["equipment_id"]) : 0;
-            creature.position_x = row["position_x"] != DBNull.Value ? CustomConverter.ToInt32(row["position_x"]) : 0;
-            creature.position_y = row["position_y"] != DBNull.Value ? CustomConverter.ToInt32(row["position_y"]) : 0;
-            creature.position_z = row["position_z"] != DBNull.Value ? CustomConverter.ToInt32(row["position_z"]) : 0;
-            creature.orientation = row["orientation"] != DBNull.Value ? CustomConverter.ToInt32(row["orientation"]) : 0;
-            creature.spawntimesecs = row["spawntimesecs"] != DBNull.Value ? CustomConverter.ToInt32(row["spawntimesecs"]) : 0;
-            creature.spawndist = row["spawndist"] != DBNull.Value ? CustomConverter.ToInt32(row["spawndist"]) : 0;
-            creature.currentwaypoint = row["currentwaypoint"] != DBNull.Value ? CustomConverter.ToInt32(row["currentwaypoint"]) : 0;
-            creature.curhealth = row["curhealth"] != DBNull.Value ? CustomConverter.ToInt32(row["curhealth"]) : 0;
-            creature.curmana = row["curmana"] != DBNull.Value ? CustomConverter.ToInt32(row["curmana"]) : 0;
-            creature.movementType = row["movementType"] != DBNull.Value ? CustomConverter.ToInt32(row["movementType"]) : 0;
-            creature.npcflag = row["npcflag"] != DBNull.Value ? CustomConverter.ToInt32(row["npcflag"]) : 0;
-            creature.unit_flags = row["unit_flags"] != DBNull.Value ? CustomConverter.ToInt32(row["unit_flags"]) : 0;
-            creature.dynamicflags = row["dynamicflags"] != DBNull.Value ? CustomConverter.ToInt32(row["dynamicflags"]) : 0;
+            var creature = new Creature
+            {
+                guid = row["guid"] != DBNull.Value ? CustomConverter.ToInt32(row["guid"]) : 0,
+                id = row["id"] != DBNull.Value ? CustomConverter.ToInt32(row["id"]) : 0,
+                map = row["map"] != DBNull.Value ? CustomConverter.ToInt32(row["map"]) : 0,
+                spawnMask = row["spawnMask"] != DBNull.Value ? CustomConverter.ToInt32(row["spawnMask"]) : 0,
+                phaseMask = row["phaseMask"] != DBNull.Value ? CustomConverter.ToInt32(row["phaseMask"]) : 0,
+                modelid = row["modelid"] != DBNull.Value ? CustomConverter.ToInt32(row["modelid"]) : 0,
+                equipment_id = row["equipment_id"] != DBNull.Value ? CustomConverter.ToInt32(row["equipment_id"]) : 0,
+                position_x = row["position_x"] != DBNull.Value ? CustomConverter.ToInt32(row["position_x"]) : 0,
+                position_y = row["position_y"] != DBNull.Value ? CustomConverter.ToInt32(row["position_y"]) : 0,
+                position_z = row["position_z"] != DBNull.Value ? CustomConverter.ToInt32(row["position_z"]) : 0,
+                orientation = row["orientation"] != DBNull.Value ? CustomConverter.ToInt32(row["orientation"]) : 0,
+                spawntimesecs = row["spawntimesecs"] != DBNull.Value ? CustomConverter.ToInt32(row["spawntimesecs"]) : 0,
+                spawndist = row["spawndist"] != DBNull.Value ? CustomConverter.ToInt32(row["spawndist"]) : 0,
+                currentwaypoint = row["currentwaypoint"] != DBNull.Value ? CustomConverter.ToInt32(row["currentwaypoint"]) : 0,
+                curhealth = row["curhealth"] != DBNull.Value ? CustomConverter.ToInt32(row["curhealth"]) : 0,
+                curmana = row["curmana"] != DBNull.Value ? CustomConverter.ToInt32(row["curmana"]) : 0,
+                movementType = row["movementType"] != DBNull.Value ? CustomConverter.ToInt32(row["movementType"]) : 0,
+                npcflag = row["npcflag"] != DBNull.Value ? CustomConverter.ToInt32(row["npcflag"]) : 0,
+                unit_flags = row["unit_flags"] != DBNull.Value ? CustomConverter.ToInt32(row["unit_flags"]) : 0,
+                dynamicflags = row["dynamicflags"] != DBNull.Value ? CustomConverter.ToInt32(row["dynamicflags"]) : 0
+            };
             return creature;
         }
 
         private Gameobject BuildGameobject(DataRow row)
         {
-            var gameobject = new Gameobject();
-            gameobject.guid = row["guid"] != DBNull.Value ? CustomConverter.ToInt32(row["guid"]) : 0;
-            gameobject.id = row["id"] != DBNull.Value ? CustomConverter.ToInt32(row["id"]) : 0;
-            gameobject.map = row["map"] != DBNull.Value ? CustomConverter.ToInt32(row["map"]) : 0;
-            gameobject.spawnMask = row["spawnMask"] != DBNull.Value ? CustomConverter.ToInt32(row["spawnMask"]) : 0;
-            gameobject.phaseMask = row["phaseMask"] != DBNull.Value ? CustomConverter.ToInt32(row["phaseMask"]) : 0;
-            gameobject.position_x = row["position_x"] != DBNull.Value ? CustomConverter.ToInt32(row["position_x"]) : 0;
-            gameobject.position_y = row["position_y"] != DBNull.Value ? CustomConverter.ToInt32(row["position_y"]) : 0;
-            gameobject.position_z = row["position_z"] != DBNull.Value ? CustomConverter.ToInt32(row["position_z"]) : 0;
-            gameobject.orientation = row["orientation"] != DBNull.Value ? CustomConverter.ToInt32(row["orientation"]) : 0;
-            gameobject.rotation0 = row["rotation0"] != DBNull.Value ? CustomConverter.ToInt32(row["rotation0"]) : 0;
-            gameobject.rotation1 = row["rotation1"] != DBNull.Value ? CustomConverter.ToInt32(row["rotation1"]) : 0;
-            gameobject.rotation2 = row["rotation2"] != DBNull.Value ? CustomConverter.ToInt32(row["rotation2"]) : 0;
-            gameobject.rotation3 = row["rotation3"] != DBNull.Value ? CustomConverter.ToInt32(row["rotation3"]) : 0;
-            gameobject.spawntimesecs = row["spawntimesecs"] != DBNull.Value ? CustomConverter.ToInt32(row["spawntimesecs"]) : 0;
-            gameobject.animprogress = row["animprogress"] != DBNull.Value ? CustomConverter.ToInt32(row["animprogress"]) : 0;
-            gameobject.state = row["state"] != DBNull.Value ? CustomConverter.ToInt32(row["state"]) : 0;
+            var gameobject = new Gameobject
+            {
+                guid = row["guid"] != DBNull.Value ? CustomConverter.ToInt32(row["guid"]) : 0,
+                id = row["id"] != DBNull.Value ? CustomConverter.ToInt32(row["id"]) : 0,
+                map = row["map"] != DBNull.Value ? CustomConverter.ToInt32(row["map"]) : 0,
+                spawnMask = row["spawnMask"] != DBNull.Value ? CustomConverter.ToInt32(row["spawnMask"]) : 0,
+                phaseMask = row["phaseMask"] != DBNull.Value ? CustomConverter.ToInt32(row["phaseMask"]) : 0,
+                position_x = row["position_x"] != DBNull.Value ? CustomConverter.ToInt32(row["position_x"]) : 0,
+                position_y = row["position_y"] != DBNull.Value ? CustomConverter.ToInt32(row["position_y"]) : 0,
+                position_z = row["position_z"] != DBNull.Value ? CustomConverter.ToInt32(row["position_z"]) : 0,
+                orientation = row["orientation"] != DBNull.Value ? CustomConverter.ToInt32(row["orientation"]) : 0,
+                rotation0 = row["rotation0"] != DBNull.Value ? CustomConverter.ToInt32(row["rotation0"]) : 0,
+                rotation1 = row["rotation1"] != DBNull.Value ? CustomConverter.ToInt32(row["rotation1"]) : 0,
+                rotation2 = row["rotation2"] != DBNull.Value ? CustomConverter.ToInt32(row["rotation2"]) : 0,
+                rotation3 = row["rotation3"] != DBNull.Value ? CustomConverter.ToInt32(row["rotation3"]) : 0,
+                spawntimesecs = row["spawntimesecs"] != DBNull.Value ? CustomConverter.ToInt32(row["spawntimesecs"]) : 0,
+                animprogress = row["animprogress"] != DBNull.Value ? CustomConverter.ToInt32(row["animprogress"]) : 0,
+                state = row["state"] != DBNull.Value ? CustomConverter.ToInt32(row["state"]) : 0
+            };
             return gameobject;
         }
     }

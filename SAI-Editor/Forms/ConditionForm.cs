@@ -32,7 +32,7 @@ namespace SAI_Editor.Forms
 
         }
 
-        private void comboBoxConditionSourceTypes_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxConditionSourceTypes_SelectedIndexChanged(object sender, EventArgs e)
         {
             //! Reset the values
             labelSourceGroup.Text = "Unused parameter";
@@ -120,7 +120,7 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void comboBoxesConditions_KeyPress(object sender, KeyPressEventArgs e)
+        private void ComboBoxesConditions_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (Char.IsLetter(e.KeyChar) || Char.IsDigit(e.KeyChar))
                 e.Handled = true; //! Disallow changing content of the combobox, but setting it to 3D looks like shit
@@ -161,7 +161,7 @@ namespace SAI_Editor.Forms
                 comboBoxConditionTarget.SelectedIndex = 0;
         }
 
-        private void comboBoxConditionTypes_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxConditionTypes_SelectedIndexChanged(object sender, EventArgs e)
         {
             //! Reset the values
             SetConditionValues(new string[] { "", "", "", "" }, new bool[] { false, false, false, false });
@@ -303,7 +303,7 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void buttonSearchSourceGroup_Click(object sender, EventArgs e)
+        private void ButtonSearchSourceGroup_Click(object sender, EventArgs e)
         {
             TextBox textBoxToChange = textBoxSourceGroup;
 
@@ -377,7 +377,7 @@ namespace SAI_Editor.Forms
                 searchFromDatabaseForm.ShowDialog(this);
         }
 
-        private void buttonSearchSourceEntry_Click(object sender, EventArgs e)
+        private void ButtonSearchSourceEntry_Click(object sender, EventArgs e)
         {
             TextBox textBoxToChange = textBoxSourceEntry;
 
@@ -448,7 +448,7 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void buttonSearchSourceId_Click(object sender, EventArgs e)
+        private void ButtonSearchSourceId_Click(object sender, EventArgs e)
         {
             TextBox textBoxToChange = textBoxElseGroup;
 
@@ -460,7 +460,7 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void buttonSearchConditionValue1_Click(object sender, EventArgs e)
+        private void ButtonSearchConditionValue1_Click(object sender, EventArgs e)
         {
             TextBox textBoxToChange = textBoxCondValue1;
 
@@ -546,7 +546,7 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void buttonSearchConditionValue2_Click(object sender, EventArgs e)
+        private void ButtonSearchConditionValue2_Click(object sender, EventArgs e)
         {
             TextBox textBoxToChange = textBoxCondValue2;
 
@@ -564,9 +564,8 @@ namespace SAI_Editor.Forms
 
                     if (!String.IsNullOrWhiteSpace(condValue1))
                     {
-                        int intCondValue1;
 
-                        if (Int32.TryParse(condValue1, out intCondValue1))
+                        if (Int32.TryParse(condValue1, out int intCondValue1))
                         {
                             if (intCondValue1 < 0 || intCondValue1 > (int)TypeID.TYPEID_CORPSE)
                                 showError = true;
@@ -612,7 +611,7 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void buttonSearchConditionValue3_Click(object sender, EventArgs e)
+        private void ButtonSearchConditionValue3_Click(object sender, EventArgs e)
         {
             TextBox textBoxToChange = textBoxCondValue3;
 
@@ -643,7 +642,7 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void buttonGenerateSql_Click(object sender, EventArgs e)
+        private void ButtonGenerateSql_Click(object sender, EventArgs e)
         {
             string sql = String.Empty;
 
@@ -693,29 +692,31 @@ namespace SAI_Editor.Forms
                 sqlOutputForm.ShowDialog();
         }
 
-        private void buttonGenerateComment_Click(object sender, EventArgs e)
+        private void ButtonGenerateComment_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void buttonSaveCondition_Click(object sender, EventArgs e)
+        private void ButtonSaveCondition_Click(object sender, EventArgs e)
         {
-            Condition newCondition = new Condition();
-            newCondition.SourceTypeOrReferenceId = comboBoxConditionSourceTypes.SelectedIndex;
-            newCondition.SourceGroup = CustomConverter.ToInt32(textBoxSourceGroup.Text);
-            newCondition.SourceEntry = CustomConverter.ToInt32(textBoxSourceEntry.Text);
-            newCondition.SourceId = CustomConverter.ToInt32(textBoxSourceId.Text);
-            newCondition.ElseGroup = CustomConverter.ToInt32(textBoxElseGroup.Text);
-            newCondition.ConditionTypeOrReference = comboBoxConditionTypes.SelectedIndex;
-            newCondition.ConditionTarget = comboBoxConditionTarget.SelectedIndex;
-            newCondition.ConditionValue1 = CustomConverter.ToInt32(textBoxCondValue1.Text);
-            newCondition.ConditionValue2 = CustomConverter.ToInt32(textBoxCondValue2.Text);
-            newCondition.ConditionValue3 = CustomConverter.ToInt32(textBoxCondValue3.Text);
-            newCondition.NegativeCondition = checkBoxNegativeCondition.Checked ? 1 : 0;
-            newCondition.ErrorType = CustomConverter.ToInt32(textBoxErrorType.Text);
-            newCondition.ErrorTextId = CustomConverter.ToInt32(textBoxErrorTextId.Text);
-            newCondition.ScriptName = textBoxScriptName.Text;
-            newCondition.Comment = textBoxComment.Text;
+            Condition newCondition = new Condition
+            {
+                SourceTypeOrReferenceId = comboBoxConditionSourceTypes.SelectedIndex,
+                SourceGroup = CustomConverter.ToInt32(textBoxSourceGroup.Text),
+                SourceEntry = CustomConverter.ToInt32(textBoxSourceEntry.Text),
+                SourceId = CustomConverter.ToInt32(textBoxSourceId.Text),
+                ElseGroup = CustomConverter.ToInt32(textBoxElseGroup.Text),
+                ConditionTypeOrReference = comboBoxConditionTypes.SelectedIndex,
+                ConditionTarget = comboBoxConditionTarget.SelectedIndex,
+                ConditionValue1 = CustomConverter.ToInt32(textBoxCondValue1.Text),
+                ConditionValue2 = CustomConverter.ToInt32(textBoxCondValue2.Text),
+                ConditionValue3 = CustomConverter.ToInt32(textBoxCondValue3.Text),
+                NegativeCondition = checkBoxNegativeCondition.Checked ? 1 : 0,
+                ErrorType = CustomConverter.ToInt32(textBoxErrorType.Text),
+                ErrorTextId = CustomConverter.ToInt32(textBoxErrorTextId.Text),
+                ScriptName = textBoxScriptName.Text,
+                Comment = textBoxComment.Text
+            };
 
             conditions.Add(newCondition);
             
@@ -739,7 +740,7 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void buttonDeleteCondition_Click(object sender, EventArgs e)
+        private void ButtonDeleteCondition_Click(object sender, EventArgs e)
         {
             if (DialogResult.Yes != MessageBox.Show("Are you sure you want to get rid of this condition?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                 return;
@@ -751,13 +752,13 @@ namespace SAI_Editor.Forms
                 listViewConditions.Items[0].Selected = true;
         }
 
-        private void buttonLoadCondition_Click(object sender, EventArgs e)
+        private void ButtonLoadCondition_Click(object sender, EventArgs e)
         {
             if (DialogResult.Yes != MessageBox.Show("Are you sure you want to load this condition and get rid of the local changes?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                 return;
         }
 
-        private void buttonDuplicateCondition_Click(object sender, EventArgs e)
+        private void ButtonDuplicateCondition_Click(object sender, EventArgs e)
         {
             if (DialogResult.Yes != MessageBox.Show("Are you sure you want to duplicate this condition?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                 return;
@@ -765,7 +766,7 @@ namespace SAI_Editor.Forms
             listViewConditions.AddScript(listViewConditions.SelectedScript, selectNewItem: true);
         }
 
-        private void listViewConditions_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListViewConditions_SelectedIndexChanged(object sender, EventArgs e)
         {
             buttonDeleteCondition.Enabled = listViewConditions.SelectedIndices.Count > 0;
             buttonDuplicateCondition.Enabled = listViewConditions.SelectedIndices.Count > 0;
@@ -793,23 +794,23 @@ namespace SAI_Editor.Forms
             textBoxComment.Text = selectedCond.Comment;
         }
 
-        private void buttonSearchErrorType_Click(object sender, EventArgs e)
+        private void ButtonSearchErrorType_Click(object sender, EventArgs e)
         {
             ShowSelectForm("SpellCastResult", textBoxErrorType);
         }
 
-        private void buttonSearchErrorTextId_Click(object sender, EventArgs e)
+        private void ButtonSearchErrorTextId_Click(object sender, EventArgs e)
         {
             ShowSelectForm("SpellCustomErrors", textBoxErrorTextId);
         }
 
-        private void textBoxesConditionEditor_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBoxesConditionEditor_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!Char.IsControl(e.KeyChar) && !Char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != '-')
                 e.Handled = true;
         }
 
-        private void textBoxesConditionEditor_Leave(object sender, EventArgs e)
+        private void TextBoxesConditionEditor_Leave(object sender, EventArgs e)
         {
             TextBox textBox = sender as TextBox;
 
@@ -820,7 +821,7 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void buttonResetSession_Click(object sender, EventArgs e)
+        private void ButtonResetSession_Click(object sender, EventArgs e)
         {
             if (DialogResult.Yes != MessageBox.Show("Are you sure you want to get rid of all conditions in this session?", "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                 return;
