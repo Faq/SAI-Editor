@@ -31,6 +31,7 @@ _ReSharper*/
 
 #nuget
 !packages/repositories.config
+!packages/EntityFramework.6.2.0/tools/migrate.exe
 
 #Installer
 SAI-Editor Installer/SAI-Editor-SetupFiles
