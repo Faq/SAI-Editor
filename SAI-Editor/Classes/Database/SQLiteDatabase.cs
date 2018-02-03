@@ -5,7 +5,6 @@ using System.Data.SQLite;
 using System.Threading.Tasks;
 using SAI_Editor.Classes.Database.Classes;
 using System.Linq;
-using SAI_Editor.Enumerators;
 
 namespace SAI_Editor.Classes.Database
 {

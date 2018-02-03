@@ -19,8 +19,8 @@ namespace SAI_Editor.Enumerators
 
     internal enum SaiEditorSizes
     {
-        LoginFormWidth = 403,
-        LoginFormHeight = 236,
+        LoginFormWidth = 529,
+        LoginFormHeight = 295,
 
         MainFormWidth = 969,
         MainFormHeight = 542,

@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SAI_Editor.Classes.CustomControls;
 using SAI_Editor.Classes.Database.Classes;
-using SAI_Editor.Classes.State;
 
 namespace SAI_Editor.Classes.Serialization
 {

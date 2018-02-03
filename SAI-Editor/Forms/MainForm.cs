@@ -1361,24 +1361,33 @@ namespace SAI_Editor.Forms
 
         private void SynchronizeSizeOfUserControlAndListView(bool fromResize = false)
         {
-            UserControl.Width = tabControlWorkspaces.Width;
-            UserControl.Height = tabControlWorkspaces.Height;
+            if (UserControl != null)
+            {
+                UserControl.Width = tabControlWorkspaces.Width;
+                UserControl.Height = tabControlWorkspaces.Height;
 
-            //! Not sure why but height is really off...
-            int contractHeightFromTabControl = 252, contractWidthFromTabControl = (int)SaiEditorSizes.StaticTooltipsPadding;
+                //! Not sure why but height is really off...
+                int contractHeightFromTabControl = 252,
+                    contractWidthFromTabControl = (int) SaiEditorSizes.StaticTooltipsPadding;
 
-            if (fromResize && UserControl.checkBoxUseStaticTooltips.Checked)
-                contractHeightFromTabControl += 60 + 12; //! Height of two panels plus some extra padding
+                if (fromResize && UserControl.checkBoxUseStaticTooltips.Checked)
+                    contractHeightFromTabControl += 60 + 12; //! Height of two panels plus some extra padding
 
-            UserControl.ListView.Width = tabControlWorkspaces.Width - contractWidthFromTabControl;
-            UserControl.ListView.Height = tabControlWorkspaces.Height - contractHeightFromTabControl;
+                UserControl.ListView.Width = tabControlWorkspaces.Width - contractWidthFromTabControl;
+                UserControl.ListView.Height = tabControlWorkspaces.Height - contractHeightFromTabControl;
 
-            UserControl.panelStaticTooltipTypes.Width = tabControlWorkspaces.Width - (int)SaiEditorSizes.StaticTooltipsPadding;
-            UserControl.panelStaticTooltipParameters.Width = tabControlWorkspaces.Width - (int)SaiEditorSizes.StaticTooltipsPadding;
+                UserControl.panelStaticTooltipTypes.Width =
+                    tabControlWorkspaces.Width - (int) SaiEditorSizes.StaticTooltipsPadding;
+                UserControl.panelStaticTooltipParameters.Width =
+                    tabControlWorkspaces.Width - (int) SaiEditorSizes.StaticTooltipsPadding;
 
-            int increaseY = tabControlWorkspaces.Height - _oldHeightTabControlWorkspaces;
-            UserControl.panelStaticTooltipTypes.Location = new Point(UserControl.panelStaticTooltipTypes.Location.X, UserControl.panelStaticTooltipTypes.Location.Y + increaseY);
-            UserControl.panelStaticTooltipParameters.Location = new Point(UserControl.panelStaticTooltipParameters.Location.X, UserControl.panelStaticTooltipParameters.Location.Y + increaseY);
+                int increaseY = tabControlWorkspaces.Height - _oldHeightTabControlWorkspaces;
+                UserControl.panelStaticTooltipTypes.Location = new Point(UserControl.panelStaticTooltipTypes.Location.X,
+                    UserControl.panelStaticTooltipTypes.Location.Y + increaseY);
+                UserControl.panelStaticTooltipParameters.Location = new Point(
+                    UserControl.panelStaticTooltipParameters.Location.X,
+                    UserControl.panelStaticTooltipParameters.Location.Y + increaseY);
+            }
 
             _oldHeightTabControlWorkspaces = tabControlWorkspaces.Height;
             _oldWidthTabControlWorkspaces = tabControlWorkspaces.Width;

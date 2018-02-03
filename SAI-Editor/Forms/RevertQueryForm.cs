@@ -1,7 +1,6 @@
 ﻿using SAI_Editor.Properties;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -25,7 +24,7 @@ namespace SAI_Editor.Forms
             FillListViewWithDate();
         }
 
-        private void calenderScriptsToRevert_DateChanged(object sender, DateRangeEventArgs e)
+        private void CalenderScriptsToRevert_DateChanged(object sender, DateRangeEventArgs e)
         {
             FillListViewWithDate();
         }
@@ -50,7 +49,7 @@ namespace SAI_Editor.Forms
             buttonExecuteSelectedScript.Enabled = listViewScripts.SelectedItems.Count > 0;
         }
 
-        private void buttonExecuteSelectedScript_Click(object sender, EventArgs e)
+        private void ButtonExecuteSelectedScript_Click(object sender, EventArgs e)
         {
             ExecutedSelectedScript();
         }
@@ -73,7 +72,7 @@ namespace SAI_Editor.Forms
                 MessageBox.Show("The query has been executed succesfully!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void listViewScripts_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListViewScripts_SelectedIndexChanged(object sender, EventArgs e)
         {
             buttonExecuteSelectedScript.Enabled = listViewScripts.SelectedItems.Count > 0;
         }
@@ -88,12 +87,12 @@ namespace SAI_Editor.Forms
             }
         }
 
-        private void listViewScripts_DoubleClick(object sender, EventArgs e)
+        private void ListViewScripts_DoubleClick(object sender, EventArgs e)
         {
             ExecutedSelectedScript();
         }
 
-        private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listViewScripts.SelectedItems.Count == 0)
                 return;
@@ -103,7 +102,7 @@ namespace SAI_Editor.Forms
             SAI_Editor_Manager.Instance.StartProcess(fileName);
         }
 
-        private void openFileWithToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenFileWithToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listViewScripts.SelectedItems.Count == 0)
                 return;
@@ -113,7 +112,7 @@ namespace SAI_Editor.Forms
             SAI_Editor_Manager.Instance.StartProcess("rundll32.exe", "shell32.dll, OpenAs_RunDLL " + fileName);
         }
 
-        private void openDirectoryOfFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenDirectoryOfFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listViewScripts.SelectedItems.Count == 0)
                 return;
@@ -123,14 +122,14 @@ namespace SAI_Editor.Forms
             SAI_Editor_Manager.Instance.StartProcess("explorer.exe", String.Format("/select,\"{0}\"", fileName));
         }
 
-        private void listViewScripts_MouseClick(object sender, MouseEventArgs e)
+        private void ListViewScripts_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
                 if (listViewScripts.FocusedItem.Bounds.Contains(e.Location))
                     listViewContextMenu.Show(Cursor.Position);
         }
 
-        private void deleteRevertQueryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DeleteRevertQueryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listViewScripts.SelectedItems.Count == 0)
                 return;

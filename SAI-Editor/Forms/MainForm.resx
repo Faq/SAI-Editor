@@ -130,7 +130,7 @@
   <data name="pictureBoxDonate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAhQAAACUCAYAAADLVbAUAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAABh0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC41ZYUyZQAAV19JREFUeF7tvQeQ
+        vwAADr8BOAVTJAAAABh0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC41ZYUyZQAAV19JREFUeF7tvQeQ
         XFWW590dM/HNRkz0xn4T8c327s63u9/M7O40DfK+pFIZGYQRamhhBDSm8TQ0TUMbGNrQQGMaGo+kMlny
         XkjIIIEMwhsBAiEQEsh7lXyVSlWVWec7/2te3nx1sypvVmZWZtW9Ef9ASFUv89178/z+75zzXn7HDz/8
         8MMPP/zwww8//PDDDz/88MMPP/zwww8//PDDDz/88MMPP/zwww8//PDDDz/88MMPP/zwww8//PDDDz+6
@@ -506,6 +506,12 @@
         ww8//PDDDz/88MMPP/zwww8//PDDDz/88MMPP/zw4zvf+c7/D82tFTH60IqVAAAAAElFTkSuQmCC
 </value>
   </data>
+  <metadata name="timerExpandOrContract.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>330, 2</value>
+  </metadata>
+  <metadata name="timerShowStaticTooltips.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>298, 28</value>
+  </metadata>
   <data name="pictureBoxCreateScript.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAADS9JREFUeF7l
@@ -624,12 +630,6 @@
         hVU9AAAAAElFTkSuQmCC
 </value>
   </data>
-  <metadata name="timerExpandOrContract.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>330, 2</value>
-  </metadata>
-  <metadata name="timerShowStaticTooltips.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>298, 28</value>
-  </metadata>
   <data name="pictureBoxStaticTooltip.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

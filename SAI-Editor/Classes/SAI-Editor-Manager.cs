@@ -8,7 +8,6 @@ using MySql.Data.MySqlClient;
 using SAI_Editor.Classes.Database;
 using SAI_Editor.Classes.Database.Classes;
 using SAI_Editor.Enumerators;
-using SAI_Editor.Forms;
 using SAI_Editor.Properties;
 using System.Linq;
 using System.Net.NetworkInformation;

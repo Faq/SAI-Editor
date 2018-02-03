@@ -1,5 +1,4 @@
 ﻿using SAI_Editor.Properties;
-using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
